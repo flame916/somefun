@@ -65,7 +65,7 @@ python -m http.server 8000
 node game-project/code/tests/smoke.js
 ```
 
-移动端布局自测（需要本机 Chrome；先启动静态服务器，再指定 `CDP_URL`）：
+移动端布局自测（需要本机 Chrome；本地静态服务器最稳，线上站点也可指定 `CDP_URL`，远程加载偶发不稳可重试）：
 
 ```bash
 python -m http.server 8000

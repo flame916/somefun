@@ -41,12 +41,29 @@ chrome.stderr.on("data", (chunk) => {
 let socket;
 let nextId = 1;
 const pending = new Map();
+let connected = false;
 
 function send(method, params = {}) {
   return new Promise((resolve, reject) => {
     const id = nextId++;
     pending.set(id, { resolve, reject });
-    socket.send(JSON.stringify({ id, method, params }));
+    const trySend = () => {
+      if (!connected || socket.readyState !== 1) {
+        reject(new Error("socket not connected"));
+        return;
+      }
+      socket.send(JSON.stringify({ id, method, params }));
+    };
+    if (connected && socket.readyState === 1) trySend();
+    else {
+      const timer = setInterval(() => {
+        if (connected && socket.readyState === 1) {
+          clearInterval(timer);
+          trySend();
+        }
+      }, 20);
+      setTimeout(() => clearInterval(timer), 5000);
+    }
   });
 }
 
@@ -206,6 +223,7 @@ async function connect(port) {
     process.exit(3);
   }
   socket = new WebSocket(pageUrl);
+  connected = false;
   socket.onmessage = (event) => {
     const message = JSON.parse(event.data);
     if (message.id && pending.has(message.id)) {
@@ -222,7 +240,7 @@ async function connect(port) {
   };
   socket.onopen = async () => {
     try {
-      await sleep(100);
+      connected = true;
       await send("Page.enable");
       await send("Runtime.enable");
       const results = [];
