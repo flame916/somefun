@@ -30,7 +30,7 @@ body {
 .app-shell {
   max-width: 760px;
   margin: 0 auto;
-  padding: 16px 16px 48px;
+  padding: 16px 16px calc(48px + env(safe-area-inset-bottom));
 }
 
 .view {
@@ -143,7 +143,9 @@ body {
 .history-row {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: 12px;
+  flex-wrap: wrap;
   padding: 9px 0;
   border-bottom: 1px solid var(--line);
   font-size: 13px;
@@ -392,6 +394,7 @@ body {
 .ending-actions {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
   margin-top: 4px;
 }
 
@@ -451,7 +454,7 @@ body {
 
 @media (max-width: 520px) {
   .app-shell {
-    padding: 12px 12px 40px;
+    padding: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom));
   }
 
   .stat-grid {
@@ -464,7 +467,58 @@ body {
   }
 
   .home-title {
-    font-size: 34px;
+    font-size: clamp(28px, 9vw, 34px);
+    line-height: 1.25;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  .home-subtitle {
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  .home-route {
+    max-width: 100%;
+    line-height: 1.6;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  .event-card {
+    padding: 20px 16px;
+  }
+
+  .event-title {
+    font-size: 22px;
+  }
+
+  .ending-title {
+    font-size: 28px;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  .ending-actions .primary-btn,
+  .ending-actions .ghost-btn {
+    flex: 1 1 44%;
+    min-width: 0;
+    padding: 0 14px;
+    text-align: center;
+  }
+
+  .history-row,
+  .review-head,
+  .history-item-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px 0;
+  }
+
+  .review-head {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .option-btn {

@@ -28,6 +28,7 @@ code/
     styles.css                      页面样式
   tests/
     smoke.js                        引擎冒烟测试
+    mobile-layout.mjs               移动端布局自测（375/390 视口，需本机 Chrome）
   index.html                        可直接打开的 MVP 入口
   AD_PLACEMENT.md                   广告接入预留说明
 ```
@@ -63,3 +64,13 @@ python -m http.server 8000
 ```bash
 node game-project/code/tests/smoke.js
 ```
+
+移动端布局自测（需要本机 Chrome；先启动静态服务器，再指定 `CDP_URL`）：
+
+```bash
+python -m http.server 8000
+$env:CDP_URL="http://127.0.0.1:8000/"
+node game-project/code/tests/mobile-layout.mjs
+```
+
+脚本会在 375×667 与 390×844 视口下完整跑通 首页 → 事件 → 属性 → 幕间 → 结局 → 返回首页，并检查无横向溢出、按钮可点、历史记录已保存。
