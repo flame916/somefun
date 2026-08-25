@@ -42,6 +42,7 @@ let socket;
 let nextId = 1;
 const pending = new Map();
 let connected = false;
+const jsErrors = [];
 
 function send(method, params = {}) {
   return new Promise((resolve, reject) => {
@@ -132,7 +133,6 @@ async function runViewport(width, height) {
   await assertNoOverflow();
 
   await evaluate(`document.querySelector('.primary-btn').click(); true`);
-  await sleep(400);
   if (!(await waitFor(`!!document.querySelector('.event-screen')`))) {
     throw new Error("event did not render");
   }
@@ -143,7 +143,6 @@ async function runViewport(width, height) {
   await assertNoOverflow();
 
   await evaluate(`document.querySelector('.option-btn').click(); true`);
-  await sleep(500);
   if (!(await waitFor(`document.querySelectorAll('.stat-value').length === 6`))) {
     throw new Error("stat grid missing");
   }
@@ -235,7 +234,7 @@ async function connect(port) {
     }
     if (message.method === "Runtime.exceptionThrown") {
       const details = message.params.exceptionDetails;
-      console.error("JS_EXCEPTION", details.exception?.description || details.text);
+      jsErrors.push(details);
     }
   };
   socket.onopen = async () => {
@@ -257,6 +256,13 @@ async function connect(port) {
       process.exit(0);
     } catch (error) {
       console.error("mobile layout failed:", error.message);
+      try {
+        const dump = await evaluate(`JSON.stringify({ readyState: document.readyState, body: document.body?.innerText?.slice(0, 200), html: document.documentElement.outerHTML.slice(0, 300) })`);
+        console.error("PAGE_DUMP", dump);
+      } catch {}
+      for (const details of jsErrors.slice(-6)) {
+        console.error("JS_EXCEPTION", details.exception?.description || details.text, details.url, details.lineNumber, details.columnNumber);
+      }
       console.error("stderr:", stderr.slice(-500));
       process.exit(1);
     }
