@@ -1,8 +1,8 @@
 import { createGameController } from "./game-controller.js";
 
-const template = await fetch("../config/life-simulator.template.json").then((res) => res.json());
-const content = await fetch("../content/life-simulator.placeholder.json").then((res) => res.json());
-const adConfig = await fetch("../config/ad-placements.json").then((res) => res.json());
+const template = await fetch("./config/life-simulator.template.json").then((res) => res.json());
+const content = await fetch("./content/life-simulator.placeholder.json").then((res) => res.json());
+const adConfig = await fetch("./config/ad-placements.json").then((res) => res.json());
 
 const game = createGameController({ template, content, adConfig });
 const view = document.getElementById("view");
