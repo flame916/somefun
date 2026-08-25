@@ -1,0 +1,47 @@
+{
+  "$comment": "IAA 广告位预留配置。首版不接入真实广告，SDK 调用全部由 app/ad-service.js 空实现兜底。",
+  "version": "0.1.0",
+  "enabled": false,
+  "defaultProvider": "wx",
+  "global": {
+    "minIntervalMs": 60000,
+    "dailyCap": 6,
+    "failOpen": true,
+    "debug": false
+  },
+  "placements": [
+    {
+      "id": "interstitial_stage_switch",
+      "kind": "interstitial",
+      "trigger": "stage_switch",
+      "enabled": false,
+      "minIntervalMs": 90000,
+      "dailyCap": 3,
+      "provider": "wx",
+      "adUnitId": "",
+      "fallback": "none"
+    },
+    {
+      "id": "rewarded_restart",
+      "kind": "rewarded",
+      "trigger": "restart",
+      "enabled": false,
+      "minIntervalMs": 120000,
+      "dailyCap": 4,
+      "provider": "wx",
+      "adUnitId": "",
+      "fallback": "direct"
+    },
+    {
+      "id": "banner_result",
+      "kind": "banner",
+      "trigger": "result",
+      "enabled": false,
+      "minIntervalMs": 30000,
+      "dailyCap": 6,
+      "provider": "wx",
+      "adUnitId": "",
+      "fallback": "hide"
+    }
+  ]
+}

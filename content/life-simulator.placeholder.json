@@ -1,0 +1,512 @@
+{
+  "version": "1.0",
+  "meta": {
+    "title": "人生模拟器占位内容包",
+    "source": "B 阶段原型事件改写，未使用任何小说原文",
+    "isPlaceholder": true,
+    "contentRoute": "none"
+  },
+  "events": [
+    {
+      "id": "ev_youth_first_step",
+      "title": "初入宗门",
+      "text": "占位：你第一次踏入宗门，山门前的长老正打量着每一位新弟子。",
+      "stage": "youth",
+      "isPlaceholder": true,
+      "weight": 100,
+      "conditions": null,
+      "options": [
+        {
+          "label": "谦逊行礼",
+          "effects": { "fame": 1, "bond": 1 },
+          "successRate": 1,
+          "resultText": "长老微微点头，记下了你的名字。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "昂首而立",
+          "effects": { "power": 2, "sanity": -1 },
+          "successRate": 0.6,
+          "resultText": "有人觉得你狂妄，也有人记住了你。",
+          "failureEffects": { "power": -1 },
+          "failureText": "你撞上了冷眼，气势矮了半截。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_youth_bottle",
+      "title": "修炼瓶颈",
+      "text": "占位：你的修炼陷入瓶颈，同门劝你换个思路。",
+      "stage": "youth",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "闭关苦修",
+          "effects": { "power": 2 },
+          "successRate": 1,
+          "resultText": "数日之后，你感到体内气息渐稳。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "挑战长老",
+          "effects": { "power": 4, "sanity": -2 },
+          "successRate": 0.5,
+          "resultText": "胜负之间，你看到了自己的极限。",
+          "failureEffects": { "power": -1, "health": -1 },
+          "failureText": "长老只用三招便让你趴在地上。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_youth_letter",
+      "title": "深夜来信",
+      "text": "占位：深夜有人送来一封密信，邀你赴约。",
+      "stage": "youth",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "回信宽慰",
+          "effects": { "bond": 2, "sanity": 1 },
+          "successRate": 1,
+          "resultText": "你的一封回信，让远方的人安心下来。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "冒险赴约",
+          "effects": { "bond": 4, "health": -2 },
+          "successRate": 0.55,
+          "resultText": "夜色里你见到了写信的人，也踩进了对方的陷阱。",
+          "failureEffects": { "health": -2, "sanity": -1 },
+          "failureText": "你被围堵在窄巷，带伤而归。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_youth_city",
+      "title": "城中有难",
+      "text": "占位：城中百姓受难，有人请求你出手。",
+      "stage": "youth",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "捐出积蓄",
+          "effects": { "wealth": -2, "fame": 2 },
+          "successRate": 1,
+          "resultText": "你的慷慨被城中人传扬。",
+          "riskTag": "sacrifice"
+        },
+        {
+          "label": "亲自救援",
+          "effects": { "bond": 3, "health": -2 },
+          "successRate": 0.65,
+          "resultText": "你救下了一家人，也付出了一些代价。",
+          "failureEffects": { "health": -3, "fame": -1 },
+          "failureText": "你冲得太急，反被乱局困住。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_youth_rest",
+      "title": "山间小憩",
+      "text": "占位：你在山间溪边歇脚，看见一位老人在钓鱼。",
+      "stage": "youth",
+      "isPlaceholder": true,
+      "weight": 8,
+      "conditions": null,
+      "options": [
+        {
+          "label": "坐下听故事",
+          "effects": { "sanity": 3, "bond": 1 },
+          "successRate": 1,
+          "resultText": "老人的话像溪水，把焦躁冲淡了。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "向老人求教",
+          "effects": { "power": 1, "sanity": 2 },
+          "successRate": 1,
+          "resultText": "老人随手点破你练功的一处错漏。",
+          "riskTag": "safe"
+        }
+      ]
+    },
+    {
+      "id": "ev_prime_fame",
+      "title": "名声鹊起",
+      "text": "占位：你的事迹传开，有人邀你在众人面前亮相。",
+      "stage": "prime",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "低调谦辞",
+          "effects": { "fame": 1, "sanity": 1 },
+          "successRate": 1,
+          "resultText": "你退回人群，反而被人记得更深。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "高调亮相",
+          "effects": { "fame": 3, "sanity": -2 },
+          "successRate": 0.7,
+          "resultText": "你的锋芒刺痛了一些人的眼睛。",
+          "failureEffects": { "fame": -2, "sanity": -1 },
+          "failureText": "登场时机没选对，台下传来哄笑。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_prime_old_friend",
+      "title": "故人重逢",
+      "text": "占位：多年不见的故人出现在你面前。",
+      "stage": "prime",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "设宴叙旧",
+          "effects": { "wealth": -2, "bond": 2 },
+          "successRate": 1,
+          "resultText": "酒过三巡，隔阂消了大半。",
+          "riskTag": "sacrifice"
+        },
+        {
+          "label": "直奔主题",
+          "effects": { "fame": 2, "bond": -1 },
+          "successRate": 1,
+          "resultText": "你问得直接，故人却觉得你变了。",
+          "riskTag": "custom"
+        }
+      ]
+    },
+    {
+      "id": "ev_prime_storm",
+      "title": "山雨欲来",
+      "text": "占位：山雨欲来，有人劝你早做打算。",
+      "stage": "prime",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "加固家业",
+          "effects": { "wealth": 2, "health": 1 },
+          "successRate": 1,
+          "resultText": "你把大门修牢，也让自己安稳了几分。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "提前迎战",
+          "effects": { "power": 3, "health": -2 },
+          "successRate": 0.6,
+          "resultText": "你抢在雨前动手，赢下了先机。",
+          "failureEffects": { "power": -1, "health": -2 },
+          "failureText": "你低估了雨势，折损了人手。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_prime_plea",
+      "title": "众生求援",
+      "text": "占位：百姓在门外长跪，求你主持公道。",
+      "stage": "prime",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "安抚众人",
+          "effects": { "bond": 2, "sanity": 1 },
+          "successRate": 1,
+          "resultText": "你许下承诺，人心暂时安定。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "孤身入局",
+          "effects": { "power": 2, "fame": 2, "health": -2 },
+          "successRate": 0.6,
+          "resultText": "你独自踏入旋涡，名望升了，身上也添了伤。",
+          "failureEffects": { "health": -3, "bond": -1 },
+          "failureText": "你没能护住所有人，人群散了一半。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_prime_invitation",
+      "title": "豪门邀请",
+      "text": "占位：城中的豪门递来请帖，想与你结盟。",
+      "stage": "prime",
+      "isPlaceholder": true,
+      "weight": 8,
+      "conditions": null,
+      "options": [
+        {
+          "label": "婉言谢绝",
+          "effects": { "bond": 1, "sanity": 1 },
+          "successRate": 1,
+          "resultText": "你守住清净，也守住了自己的立场。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "应邀赴宴",
+          "effects": { "wealth": 3, "fame": 1, "sanity": -1 },
+          "successRate": 1,
+          "resultText": "你与豪门相谈甚欢，却也沾上了是非。",
+          "riskTag": "custom"
+        }
+      ]
+    },
+    {
+      "id": "ev_prime_pit",
+      "title": "暗巷伏击",
+      "text": "占位：有人在暗巷设下埋伏，等你自投罗网。",
+      "stage": "prime",
+      "isPlaceholder": true,
+      "weight": 8,
+      "conditions": {
+        "requiredAttribute": { "name": "power", "min": 8 }
+      },
+      "options": [
+        {
+          "label": "绕道而行",
+          "effects": { "sanity": 1 },
+          "successRate": 1,
+          "resultText": "你避开险路，损失的是时间。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "正面破局",
+          "effects": { "power": 2, "fame": 2 },
+          "successRate": 0.65,
+          "resultText": "你在阴影中反杀，让对方记住了你的名字。",
+          "failureEffects": { "health": -3, "power": -1 },
+          "failureText": "伏击者比传闻中更多，你吃了暗亏。",
+          "riskTag": "risky"
+        }
+      ]
+    },
+    {
+      "id": "ev_prime_repair",
+      "title": "重整旗鼓",
+      "text": "占位：连番奔波后，你终于有了一段喘息时间。",
+      "stage": "prime",
+      "isPlaceholder": true,
+      "weight": 8,
+      "conditions": null,
+      "options": [
+        {
+          "label": "闭关养伤",
+          "effects": { "health": 3, "sanity": 1 },
+          "successRate": 1,
+          "resultText": "你关起门来休整，气血渐渐复原。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "走访旧友",
+          "effects": { "bond": 2, "sanity": 2 },
+          "successRate": 1,
+          "resultText": "旧友的谈笑让你重新有了精神。",
+          "riskTag": "safe"
+        }
+      ]
+    },
+    {
+      "id": "ev_late_legacy",
+      "title": "传承抉择",
+      "text": "占位：有人请你收徒，把一身本事传下去。",
+      "stage": "late",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "亲自传道",
+          "effects": { "bond": 2, "fame": 1, "health": -1 },
+          "successRate": 1,
+          "resultText": "你收下弟子，把自己的路交给了后来人。",
+          "riskTag": "sacrifice"
+        },
+        {
+          "label": "留下心法",
+          "effects": { "fame": 1, "sanity": 1 },
+          "successRate": 1,
+          "resultText": "你不愿再耗心力，只留下几句口诀。",
+          "riskTag": "safe"
+        }
+      ]
+    },
+    {
+      "id": "ev_late_reunion",
+      "title": "旧地重游",
+      "text": "占位：你回到年轻时第一次踏入的那座山门。",
+      "stage": "late",
+      "isPlaceholder": true,
+      "weight": 10,
+      "conditions": null,
+      "options": [
+        {
+          "label": "向山门鞠躬",
+          "effects": { "sanity": 2, "bond": 1 },
+          "successRate": 1,
+          "resultText": "山风穿过石阶，你忽然觉得一切都值得。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "写下生平",
+          "effects": { "fame": 1, "power": 1 },
+          "successRate": 1,
+          "resultText": "你把这一生的起落写成了一卷旧书。",
+          "riskTag": "custom"
+        }
+      ]
+    },
+    {
+      "id": "ev_late_illness",
+      "title": "旧伤复发",
+      "text": "占位：旧伤在夜里复发，大夫摇头叹气。",
+      "stage": "late",
+      "isPlaceholder": true,
+      "weight": 8,
+      "conditions": null,
+      "options": [
+        {
+          "label": "安心静养",
+          "effects": { "health": 2, "sanity": -1 },
+          "successRate": 1,
+          "resultText": "你放下所有事，身体慢慢有了起色。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "强撑出席",
+          "effects": { "fame": 2, "health": -3 },
+          "successRate": 1,
+          "resultText": "你带病露面，众人只看见你的体面。",
+          "riskTag": "sacrifice"
+        }
+      ]
+    },
+    {
+      "id": "ev_late_will",
+      "title": "分配家业",
+      "text": "占位：家人们围坐堂前，等你决定如何分配家业。",
+      "stage": "late",
+      "isPlaceholder": true,
+      "weight": 8,
+      "conditions": null,
+      "options": [
+        {
+          "label": "平分众人",
+          "effects": { "bond": 2, "wealth": -2 },
+          "successRate": 1,
+          "resultText": "众人散去时都记得你的公平。",
+          "riskTag": "sacrifice"
+        },
+        {
+          "label": "留作善款",
+          "effects": { "fame": 2, "wealth": -3 },
+          "successRate": 1,
+          "resultText": "你把这笔家业散给了更需要的人。",
+          "riskTag": "sacrifice"
+        }
+      ]
+    },
+    {
+      "id": "ev_late_farewell",
+      "title": "最后远行",
+      "text": "占位：你决定在还能走动时，去看一眼没看过的远方。",
+      "stage": "late",
+      "isPlaceholder": true,
+      "weight": 8,
+      "conditions": null,
+      "options": [
+        {
+          "label": "独自远行",
+          "effects": { "sanity": 2, "health": -1 },
+          "successRate": 1,
+          "resultText": "你走在长路上，心里前所未有地安静。",
+          "riskTag": "safe"
+        },
+        {
+          "label": "邀友同行",
+          "effects": { "bond": 2, "sanity": 1 },
+          "successRate": 1,
+          "resultText": "旧友陪你走完了最后一段路。",
+          "riskTag": "safe"
+        }
+      ]
+    }
+  ],
+  "endingCards": [
+    {
+      "id": "ending_collapse",
+      "title": "抱憾退场",
+      "text": "占位：命运没有给你更多的机会，你在此处停下。",
+      "tone": "dark",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_balanced",
+      "title": "圆满谢幕",
+      "text": "占位：你走过的路不算平坦，却在每个岔口都留下了分寸。",
+      "tone": "bright",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_power",
+      "title": "一鸣惊人",
+      "text": "占位：你的名字与实力一起，成了后人口中的传说。",
+      "tone": "bright",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_wealth",
+      "title": "富贵闲人",
+      "text": "占位：你守着家业与安稳，把风浪留在了门外。",
+      "tone": "warm",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_fame",
+      "title": "名满天下",
+      "text": "占位：天下人提起你时，都先说那一句好名声。",
+      "tone": "bright",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_bond",
+      "title": "知心故人",
+      "text": "占位：你未必得到天下，却得到了最难得到的人心。",
+      "tone": "warm",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_haunted",
+      "title": "心魔缠身",
+      "text": "占位：你的每一步都踩在悬崖边上，最终被自己的影子追上。",
+      "tone": "dark",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_plain",
+      "title": "平凡一生",
+      "text": "占位：你没有掀起波澜，但日子就这样安安稳稳地过去了。",
+      "tone": "neutral",
+      "isPlaceholder": true
+    }
+  ]
+}

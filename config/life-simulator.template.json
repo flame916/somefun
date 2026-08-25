@@ -1,0 +1,215 @@
+{
+  "id": "life-simulator",
+  "name": "人生模拟器",
+  "version": "0.1.0",
+  "engine": {
+    "mode": "event-choice",
+    "stageSequence": ["youth", "prime", "late"],
+    "eventsPerStage": {
+      "youth": { "min": 4, "max": 5 },
+      "prime": { "min": 5, "max": 6 },
+      "late": { "min": 4, "max": 5 }
+    },
+    "maxEvents": 16,
+    "weightedDraw": true,
+    "noRepeatWithinRun": true,
+    "allowRepeatAcrossRuns": true,
+    "guaranteedEvents": {
+      "youth": ["ev_youth_first_step"]
+    },
+    "age": {
+      "enabled": true,
+      "start": 12,
+      "stepPerStage": {
+        "youth": 0,
+        "prime": 18,
+        "late": 25
+      }
+    }
+  },
+  "attributes": {
+    "wealth": {
+      "label": "财富",
+      "init": 10,
+      "min": 0,
+      "max": 100,
+      "group": "resource",
+      "displayOrder": 1,
+      "color": "#b8860b"
+    },
+    "power": {
+      "label": "修为",
+      "init": 0,
+      "min": 0,
+      "max": 100,
+      "group": "growth",
+      "displayOrder": 2,
+      "color": "#2f6f4f"
+    },
+    "fame": {
+      "label": "声望",
+      "init": 0,
+      "min": 0,
+      "max": 100,
+      "group": "growth",
+      "displayOrder": 3,
+      "color": "#7c5cbf"
+    },
+    "bond": {
+      "label": "羁绊",
+      "init": 0,
+      "min": 0,
+      "max": 100,
+      "group": "growth",
+      "displayOrder": 4,
+      "color": "#c2574f"
+    },
+    "sanity": {
+      "label": "理智",
+      "init": 100,
+      "min": 0,
+      "max": 100,
+      "group": "state",
+      "displayOrder": 5,
+      "color": "#3d6ea5",
+      "zeroMessage": "理智已归零，你再也无法思考。"
+    },
+    "health": {
+      "label": "健康",
+      "init": 100,
+      "min": 0,
+      "max": 100,
+      "group": "state",
+      "displayOrder": 6,
+      "color": "#3a8a6f",
+      "zeroMessage": "健康已归零，你的身体撑不住了。"
+    }
+  },
+  "stages": {
+    "youth": {
+      "label": "第一幕 · 入局",
+      "description": "你刚踏入江湖，一切都在试探你的分寸。",
+      "interlude": "少年岁月转瞬即逝，你已长出第一副筋骨。",
+      "minEvents": 4,
+      "maxEvents": 5
+    },
+    "prime": {
+      "label": "第二幕 · 抉择",
+      "description": "名声、责任与野心同时找上门来。",
+      "interlude": "正当壮年，你的名字开始被人提起。",
+      "minEvents": 5,
+      "maxEvents": 6
+    },
+    "late": {
+      "label": "第三幕 · 收束",
+      "description": "风浪渐渐平息，命运到了清点的时刻。",
+      "interlude": "暮年将至，你开始回望走过的路。",
+      "minEvents": 4,
+      "maxEvents": 5
+    }
+  },
+  "endings": {
+    "ending_collapse": {
+      "label": "抱憾退场",
+      "description": "理智或健康归零时强制触发。",
+      "tone": "dark",
+      "conditions": {
+        "mode": "any",
+        "thresholds": [
+          { "attribute": "sanity", "op": "lte", "value": 0 },
+          { "attribute": "health", "op": "lte", "value": 0 }
+        ]
+      }
+    },
+    "ending_balanced": {
+      "label": "圆满谢幕",
+      "description": "四项成长属性中至少三项达标。",
+      "tone": "bright",
+      "conditions": {
+        "mode": "threshold",
+        "thresholds": [
+          { "attribute": "wealth", "op": "gte", "value": 20 },
+          { "attribute": "power", "op": "gte", "value": 15 },
+          { "attribute": "fame", "op": "gte", "value": 10 },
+          { "attribute": "bond", "op": "gte", "value": 15 }
+        ],
+        "countOfThresholds": 3
+      }
+    },
+    "ending_power": {
+      "label": "一鸣惊人",
+      "description": "修为一路走高。",
+      "tone": "bright",
+      "conditions": {
+        "mode": "any",
+        "thresholds": [
+          { "attribute": "power", "op": "gte", "value": 25 }
+        ]
+      }
+    },
+    "ending_wealth": {
+      "label": "富贵闲人",
+      "description": "财富成为你最厚的底气。",
+      "tone": "warm",
+      "conditions": {
+        "mode": "any",
+        "thresholds": [
+          { "attribute": "wealth", "op": "gte", "value": 25 }
+        ]
+      }
+    },
+    "ending_fame": {
+      "label": "名满天下",
+      "description": "你的名望传遍四方。",
+      "tone": "bright",
+      "conditions": {
+        "mode": "any",
+        "thresholds": [
+          { "attribute": "fame", "op": "gte", "value": 15 }
+        ]
+      }
+    },
+    "ending_bond": {
+      "label": "知心故人",
+      "description": "有人始终记得你的好。",
+      "tone": "warm",
+      "conditions": {
+        "mode": "any",
+        "thresholds": [
+          { "attribute": "bond", "op": "gte", "value": 20 }
+        ]
+      }
+    },
+    "ending_haunted": {
+      "label": "心魔缠身",
+      "description": "理智低于六成，代价开始显形。",
+      "tone": "dark",
+      "conditions": {
+        "mode": "any",
+        "thresholds": [
+          { "attribute": "sanity", "op": "lt", "value": 60 }
+        ]
+      }
+    },
+    "ending_plain": {
+      "label": "平凡一生",
+      "description": "波澜不惊，也算一种结局。",
+      "tone": "neutral",
+      "conditions": {
+        "mode": "fallback"
+      }
+    }
+  },
+  "save": {
+    "enabled": true,
+    "maxHistory": 5,
+    "autoSave": true,
+    "storageKeyPrefix": "novel-game:life-simulator"
+  },
+  "ui": {
+    "title": "人生模拟器",
+    "startButton": "开始一段人生",
+    "restartButton": "再来一局",
+    "showFlags": false
+  }
+}

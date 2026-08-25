@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NovelGameContent",
+  "description": "内容包配置：事件、结局卡、可选的占位标记。事件与结局均支持条件和随机抽取。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "meta", "events", "endingCards"],
+  "properties": {
+    "version": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "source", "isPlaceholder"],
+      "properties": {
+        "title": { "type": "string" },
+        "source": { "type": "string" },
+        "isPlaceholder": { "type": "boolean" },
+        "novelTitle": { "type": "string" },
+        "contentRoute": { "enum": ["A", "B", "C", "none"] }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "text", "stage", "options", "weight"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "text": { "type": "string" },
+          "stage": { "type": "string" },
+          "weight": { "type": "integer", "minimum": 0 },
+          "isPlaceholder": { "type": "boolean", "default": true },
+          "conditions": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "minAge": { "type": "number" },
+              "requiredAttribute": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "min": { "type": "number" },
+                  "max": { "type": "number" }
+                }
+              },
+              "requiredFlag": { "type": "string" },
+              "requiredAnyFlag": { "type": "array", "items": { "type": "string" } },
+              "requiredAllFlags": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "options": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label", "effects"],
+              "properties": {
+                "label": { "type": "string" },
+                "effects": {
+                  "type": "object",
+                  "additionalProperties": { "type": "number" }
+                },
+                "successRate": { "type": "number", "minimum": 0, "maximum": 1 },
+                "resultText": { "type": "string" },
+                "failureEffects": {
+                  "type": "object",
+                  "additionalProperties": { "type": "number" }
+                },
+                "failureText": { "type": "string" },
+                "nextEvent": { "type": ["string", "null"] },
+                "unlockFlag": { "type": ["string", "null"] },
+                "riskTag": { "enum": ["safe", "risky", "sacrifice", "custom"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "endingCards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "text"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "text": { "type": "string" },
+          "tone": { "type": "string" },
+          "isPlaceholder": { "type": "boolean", "default": true }
+        }
+      }
+    }
+  }
+}
