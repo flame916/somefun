@@ -1,9 +1,7 @@
-"use strict";
-
-const { createSession } = require("../engine/event-engine");
-const { judgeEnding } = require("../engine/ending-engine");
-const { createSaveSystem } = require("../engine/save-system");
-const { createAdService } = require("./ad-service");
+import { createSession } from "../engine/event-engine.js";
+import { judgeEnding } from "../engine/ending-engine.js";
+import { createSaveSystem } from "../engine/save-system.js";
+import { createAdService } from "./ad-service.js";
 
 /**
  * 页面控制器：把模板、内容包、引擎、存档、广告预留串起来。
@@ -96,4 +94,4 @@ function createGameController({ template, content, storage, adConfig, analytics 
   };
 }
 
-module.exports = { createGameController };
+export { createGameController };

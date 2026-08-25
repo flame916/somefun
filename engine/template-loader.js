@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * 模板加载器：负责配置与内容包的装配、基础校验、占位标记检查。
  * 引擎不关心内容包来自 JSON 文件、网络还是后续数据库。
@@ -42,4 +40,4 @@ function placeholderReport(content) {
   };
 }
 
-module.exports = { loadTemplate, loadContent, placeholderReport };
+export { loadTemplate, loadContent, placeholderReport };

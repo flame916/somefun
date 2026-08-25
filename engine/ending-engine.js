@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * 结局判定：按模板结局配置顺序，多条件支持 any/all/threshold/flag/fallback。
  * 内容包只提供结局卡片文案，判定规则全部来自模板配置。
@@ -62,4 +60,4 @@ function judgeEnding(config, state, flags) {
   };
 }
 
-module.exports = { judgeEnding, evaluateConditions };
+export { judgeEnding, evaluateConditions };

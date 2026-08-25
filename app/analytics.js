@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * 上报预留：首版只做本地打点，不接入任何远端统计服务。
  */
@@ -20,4 +18,4 @@ function createAnalytics(enabled) {
   };
 }
 
-module.exports = { createAnalytics };
+export { createAnalytics };

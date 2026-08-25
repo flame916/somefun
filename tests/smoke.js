@@ -1,10 +1,9 @@
-"use strict";
+import assert from "node:assert";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const assert = require("node:assert");
-const fs = require("node:fs");
-const path = require("node:path");
-
-const root = path.resolve(__dirname, "..");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const template = JSON.parse(
   fs.readFileSync(path.join(root, "config/life-simulator.template.json"), "utf-8")
 );
@@ -15,11 +14,11 @@ const adConfig = JSON.parse(
   fs.readFileSync(path.join(root, "config/ad-placements.json"), "utf-8")
 );
 
-const { createSession } = require("../engine/event-engine");
-const { judgeEnding } = require("../engine/ending-engine");
-const { createRandom } = require("../engine/random");
-const { createGameController } = require("../app/game-controller");
-const { createAdService } = require("../app/ad-service");
+import { createSession } from "../engine/event-engine.js";
+import { judgeEnding } from "../engine/ending-engine.js";
+import { createRandom } from "../engine/random.js";
+import { createGameController } from "../app/game-controller.js";
+import { createAdService } from "../app/ad-service.js";
 
 function bestOptionIndex(event, attribute) {
   let best = 0;

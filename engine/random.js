@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * 随机数统一入口：默认真随机；测试与回放可注入固定种子。
  */
@@ -20,4 +18,4 @@ function createRandom(seed) {
   return mulberry32(seed);
 }
 
-module.exports = { createRandom };
+export { createRandom };

@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * 数值系统：按模板配置初始化、应用增量、钳制上下限。
  * 引擎不感知具体属性名，属性全部来自模板配置。
@@ -51,4 +49,4 @@ function applyEffects(state, attributeConfig, effects, source = "engine") {
   return { applied, warnings };
 }
 
-module.exports = { createAttributes, applyEffects, clamp };
+export { createAttributes, applyEffects, clamp };

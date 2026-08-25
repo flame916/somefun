@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * IAA 广告预留服务：只做配置解析、频控与失败兜底，不接入真实广告 SDK。
  * 后续接入微信广告时，只需在 ADAPTERS.wx 中补 createInterstitialAd 等实现。
@@ -83,4 +81,4 @@ function createAdService(config) {
   return new AdService(config);
 }
 
-module.exports = { createAdService, AdService };
+export { createAdService, AdService };

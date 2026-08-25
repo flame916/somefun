@@ -1,6 +1,4 @@
-"use strict";
-
-const { createAttributes, applyEffects } = require("./attributes");
+import { createAttributes, applyEffects } from "./attributes.js";
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -268,4 +266,4 @@ function createSession(config, content, seedState, restoreData, randomFn) {
   };
 }
 
-module.exports = { createSession, weightedPick, matchesCondition };
+export { createSession, weightedPick, matchesCondition };

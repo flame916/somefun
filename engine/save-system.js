@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * 存档系统：浏览器 localStorage 适配；无 storage 时退化为内存存档。
  */
@@ -79,4 +77,4 @@ function createSaveSystem(config, storage) {
   return { readHistory, saveResult, saveActive, loadActive, clearActive };
 }
 
-module.exports = { createSaveSystem, createStorage };
+export { createSaveSystem, createStorage };
