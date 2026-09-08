@@ -1,7 +1,7 @@
 {
   "id": "life-simulator",
   "name": "人生模拟器",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "engine": {
     "mode": "event-choice",
     "stageSequence": ["youth", "prime", "late"],
@@ -83,6 +83,35 @@
       "displayOrder": 6,
       "color": "#3a8a6f",
       "zeroMessage": "健康已归零，你的身体撑不住了。"
+    }
+  },
+  "score": {
+    "enabled": true,
+    "label": "精彩度",
+    "range": {
+      "min": 0,
+      "max": 100
+    },
+    "base": 40,
+    "delta": {
+      "risk": 8,
+      "success": 4,
+      "sacrifice": 3,
+      "custom": 2,
+      "safe": 1
+    },
+    "endingBonus": {
+      "bright": 20,
+      "warm": 12,
+      "dark": 5,
+      "neutral": 3
+    },
+    "reincarnation": {
+      "enabled": true,
+      "label": "来世传承",
+      "inheritAttrs": ["wealth", "power", "fame", "bond"],
+      "cap": 12,
+      "rate": 0.3
     }
   },
   "stages": {

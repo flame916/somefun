@@ -96,7 +96,35 @@ function testAdService() {
   assert.ok(shown.reason, "ad result missing reason");
 }
 
+function testScoreAndInheritance() {
+  const game = createGameController({ template, content, adConfig });
+  let result = game.start();
+  let guard = 0;
+  while (!result.finished) {
+    result = game.choose(0);
+    assert.ok(!result.error, "score run failed");
+    guard += 1;
+    if (guard > 50) break;
+  }
+  const run = result.runResult;
+  assert.ok(run, "runResult missing");
+  assert.ok(
+    typeof run.score === "number" && run.score >= 0 && run.score <= 100,
+    `score out of range: ${run.score}`
+  );
+  assert.ok(run.inheritance && run.inheritance.attrs, "inheritance missing");
+  const started = game.start();
+  assert.ok(started.inherited, "inheritance seed missing on next run");
+  for (const [key, bonus] of Object.entries(run.inheritance.attrs)) {
+    assert.ok(
+      started.attributes[key] >= template.attributes[key].init + bonus,
+      `${key} inheritance not applied`
+    );
+  }
+}
+
 testEngine();
 testController();
 testAdService();
+testScoreAndInheritance();
 console.log("smoke ok: engine, controller, ad placeholder");

@@ -7,6 +7,14 @@
   "required": ["version", "meta", "events", "endingCards"],
   "properties": {
     "version": { "type": "string" },
+    "soulTest": {
+      "type": "object",
+      "description": "2026-09-07 定版预留：魂性问心题库与第一世角色推荐映射（5-8 题）。旧内容包可不带，引擎按单世通用运行。"
+    },
+    "characterBiographies": {
+      "type": "object",
+      "description": "2026-09-07 定版预留：首批 3-5 个小角色人物志（每角色 6-10 个关键切片），独立于主角十世。旧内容包可不带。"
+    },
     "meta": {
       "type": "object",
       "additionalProperties": false,
@@ -52,6 +60,24 @@
               "requiredAllFlags": { "type": "array", "items": { "type": "string" } }
             }
           },
+          "powerSource": {
+            "type": "string",
+            "description": "2026-09-07 定版预留：本世力量来源（system/师承/血脉/传承/奇遇/遗物/天命等）。system 只绑定第一世；旧事件不带则按单世通用。"
+          },
+          "requiresPowerSource": {
+            "type": ["string", "null"],
+            "description": "2026-09-07 定版预留：事件要求的 powerSource，非系统世按力量来源过滤；大劫事件不得因此被过滤为可选。"
+          },
+          "fateChain": { "type": "string", "description": "2026-09-07 定版预留：所属命运链 id（守护/复仇/证道/传承等）。" },
+          "fateInstance": { "type": "string", "description": "2026-09-07 定版预留：命运链在当前纪元的实例 id；跨世同一链文本不同、逻辑一致。" },
+          "fateChainStage": { "type": "string", "description": "2026-09-07 定版预留：孕育/浮现/激化/转机/终章/回响等阶段，与 fateChain 配套。" },
+          "memoryFragment": { "type": "string", "description": "2026-09-07 定版预留：觉醒时揭示的记忆碎片内容/来源。觉醒前不暴露完整前世。" },
+          "awakenTrigger": { "type": "string", "description": "2026-09-07 定版预留：碎片觉醒触发条件；平时只以梦/既视感/直觉呈现。" },
+          "unfinishedBusiness": {
+            "type": "object",
+            "description": "2026-09-07 定版预留：本事件涉及的可承接未竟之事（情债/仇债/恩债等）。因果稀疏化，活跃上限 3-5 条，玩家可接/放。"
+          },
+          "grudgeAnchor": { "type": "string", "description": "2026-09-07 定版预留：血仇/执念锚点 id，指向 fateChain 跨世承接。" },
           "options": {
             "type": "array",
             "minItems": 1,
@@ -74,7 +100,24 @@
                 "failureText": { "type": "string" },
                 "nextEvent": { "type": ["string", "null"] },
                 "unlockFlag": { "type": ["string", "null"] },
-                "riskTag": { "enum": ["safe", "risky", "sacrifice", "custom"] }
+                "riskTag": { "enum": ["safe", "risky", "sacrifice", "custom"] },
+                "style": {
+                  "type": "string",
+                  "description": "2026-09-07 定版预留：本选项行事风格 aggressive/stealth/diplomatic/sacrifice/custom 等，与魂性问心结果同语言。"
+                },
+                "counterStyle": { "type": "string", "description": "2026-09-07 定版预留：克制本选项的风格，用于互克判定。" },
+                "beats": { "type": "integer", "minimum": 1, "description": "2026-09-07 定版预留：本选项的次数/节拍权重，用于互克与倾向玩法。" },
+                "losesTo": { "type": "string", "description": "2026-09-07 定版预留：被击败/克制的目标（另一选项 id 或 style）。" },
+                "successRateBase": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "2026-09-07 定版预留：互克判定前基础成功率；运行时仍使用 successRate，生效前需 B 复跑校验。"
+                },
+                "successRateShift": {
+                  "type": "number",
+                  "description": "2026-09-07 定版预留：互克判定后的成功率偏移；运行时仍使用 successRate。"
+                }
               }
             }
           }

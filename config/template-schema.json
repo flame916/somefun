@@ -9,6 +9,14 @@
     "id": { "type": "string" },
     "name": { "type": "string" },
     "version": { "type": "string" },
+    "soulTest": {
+      "type": "object",
+      "description": "2026-09-07 定版预留：魂性问心题库与第一世角色推荐映射配置；旧模板可不带，第一版仍可直接开始单世。"
+    },
+    "cycle": {
+      "type": "object",
+      "description": "2026-09-07 定版预留：十世周期配置（livesPerCycle、第 10 世大结算、第 11 世起最老一世入史等）；旧模板不带时按单世运行。"
+    },
     "engine": {
       "type": "object",
       "additionalProperties": false,
@@ -41,6 +49,57 @@
           "properties": {
             "enabled": { "type": "boolean" },
             "template": { "type": "string" }
+          }
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "description": "精彩度评分与来世传承配置。",
+      "additionalProperties": false,
+      "required": ["enabled", "label", "range", "delta", "endingBonus"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "label": { "type": "string" },
+        "range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "max"],
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          }
+        },
+        "base": { "type": "number" },
+        "delta": {
+          "type": "object",
+          "description": "风险、成功、取舍、自定义、稳妥选项的评分增量。",
+          "additionalProperties": { "type": "number" }
+        },
+        "soulPoints": {
+          "type": "object",
+          "description": "2026-09-07 定版预留：轮回点数换算与上限（每 10 分精彩度 ≈ 1 点等）；为同一系统轮回结算功能，不是第二系统。"
+        },
+        "soulAssets": {
+          "type": "object",
+          "description": "2026-09-07 定版预留：可加点灵魂资产（资质/悟性/血脉）的档位与下一世生效规则；为同一系统轮回结算功能。"
+        },
+        "endingBonus": {
+          "type": "object",
+          "description": "按结局 tone 附加的评分。",
+          "additionalProperties": { "type": "number" }
+        },
+        "reincarnation": {
+          "type": "object",
+          "description": "来世传承：把上局部分属性按比例带给下一局。",
+          "additionalProperties": false,
+          "required": ["enabled", "label", "inheritAttrs", "cap", "rate"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "label": { "type": "string" },
+            "inheritAttrs": { "type": "array", "items": { "type": "string" } },
+            "cap": { "type": "number" },
+            "rate": { "type": "number" }
           }
         }
       }

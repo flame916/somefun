@@ -60,6 +60,13 @@ function renderHome() {
   const title = el("h1", "home-title", "人生模拟器");
   const subtitle = el("p", "home-subtitle", "三幕人生 · 十四次选择 · 八种结局");
   const route = el("p", "home-route", "当前为占位内容包，未使用小说原文");
+
+  const history = game.history();
+  if (history.length && history[0].inheritance && Object.keys(history[0].inheritance.attrs || {}).length) {
+    const inheritNote = el("p", "inherit-note", "来世传承已就绪：上一世的精彩将化作下一世的开局优势。");
+    home.append(inheritNote);
+  }
+
   const start = el("button", "primary-btn", template.ui.startButton || "开始一段人生");
   start.addEventListener("click", () => {
     const snapshot = game.start();
@@ -67,7 +74,6 @@ function renderHome() {
   });
   home.append(title, subtitle, route, start);
 
-  const history = game.history();
   if (history.length) {
     const historyBox = el("div", "history-box");
     historyBox.append(el("h2", "section-title", "最近人生"));
@@ -83,6 +89,9 @@ function renderHome() {
         el("span", "history-ending", run.endingTitle || "未知结局"),
         el("span", "history-time", time)
       );
+      if (run.score != null) {
+        row.append(el("span", "history-score", `精彩度 ${run.score}`));
+      }
       historyBox.append(row);
     }
     home.append(historyBox);
@@ -94,6 +103,11 @@ function renderEvent(snapshot) {
   const current = game.current();
   const event = current.event;
   const screen = el("section", "event-screen");
+
+  if (snapshot.inherited && Object.keys(snapshot.inherited).length) {
+    const inherit = el("p", "inherit-banner", "来世传承：本局继承上一世的属性加成。");
+    screen.append(inherit);
+  }
 
   const header = el("header", "game-header");
   const stage = el("div", "stage-line");
@@ -207,7 +221,7 @@ function renderEnding(ending, snapshot, runResult) {
   screen.append(review);
 
   const actions = el("div", "ending-actions");
-  const again = el("button", "primary-btn", template.ui.restartButton || "再来一局");
+  const again = el("button", "primary-btn", "再活一世");
   again.addEventListener("click", () => {
     const next = game.start();
     renderEvent(next);
@@ -218,6 +232,31 @@ function renderEnding(ending, snapshot, runResult) {
 
   const adNote = el("p", "ad-note", "广告位预留：本局已按配置记录广告触发点，当前未展示广告。");
   screen.append(actions, adNote);
+
+  if (runResult && runResult.score != null) {
+    const scorePanel = el("div", "panel score-panel");
+    scorePanel.append(el("h2", "section-title", "精彩度评分"));
+    const scoreLine = el("div", "score-line");
+    const scoreValue = el("span", "score-value", String(runResult.score));
+    const scoreHint = el("span", "score-hint", "评分越高，下一世继承的开局属性越多。");
+    scoreLine.append(scoreValue, scoreHint);
+    scorePanel.append(scoreLine);
+    if (runResult.inheritance?.attrs && Object.keys(runResult.inheritance.attrs).length) {
+      const inheritGrid = el("div", "inherit-grid");
+      for (const [key, bonus] of Object.entries(runResult.inheritance.attrs)) {
+        const config = template.attributes[key];
+        if (!config) continue;
+        const row = el("div", "inherit-row");
+        row.append(
+          el("span", "inherit-label", `${config.label} +${bonus}`),
+          el("span", "inherit-note", "带入下一世")
+        );
+        inheritGrid.append(row);
+      }
+      scorePanel.append(inheritGrid);
+    }
+    screen.insertBefore(scorePanel, actions);
+  }
 
   if (runResult && runResult.endingId) {
     const deltas = {};

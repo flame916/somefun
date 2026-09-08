@@ -87,6 +87,23 @@ body {
   font-size: 12px;
 }
 
+.inherit-note,
+.inherit-banner {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  border: 1px solid #cbb78f;
+  border-radius: var(--radius);
+  background: #fff7e8;
+  color: #7a5a22;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.inherit-banner {
+  text-align: left;
+}
+
 .primary-btn,
 .ghost-btn,
 .option-btn {
@@ -161,6 +178,11 @@ body {
 
 .history-time {
   color: var(--muted);
+}
+
+.history-score {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .game-header {
@@ -429,6 +451,62 @@ body {
 .delta-neg {
   color: var(--danger);
   font-weight: 600;
+}
+
+.score-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.score-line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.score-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-hint {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.inherit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px 14px;
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+}
+
+.inherit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.inherit-label {
+  font-weight: 600;
+}
+
+.inherit-row .inherit-note {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .toast {

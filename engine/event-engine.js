@@ -50,16 +50,47 @@ function matchesCondition(condition, state, flags) {
 function resolveOptionResult(option, roll) {
   const rate = option.successRate == null ? 1 : option.successRate;
   const success = roll <= rate;
+  const base = option.successRateBase;
+  let adjustedRate = rate;
+  if (base != null) {
+    const shift = option.successRateShift ?? 0;
+    const counter = eventCounterStyleFor(option);
+    adjustedRate = base + (counter === "win" ? shift : counter === "lose" ? -shift : 0);
+    adjustedRate = Math.max(0.2, Math.min(0.9, adjustedRate));
+  }
+  const actualRate = base != null ? adjustedRate : rate;
+  const successByActual = roll <= actualRate;
   return {
-    success,
-    effects: success
+    success: base != null ? successByActual : success,
+    effects: (base != null ? successByActual : success)
       ? option.effects || {}
       : option.failureEffects || option.effects || {},
-    text: success
+    text: (base != null ? successByActual : success)
       ? option.resultText || ""
       : option.failureText || option.resultText || "",
-    riskTag: option.riskTag || (rate < 1 ? "risky" : "safe")
+    riskTag: option.riskTag || (actualRate < 1 ? "risky" : "safe")
   };
+}
+
+function eventCounterStyleFor(option) {
+  const style = option.style;
+  if (!style) return null;
+  const beats = option.beats || [];
+  const loses = option.losesTo || [];
+  if (beats.includes(style) || loses.includes(style)) {
+    return beats.includes(style) ? "win" : "lose";
+  }
+  return null;
+}
+
+function resolveBeats(option) {
+  const style = option.style;
+  if (!style) return null;
+  const beats = option.beats || [];
+  const loses = option.losesTo || [];
+  if (beats.includes(style)) return "win";
+  if (loses.includes(style)) return "lose";
+  return null;
 }
 
 function createSession(config, content, seedState, restoreData, randomFn) {
