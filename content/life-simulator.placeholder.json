@@ -7,6 +7,13 @@
     "contentRoute": "C",
     "note": "用于验证 R3 抉择循环、时间账本与结果反馈链；正式文本由 A 内容包替换。"
   },
+  "activePractice": {
+    "windowId": "preparation_window_01",
+    "defaultDaoId": "DAO01",
+    "startMedicine": 0,
+    "maxActionSlots": 3,
+    "breakthroughTimingId": "breakthrough_timing_01"
+  },
   "optionFeedback": {
     "act1_awaken_night": [
       { "resultText": "你先把喘息的人拖到柴门后，苏小柔认出你是在救人。", "failureText": "你护住伤者却被火把逼退，村人记住了你的选择，伤势也因此拖慢。", "bridgeText": "有人因你活下来，黎明时愿意替你指认安全的出村路。", "unlockFlag": "act1_saved_witness" },

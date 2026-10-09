@@ -56,6 +56,18 @@
         }
       }
     },
+    "activePractice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["windowId", "defaultDaoId", "maxActionSlots", "breakthroughTimingId"],
+      "properties": {
+        "windowId": { "const": "preparation_window_01" },
+        "defaultDaoId": { "enum": ["DAO01", "DAO02"] },
+        "startMedicine": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "maxActionSlots": { "const": 3 },
+        "breakthroughTimingId": { "const": "breakthrough_timing_01" }
+      }
+    },
     "optionFeedback": {
       "type": "object",
       "description": "R3.1 选项级即时回执与稳定状态 ID；按事件 ID 与选项索引对齐，由运行时合并到 options。",

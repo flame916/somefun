@@ -1,4 +1,4 @@
-import { createGameController } from "./game-controller.js?v=20260930-r31-feedback2";
+import { createGameController } from "./game-controller.js?v=20261009-active-practice";
 import { assetUrlFromManifest, loadAssetManifest } from "./asset-paths.js";
 import {
   FOUR_DIMENSIONS,
@@ -10,7 +10,7 @@ import {
 
 const [template, content, adConfig, assetBundle] = await Promise.all([
   fetch("./config/life-simulator.template.json").then((response) => response.json()),
-  fetch("./content/life-simulator.placeholder.json?v=20260930-r31-feedback2").then((response) => response.json()),
+  fetch("./content/life-simulator.placeholder.json?v=20261009-active-practice").then((response) => response.json()),
   fetch("./config/ad-placements.json").then((response) => response.json()),
   loadAssetManifest(fetch, window.location.href)
 ]);
@@ -309,6 +309,112 @@ function optionActionLine(option, event) {
   return durationLabel(years);
 }
 
+const GROWTH_DAO_LABELS = Object.freeze({ DAO01: "五行镇岳诀", DAO02: "星芒九转丹术" });
+const GROWTH_DAO_PURPOSES = Object.freeze({ DAO01: "镇压 / 护体", DAO02: "炼药 / 救治" });
+
+function growthHealthLabel(health) {
+  if (Number(health) >= 60) return "状态稳定";
+  if (Number(health) >= 30) return "已有伤势";
+  return "近乎强弩之末";
+}
+
+function growthHeader(snapshot) {
+  const growth = snapshot?.growthState || {};
+  const card = panel("growth-header", "frame_card_700x260");
+  card.append(el("p", "eyebrow", "当前目标"), el("h2", "panel-title", "补足修为、伤势或药材，再面对村口危机"));
+  card.append(el("p", "screen-copy", `修为 ${snapshot?.attributes?.power ?? 0} · 健康 ${snapshot?.attributes?.health ?? 0} · 药材 ${growth.medicine ?? 0}`));
+  card.append(el("span", `ledger-state ${growth.windowPressure === "late_window" ? "warning" : "ok"}`, `${growthHealthLabel(snapshot?.attributes?.health)} · ${growth.windowPressure === "late_window" ? "准备过久，机会已变冷" : "准备窗口进行中"}`));
+  return card;
+}
+
+function growthDaoCard(snapshot) {
+  const growth = snapshot?.growthState || {};
+  const card = panel("growth-dao-card", "frame_dao_card_700x320");
+  card.append(el("h2", "panel-title", `${GROWTH_DAO_LABELS[growth.daoId] || growth.daoId || "未选道业"} · 熟练度 ${growth.daoMastery ?? 0}`));
+  card.append(el("p", "screen-copy", `用途：${GROWTH_DAO_PURPOSES[growth.daoId] || "当前窗口可用道业"}`));
+  const choices = el("div", "growth-dao-choices");
+  for (const daoId of ["DAO01", "DAO02"]) {
+    const choose = button(`${daoId} · ${GROWTH_DAO_LABELS[daoId]}`, "btn_choice_620x120", `choice-row ${growth.daoId === daoId ? "active-growth-dao" : ""}`);
+    choose.disabled = growth.usedActions?.length > 0;
+    choose.addEventListener("click", () => {
+      const result = game.selectGrowthDao(daoId);
+      if (result.error) showToast("行动开始后不能更换道业");
+      else renderPreparation(result.snapshot);
+    });
+    choices.append(choose);
+  }
+  card.append(choices);
+  return card;
+}
+
+function renderPreparation(snapshot) {
+  const growth = snapshot?.growthState || {};
+  const screenNode = screen("event_later", "bg_event_later_750x1624");
+  const wrap = el("div", "content-column");
+  wrap.append(el("p", "eyebrow", "preparation_window_01"), el("h1", "screen-title", "有限准备窗口"), growthHeader(snapshot), growthDaoCard(snapshot));
+  const windowCard = panel("preparation-window", "frame_card_700x260");
+  windowCard.append(el("h2", "panel-title", `剩余行动 ${growth.actionSlotsRemaining ?? 0}/3`), el("p", "screen-copy", "每项行动本窗口只能做一次；点击行动后先看结果，再回到这里。"));
+  const actions = el("div", "growth-actions");
+  const specs = [
+    ["action_practice_dao", "研修当前道业", "12 个月 · 熟练度 +1 · 修为方向 · 健康代价"],
+    ["action_recover_injury", "处理伤势", `有药材 6 个月 / 无药材 12 个月 · 健康方向`],
+    ["action_outing_find_medicine", "有目的外出寻药", "8 个月 · 最多获得 1 份药材 · 承担健康风险"]
+  ];
+  for (const [actionId, label, detail] of specs) {
+    const action = button(label, "btn_choice_620x168", "choice-row growth-action");
+    const used = growth.usedActions?.includes(actionId);
+    action.disabled = used || growth.actionSlotsRemaining <= 0 || (actionId === "action_practice_dao" && Number(snapshot?.attributes?.health || 0) < 30);
+    action.append(el("span", "action-line", used ? `${detail} · 已用` : detail));
+    action.addEventListener("click", () => {
+      const result = game.chooseGrowthAction(actionId);
+      if (result.error) { showToast(result.error === "health_too_low_to_practice" ? "伤势过重，无法研修" : "这项行动现在不能执行"); return; }
+      renderSettledResult(result, () => game.continueOutcome());
+    });
+    actions.append(action);
+  }
+  windowCard.append(actions);
+  if (growth.usedActions?.length) windowCard.append(el("p", "used-actions", `已用行动：${growth.usedActions.join("、")}`));
+  wrap.append(windowCard);
+  const finish = linkButton(growth.actionSlotsRemaining > 0 ? "结束准备，进入突破时机" : "进入突破时机", () => routeTransition(game.continuePreparation()), "primary-btn");
+  wrap.append(finish, el("p", "note-row", "突破不额外推进时间；超过 24 个月会留下 late_window 机会代价。"));
+  screenNode.append(wrap);
+  view.replaceChildren(screenNode);
+  window.scrollTo({ top: 0 });
+}
+
+function renderBreakthrough(snapshot) {
+  const growth = snapshot?.growthState || {};
+  const power = Number(snapshot?.attributes?.power || 0);
+  const health = Number(snapshot?.attributes?.health || 0);
+  const eligible = power >= 28 && health >= 35;
+  const screenNode = screen("d20_result", "bg_d20_750x1624");
+  const wrap = el("div", "content-column");
+  wrap.append(el("p", "eyebrow", "breakthrough_timing_01"), el("h1", "screen-title", "突破时机"));
+  const card = panel("breakthrough-card", "frame_card_700x260");
+  card.append(el("p", "screen-copy", `${GROWTH_DAO_LABELS[growth.daoId] || growth.daoId} · 修为 ${power} · 健康 ${health} · 药材 ${growth.medicine ?? 0}`));
+  card.append(el("p", "screen-copy", eligible ? "修为与状态条件已满足，尝试会承担失败代价。" : "条件不足，只能暂不突破并保留当前状态。"));
+  const actions = el("div", "growth-actions");
+  const attempt = button("尝试突破", "btn_choice_620x168", "choice-row growth-action");
+  attempt.disabled = !eligible;
+  attempt.addEventListener("click", () => {
+    const result = game.resolveBreakthrough("attempt");
+    if (result.error) { showToast("当前条件不足，无法突破"); return; }
+    renderSettledResult(result, () => routeTransition(game.advance()));
+  });
+  const skip = button("暂不突破，进入共用危机", "btn_seal_ghost_640x144", "ghost-btn");
+  skip.addEventListener("click", () => {
+    const result = game.resolveBreakthrough("skip");
+    if (result.error) { showToast("突破时机已结算"); return; }
+    renderSettledResult(result, () => routeTransition(game.advance()));
+  });
+  actions.append(attempt, skip);
+  card.append(actions);
+  wrap.append(card, el("p", "note-row", "突破成功、失败或跳过都只结算一次；下一站是 act2_first_blood。"));
+  screenNode.append(wrap);
+  view.replaceChildren(screenNode);
+  window.scrollTo({ top: 0 });
+}
+
 function renderEvent(snapshot, phase = "event_guide") {
   currentEventSnapshot = snapshot;
   const current = game.current();
@@ -325,6 +431,11 @@ function renderEvent(snapshot, phase = "event_guide") {
   const eventCard = panel("event-card", "frame_card_700x260");
   eventCard.append(el("p", "eyebrow", `事件 ${snapshot.totalEvents}/${snapshot.maxEvents}`), el("h1", "event-title", current.event.title), el("p", "event-text", current.event.text));
   wrap.append(eventCard);
+  if (current.event.id === "act2_first_blood" && snapshot.growthState) {
+    const crisis = panel("crisis-state", "frame_card_700x260");
+    crisis.append(el("h2", "panel-title", "共用危机状态"), el("p", "screen-copy", `${GROWTH_DAO_LABELS[snapshot.growthState.daoId] || snapshot.growthState.daoId} · 突破：${snapshot.growthState.breakthroughState} · 压力：${snapshot.growthState.windowPressure}`));
+    wrap.append(crisis);
+  }
   wrap.append(el("p", "choice-heading", "请选择"));
   const choices = el("div", "choice-list");
   choices.id = "event-choices";
@@ -437,6 +548,9 @@ function renderOutcomeResult(result, continuationFactory) {
     const row = el("div", "delta-row");
     row.append(image(attrIcon(key), "delta-icon", template.attributes[key].label), el("span", "delta-name", template.attributes[key].label), el("strong", value >= 0 ? "delta-pos" : "delta-neg", formatDelta(value)), el("span", "delta-current", String(snapshot?.attributes?.[key] ?? "")));
     deltaCard.append(row);
+  }
+  for (const [key, value] of Object.entries(record.growthChanges || {}).filter(([, value]) => value != null)) {
+    deltaCard.append(el("p", "growth-change", `${key === "medicine" ? "药材" : key === "daoMastery" ? "道业熟练度" : key}：${value}`));
   }
   wrap.append(deltaCard);
   wrap.append(attributePanel(snapshot?.attributes));
@@ -910,6 +1024,8 @@ function routeSnapshot(snapshot) {
 
 function routeTransition(transition) {
   if (!transition || transition.error) { renderHome(); return; }
+  if (transition.kind === "preparation") { renderPreparation(transition.snapshot); return; }
+  if (transition.kind === "breakthrough") { renderBreakthrough(transition.snapshot); return; }
   if (transition.kind === "outcome" || transition.kind === "resolved") { renderContinuation(transition); return; }
   if (transition.kind === "event") { routeSnapshot(transition.snapshot); return; }
   if (transition.kind === "interlude") { renderInterlude(transition.snapshot, () => routeTransition(game.advance())); return; }

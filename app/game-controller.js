@@ -61,6 +61,7 @@ function createGameController({ template, content, storage, adConfig, analytics 
       memoryFragments: Array.isArray(saved.memoryFragments) ? saved.memoryFragments : [],
       unfinishedBusiness: Array.isArray(saved.unfinishedBusiness) ? saved.unfinishedBusiness : [],
       personLedger: Array.isArray(saved.personLedger) ? saved.personLedger : [],
+      growthState: saved.growthState || state.growthState || null,
       fourDims,
       checkPenalty: saved.checkPenalty || state.checkPenalty || {},
       karmaDeferred: saved.karmaDeferred || state.karmaDeferred || null,
@@ -298,6 +299,34 @@ function createGameController({ template, content, storage, adConfig, analytics 
       return result;
     },
 
+    chooseGrowthAction(actionId, roll) {
+      if (!session) return { error: "no_session" };
+      const result = session.chooseGrowthAction(actionId, roll);
+      if (result.snapshot) rememberActive(result.snapshot);
+      return result;
+    },
+
+    continuePreparation() {
+      if (!session) return { error: "no_session" };
+      const result = session.finishPreparation();
+      if (result.snapshot) rememberActive(result.snapshot);
+      return result;
+    },
+
+    resolveBreakthrough(choice, roll) {
+      if (!session) return { error: "no_session" };
+      const result = session.resolveBreakthrough(choice, roll);
+      if (result.snapshot) rememberActive(result.snapshot);
+      return result;
+    },
+
+    selectGrowthDao(daoId) {
+      if (!session) return { error: "no_session" };
+      const result = session.selectGrowthDao(daoId);
+      if (result.snapshot) rememberActive(result.snapshot);
+      return result;
+    },
+
     practiceDao(daoId, mode, roll) {
       if (!session) return { error: "no_session" };
       const result = session.practiceDao(daoId, mode, roll);
@@ -305,7 +334,7 @@ function createGameController({ template, content, storage, adConfig, analytics 
       return result;
     },
 
-    current() { return session ? { event: session.getCurrentEvent(), snapshot: session.snapshot(), ledger: session.getLedger(), pendingWindows: session.getPendingWindows(), learningRecords: session.getLearningRecords() } : null; },
+    current() { return session ? { event: session.getCurrentEvent(), snapshot: session.snapshot(), ledger: session.getLedger(), pendingWindows: session.getPendingWindows(), learningRecords: session.getLearningRecords(), growthState: session.snapshot().growthState } : null; },
     history() { return saveSystem.readHistory(); },
     lastResult() { return lastResult; },
     saveCurrentSnapshot() {

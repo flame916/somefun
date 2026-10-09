@@ -8,7 +8,11 @@ const REALMS = Object.freeze([
   { key: "nascent", label: "元婴", lifespan: 700, breakthroughTarget: 19 }
 ]);
 const D20_DIFFICULTIES = Object.freeze({ easy: 7, normal: 10, hard: 13, veryHard: 16, extreme: 19 });
-const ACTIVE_PHASES = Object.freeze(["event", "outcome", "fate_window", "karma_knock", "interlude", "cliff", "finished"]);
+const ACTIVE_PHASES = Object.freeze(["event", "outcome", "preparation", "breakthrough", "fate_window", "karma_knock", "interlude", "cliff", "finished"]);
+const GROWTH_ACTIONS = Object.freeze(["action_practice_dao", "action_recover_injury", "action_outing_find_medicine"]);
+const GROWTH_DAOS = Object.freeze(["DAO01", "DAO02"]);
+const GROWTH_WINDOW_ID = "preparation_window_01";
+const BREAKTHROUGH_ID = "breakthrough_timing_01";
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -143,6 +147,26 @@ function rollD20(random) {
   return 1 + Math.floor(random() * 20);
 }
 
+function normalizeGrowthState(value, defaults = {}) {
+  const source = value && typeof value === "object" ? value : {};
+  const daoId = GROWTH_DAOS.includes(source.daoId) ? source.daoId : (defaults.daoId || "DAO01");
+  const usedActions = asArray(source.usedActions).filter((id, index, list) => GROWTH_ACTIONS.includes(id) && list.indexOf(id) === index).slice(0, 3);
+  const breakthroughState = ["available", "succeeded", "failed", "skipped"].includes(source.breakthroughState)
+    ? source.breakthroughState
+    : "available";
+  return {
+    daoId,
+    daoMastery: clamp(Math.round(Number(source.daoMastery ?? defaults.daoMastery ?? 0)), 0, 3),
+    medicine: clamp(Math.round(Number(source.medicine ?? defaults.medicine ?? 0)), 0, 1),
+    actionSlotsRemaining: clamp(Math.round(Number(source.actionSlotsRemaining ?? 3 - usedActions.length)), 0, 3),
+    usedActions,
+    breakthroughState,
+    breakthroughTimingId: source.breakthroughTimingId || BREAKTHROUGH_ID,
+    crisisApproach: source.crisisApproach || null,
+    windowPressure: source.windowPressure === "late_window" ? "late_window" : "on_time"
+  };
+}
+
 function resolveCheck(option, state, random, manualRoll) {
   const check = option.d20 || option.check || null;
   if (!check) return null;
@@ -226,6 +250,8 @@ function createSession(config, content, seedState, restoreData, randomFn) {
     event.options = (event.options || []).map((option, index) => ({ ...option, ...(feedback[index] || {}) }));
   }
   const engine = template.engine || {};
+  const activePractice = pack.activePractice && typeof pack.activePractice === "object" ? pack.activePractice : null;
+  const hasActivePractice = Boolean(activePractice && activePractice.windowId === GROWTH_WINDOW_ID);
   const random = typeof randomFn === "function" ? randomFn : Math.random;
   const stageSequence = asArray(engine.stageSequence);
   const counts = engine.eventsPerStage || {};
@@ -257,6 +283,12 @@ function createSession(config, content, seedState, restoreData, randomFn) {
   state.karmaDeferred = clone(restoreData?.karmaDeferred || seed.karmaDeferred || null);
   state.blackMark = restoreData?.blackMark === true || seed.blackMark === true;
   state.lifespanRescueUsed = restoreData?.lifespanRescueUsed === true || seed.lifespanRescueUsed === true;
+  if (hasActivePractice) {
+    state.growthState = normalizeGrowthState(
+      restoreData?.growthState || seed.growthState || state.growthState,
+      { daoId: activePractice.defaultDaoId, medicine: activePractice.startMedicine }
+    );
+  }
   const flags = new Set(restoreData?.flags || seed.flags || []);
   const history = clone(restoreData?.history || []);
   const timeline = clone(restoreData?.timeline || seed.timeline || []);
@@ -291,6 +323,15 @@ function createSession(config, content, seedState, restoreData, randomFn) {
   function drawEvent() {
     const stageId = currentStage();
     if (!stageId) return null;
+    if (hasActivePractice && stageId === "act2") {
+      const herb = (pack.events || []).find((event) => event.id === "act2_herb_shelter");
+      if (herb && !usedEventIds.has(herb.id) && matchesEvent(herb, state, flags)) {
+        usedEventIds.add(herb.id);
+        eventIndexInStage += 1;
+        return herb;
+      }
+      if (usedEventIds.has("act2_herb_shelter") && !usedEventIds.has("act2_first_blood")) return null;
+    }
     const guaranteed = engine.guaranteedEvents?.[stageId] || [];
     const guaranteedEvent = guaranteed.map((id) => (pack.events || []).find((event) => event.id === id)).find((event) => event && !usedEventIds.has(event.id) && matchesEvent(event, state, flags));
     if (guaranteedEvent) {
@@ -347,6 +388,7 @@ function createSession(config, content, seedState, restoreData, randomFn) {
       livesInCycle: state.livesInCycle,
       learningRecords: clone(learningRecords),
       pendingWindows: clone(pendingWindows),
+      growthState: hasActivePractice ? clone(state.growthState) : null,
       unfinishedBusiness: clone(state.unfinishedBusiness),
       memoryFragments: clone(state.memoryFragments),
       fourDims: clone(state.fourDims),
@@ -423,6 +465,243 @@ function createSession(config, content, seedState, restoreData, randomFn) {
     }
   }
 
+  function growthActionMonths() {
+    const windowStart = timeline.reduce((lastIndex, entry, index) => entry.eventId === "act2_herb_shelter" ? index : lastIndex, -1);
+    return timeline
+      .slice(windowStart + 1)
+      .filter((entry) => entry.source === "growth_action")
+      .reduce((sum, entry) => sum + Number(entry.months || 0), 0);
+  }
+
+  function updateGrowthPressure() {
+    if (!hasActivePractice) return;
+    state.growthState.windowPressure = growthActionMonths() > 24 ? "late_window" : "on_time";
+  }
+
+  function crisisOptions() {
+    const growth = state.growthState;
+    const lateText = growth.windowPressure === "late_window" ? "准备过久，后续机会已变冷。" : "准备仍在窗口时限内。";
+    const options = [];
+    const canFortify = growth.daoId === "DAO01" && (growth.breakthroughState === "succeeded" || (Number(state.power || 0) >= 40 && Number(state.health || 0) >= 45));
+    const canAlchemy = growth.daoId === "DAO02" && (growth.breakthroughState === "succeeded" || (growth.medicine >= 1 && growth.daoMastery >= 1));
+    if (canFortify) options.push({
+      label: "以五行镇岳诀镇压首杀现场",
+      effects: { power: 4, fame: 5, health: -4 },
+      successRate: 1,
+      semantic: "growth",
+      growthCrisis: "fortify",
+      unlockFlag: "dao01_crisis_fortify",
+      resultText: `你以镇岳诀压住村口的第一具尸体，${lateText}`,
+      bridgeText: "村口守望的旗子立了起来，宗门巡逻队不得不先查旧案。"
+    });
+    if (canAlchemy) options.push({
+      label: "以丹术处理伤口与证人",
+      effects: { health: 8, bond: 5, fame: 3 },
+      successRate: 1,
+      semantic: "growth",
+      growthCrisis: "alchemy",
+      consumeMedicine: growth.breakthroughState !== "succeeded",
+      unlockFlag: "dao02_crisis_alchemy",
+      resultText: `你把药火压进伤口，先保住证人的气息，${lateText}`,
+      bridgeText: "药棚留下了可追溯的炉火印，天香谷的试炼塔因此向你打开一条窄门。"
+    });
+    if (Number(state.health || 0) >= 25) options.push({
+      label: "先护住活人，退让换取三天",
+      effects: { bond: 5, fame: -2, health: -2 },
+      successRate: 1,
+      semantic: "safe",
+      growthCrisis: "retreat",
+      unlockFlag: "act2_retreat",
+      resultText: "你把活人推出村口，放弃追问令符的机会，至少没有让更多人倒下。",
+      bridgeText: "村口暂时安静，却有人记住了你退让的那一刻；两条专属道路都还隔着一层雾。"
+    });
+    if (Number(state.health || 0) < 25) options.push({
+      label: "状态崩溃，只求把人推出火线",
+      effects: { health: -Number(state.health || 0), sanity: -5 },
+      successRate: 1,
+      semantic: "collapse",
+      growthCrisis: "collapse",
+      unlockFlag: "act2_collapse",
+      resultText: "你已经撑不住了，只来得及把最后一个活人推离村口。",
+      bridgeText: "重伤压垮了剩下的路，因果在此世提前收束。"
+    });
+    return options;
+  }
+
+  function activateCrisisEvent() {
+    const base = (pack.events || []).find((event) => event.id === "act2_first_blood");
+    if (!base) return false;
+    currentEvent = clone(base);
+    currentEvent.options = crisisOptions();
+    if (!usedEventIds.has(currentEvent.id)) {
+      usedEventIds.add(currentEvent.id);
+      eventIndexInStage += 1;
+    }
+    phase = "event";
+    stageChanged = false;
+    return true;
+  }
+
+  function growthResult(record, snapshotResult = snapshot()) {
+    return { result: record, snapshot: snapshotResult, phase, finished: false };
+  }
+
+  function chooseGrowthAction(actionId, manualRoll) {
+    if (!hasActivePractice || phase !== "preparation") return { error: "growth_window_not_active" };
+    const growth = state.growthState;
+    if (!GROWTH_ACTIONS.includes(actionId)) return { error: "unknown_growth_action" };
+    if (growth.actionSlotsRemaining <= 0) return { error: "no_action_slots" };
+    if (growth.usedActions.includes(actionId)) return { error: "growth_action_already_used" };
+    if (actionId === "action_practice_dao" && Number(state.health || 0) < 30) return { error: "health_too_low_to_practice" };
+
+    const beforeGrowth = clone(growth);
+    const daoId = growth.daoId;
+    let months = 0;
+    let success = true;
+    let effects = {};
+    let growthChanges = {};
+    let resultText = "";
+    let optionLabel = "";
+    if (actionId === "action_practice_dao") {
+      months = 12;
+      optionLabel = "研修当前道业";
+      effects = daoId === "DAO01" ? { power: 10, health: -2 } : { power: 8, health: -1 };
+      growth.daoMastery = Math.min(3, growth.daoMastery + 1);
+      const record = learningRecords.find((item) => item.id === daoId.toLowerCase() && item.current !== false);
+      if (record) {
+        record.stageIndex = Math.min(3, Number(record.stageIndex || 0) + 1);
+        record.rank = record.stages?.[record.stageIndex] || record.rank;
+      }
+      growthChanges = { daoMastery: `${beforeGrowth.daoMastery} → ${growth.daoMastery}` };
+      resultText = daoId === "DAO01" ? "你把五行镇岳诀压进骨缝，修为上涨，却让伤势更沉。" : "你照着丹术调息，修为缓慢上涨，药火也更懂得如何护住经脉。";
+    } else if (actionId === "action_recover_injury") {
+      const hasMedicine = growth.medicine >= 1;
+      months = hasMedicine ? 6 : 12;
+      optionLabel = "处理伤势";
+      effects = { health: daoId === "DAO01" ? 16 : 18, ...(hasMedicine ? {} : { power: -2 }) };
+      if (hasMedicine) growth.medicine -= 1;
+      growthChanges = { medicine: `${beforeGrowth.medicine} → ${growth.medicine}` };
+      resultText = hasMedicine ? "药材化开，伤口终于不再往外渗血。" : "没有药材，你只能用更长的时间养伤，修为也因此松动。";
+    } else {
+      months = 8;
+      optionLabel = "有目的外出寻药";
+      const health = Number(state.health || 0);
+      const successRate = health >= 60 ? 0.8 : health >= 30 ? 0.6 : 0.35;
+      const sample = manualRoll == null ? random() : Number(manualRoll);
+      success = sample <= successRate;
+      if (success) {
+        growth.medicine = Math.min(1, growth.medicine + 1);
+        growthChanges = { medicine: `${beforeGrowth.medicine} → ${growth.medicine}` };
+        resultText = "你沿着雨水冲出的药痕找回一份完整药材，回村时伤势还撑得住。";
+      } else {
+        effects = { health: daoId === "DAO02" && growth.daoMastery >= 1 ? -4 : -8 };
+        resultText = "药材没找到，你反倒在山沟里摔出一道新伤。";
+      }
+    }
+    const applied = applyEffects(state, attributeConfig, effects, "growth_action");
+    growth.usedActions.push(actionId);
+    growth.actionSlotsRemaining = Math.max(0, growth.actionSlotsRemaining - 1);
+    const record = {
+      eventId: GROWTH_WINDOW_ID,
+      actionId,
+      eventTitle: "准备窗口",
+      optionLabel,
+      success,
+      semantic: "growth",
+      riskTag: actionId === "action_outing_find_medicine" ? "risky" : "development",
+      effects: applied.applied,
+      growthChanges,
+      resultText,
+      bridgeText: growth.actionSlotsRemaining > 0 ? `准备窗口还剩 ${growth.actionSlotsRemaining} 次行动。` : "行动槽已用尽，突破时机在等你决定。",
+      timeAdvance: null,
+      windowTimeAdvances: [],
+      growthState: clone(growth)
+    };
+    pendingOutcome = { kind: "growth_action", ...record, beforeGrowth, months };
+    phase = "outcome";
+    return growthResult(record, snapshot());
+  }
+
+  function continueGrowthOutcome() {
+    const outcome = pendingOutcome;
+    const timeAdvance = advanceLedger(outcome.months / 12, {
+      source: "growth_action",
+      months: outcome.months,
+      eventId: GROWTH_WINDOW_ID,
+      eventTitle: "准备窗口",
+      optionLabel: outcome.optionLabel,
+      daoId: state.growthState.daoId,
+      daoName: state.growthState.daoId === "DAO01" ? "五行镇岳诀" : "星芒九转丹术",
+      reason: `${outcome.optionLabel}耗时 ${outcome.months} 个月`,
+      basis: `准备窗口依据：${outcome.actionId}`
+    });
+    updateGrowthPressure();
+    const record = { ...outcome, timeAdvance, growthState: clone(state.growthState) };
+    delete record.kind;
+    delete record.beforeGrowth;
+    delete record.months;
+    pendingOutcome = null;
+    if (Number(state.health || 0) <= 0 || Number(state.sanity || 0) <= 0) phase = "cliff";
+    else if (state.growthState.actionSlotsRemaining <= 0) phase = "breakthrough";
+    else phase = "preparation";
+    return { kind: "growth_resolved", ...record, snapshot: snapshot(), phase, finished: false };
+  }
+
+  function finishPreparation() {
+    if (!hasActivePractice || phase !== "preparation") return { error: "growth_window_not_active" };
+    phase = "breakthrough";
+    return { kind: "breakthrough", timingId: BREAKTHROUGH_ID, snapshot: snapshot(), growthState: clone(state.growthState), phase };
+  }
+
+  function resolveBreakthrough(choice, manualRoll) {
+    if (!hasActivePractice || phase !== "breakthrough") return { error: "breakthrough_not_ready" };
+    const growth = state.growthState;
+    if (growth.breakthroughState !== "available") return { error: "breakthrough_already_resolved" };
+    if (choice === "skip") {
+      growth.breakthroughState = "skipped";
+      const record = { eventId: BREAKTHROUGH_ID, eventTitle: "突破时机", optionLabel: "暂不突破", success: true, semantic: "growth", effects: {}, resultText: "你暂时按住突破的念头，先去面对村口的血光。", bridgeText: "没有人能替你保存这次时机，接下来的危机只看你现在的状态。", growthState: clone(growth) };
+      activateCrisisEvent();
+      return growthResult(record);
+    }
+    const power = Number(state.power || 0);
+    const health = Number(state.health || 0);
+    if (power < 28 || health < 35) return { error: "breakthrough_conditions_unmet", required: { power: 28, health: 35 }, actual: { power, health } };
+    const daoId = growth.daoId;
+    const hasMedicine = daoId === "DAO02" && growth.medicine >= 1;
+    const daoModifier = daoId === "DAO01" ? (health >= 60 ? 2 : -1) : (hasMedicine ? 2 : -1);
+    if (hasMedicine) growth.medicine -= 1;
+    const roll = manualRoll == null ? rollD20(random) : clamp(Math.round(Number(manualRoll)), 1, 20);
+    const modifier = Math.floor(power / 10) + daoModifier;
+    const total = roll + modifier;
+    const success = roll === 20 || (roll !== 1 && total >= 17);
+    const d20 = { id: BREAKTHROUGH_ID, kind: "breakthrough", roll, modifier, total, target: 17, baseTarget: 17, penalty: 0, success, extreme: roll === 1 ? "disaster" : roll === 20 ? "greatSuccess" : null };
+    const effects = success
+      ? (daoId === "DAO01" ? { power: 12, health: -6 } : { power: 10, health: 4 })
+      : (daoId === "DAO01" ? { health: -10, power: -4 } : { health: -7 });
+    const applied = applyEffects(state, attributeConfig, effects, "breakthrough");
+    growth.breakthroughState = success ? "succeeded" : "failed";
+    if (success) flags.add(daoId === "DAO01" ? "dao01_breakthrough" : "dao02_alchemy_breakthrough");
+    else flags.add(daoId === "DAO01" ? "breakthrough_backlash" : "damaged_elixir");
+    const record = {
+      eventId: BREAKTHROUGH_ID,
+      eventTitle: "突破时机",
+      optionLabel: "尝试突破",
+      success,
+      semantic: "growth",
+      riskTag: "risky",
+      effects: applied.applied,
+      growthChanges: { medicine: daoId === "DAO02" ? `${hasMedicine ? 1 : 0} → ${growth.medicine}` : undefined },
+      resultText: success
+        ? (daoId === "DAO01" ? "镇岳诀压过血气，你在村口之前先把自己的关口推开。" : "丹火逆转经脉，星芒九转丹术把药材炼成了护住命门的火。")
+        : (daoId === "DAO01" ? "镇岳诀反噬，修为倒退，伤势在关口撕开。" : "丹火散乱，药材化灰，伤势又添一层。"),
+      bridgeText: "突破的结果已经写进此世，村口的第一滴血不会等你第二次尝试。",
+      d20,
+      growthState: clone(growth)
+    };
+    activateCrisisEvent();
+    return growthResult(record);
+  }
+
   function collectDueWindow() {
     return pendingWindows.find((window) => !window.resolved && !window.resolveAtEvent && Number(state.age || 0) >= Number(window.dueAge || 0)) || null;
   }
@@ -474,6 +753,7 @@ function createSession(config, content, seedState, restoreData, randomFn) {
 
   function advance() {
     if (pendingOutcome) {
+      if (pendingOutcome.kind === "growth_action") return continueGrowthOutcome();
       const continuation = continueOutcome();
       if (continuation.error) return continuation;
       if (continuation.phase === "finished") return { kind: "finished", continued: continuation, snapshot: continuation.snapshot };
@@ -484,6 +764,8 @@ function createSession(config, content, seedState, restoreData, randomFn) {
       phase = currentEvent ? "event" : "finished";
       return { kind: "interlude", snapshot: snapshot() };
     }
+    if (phase === "preparation") return { kind: "preparation", windowId: GROWTH_WINDOW_ID, snapshot: snapshot(), growthState: clone(state.growthState), phase };
+    if (phase === "breakthrough") return { kind: "breakthrough", timingId: BREAKTHROUGH_ID, snapshot: snapshot(), growthState: clone(state.growthState), phase };
     if (phase === "fate_window") return { kind: "fate_window", window: activeWindow || collectDueWindow(), snapshot: snapshot() };
     if (phase === "karma_knock") return { kind: "karma_knock", karma: clone(state.karmaDeferred), snapshot: snapshot() };
     if (phase === "cliff") return { kind: "cliff", reason: healthZeroReason(), snapshot: snapshot() };
@@ -519,6 +801,16 @@ function createSession(config, content, seedState, restoreData, randomFn) {
       failureText: currentEvent.failureText
     });
     const appliedResult = applyEffects(state, attributeConfig, resolved.effects, "option");
+    let growthChanges = null;
+    if (currentEvent.id === "act2_first_blood" && option.growthCrisis) {
+      state.growthState.crisisApproach = option.growthCrisis;
+      if (option.growthCrisis === "alchemy" && option.consumeMedicine) {
+        const beforeMedicine = state.growthState.medicine;
+        state.growthState.medicine = Math.max(0, beforeMedicine - 1);
+        growthChanges = { medicine: `${beforeMedicine} → ${state.growthState.medicine}` };
+      }
+      updateGrowthPressure();
+    }
     if (resolved.success && option.unlockFlag) flags.add(option.unlockFlag);
     if (!resolved.success && option.failureUnlockFlag) flags.add(option.failureUnlockFlag);
     const realmProgress = applyRealmProgress(state, resolved.d20);
@@ -531,6 +823,7 @@ function createSession(config, content, seedState, restoreData, randomFn) {
       riskTag: resolved.riskTag,
       semantic: resolved.semantic,
       effects: appliedResult.applied,
+      growthChanges,
       warnings: appliedResult.warnings,
       resultText: resolved.text,
       d20: resolved.d20,
@@ -593,6 +886,7 @@ function createSession(config, content, seedState, restoreData, randomFn) {
   }
 
   function continueOutcome() {
+    if (pendingOutcome?.kind === "growth_action") return continueGrowthOutcome();
     if (!pendingOutcome) return { error: "no_pending_outcome" };
     const outcome = pendingOutcome;
     const event = (pack.events || []).find((item) => item.id === outcome.eventId);
@@ -629,6 +923,28 @@ function createSession(config, content, seedState, restoreData, randomFn) {
       branchFlags: outcome.record.branchFlags || []
     };
     history.push(record);
+
+    if (hasActivePractice && event.id === "act2_herb_shelter") {
+      pendingOutcome = null;
+      currentEvent = null;
+      phase = "preparation";
+      stageChanged = false;
+      updateGrowthPressure();
+      return {
+        kind: "outcome",
+        record,
+        timeAdvance,
+        windowTimeAdvances,
+        bridgeText: "药棚保住后，恶徒发现村里多了一个会配药的外乡人；你还有三次准备机会。",
+        timeBeats: record.timeBeats,
+        nextEventTrigger: "准备窗口结束后，村口的第一滴血会逼你交出答案。",
+        stageChanged,
+        snapshot: snapshot(),
+        phase,
+        finished: false,
+        preparationWindow: GROWTH_WINDOW_ID
+      };
+    }
 
     pendingOutcome = null;
     currentEvent = null;
@@ -811,6 +1127,16 @@ function createSession(config, content, seedState, restoreData, randomFn) {
     resolveWindow,
     resolveKarma,
     resolveCliff,
+    chooseGrowthAction,
+    finishPreparation,
+    resolveBreakthrough,
+    selectGrowthDao(daoId) {
+      if (!hasActivePractice || phase !== "preparation") return { error: "growth_window_not_active" };
+      if (!GROWTH_DAOS.includes(daoId)) return { error: "unknown_growth_dao" };
+      if (state.growthState.usedActions.length > 0) return { error: "growth_dao_locked_after_action" };
+      state.growthState.daoId = daoId;
+      return { ok: true, growthState: clone(state.growthState), snapshot: snapshot() };
+    },
     practiceDao,
     useFortuneReroll,
     getFortuneRerolls,

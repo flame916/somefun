@@ -198,6 +198,8 @@ img {
 .profile-actions,
 .event-menu,
 .dao-ops,
+.growth-actions,
+.growth-dao-choices,
 .modal-actions {
   display: grid;
   gap: 10px;
@@ -212,6 +214,8 @@ img {
 .home-actions,
 .profile-actions,
 .dao-ops,
+.growth-actions,
+.growth-dao-choices,
 .modal-actions {
   grid-template-columns: 1fr;
 }
@@ -304,6 +308,32 @@ img {
   min-height: 84px;
   padding: 16px;
   text-align: left;
+}
+
+.growth-action {
+  align-items: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.growth-action .button-label {
+  width: 100%;
+}
+
+.active-growth-dao {
+  outline: 2px solid var(--bamboo-600);
+  outline-offset: 2px;
+}
+
+.used-actions,
+.growth-change {
+  margin: 8px 0 0;
+  color: var(--bamboo-600);
+  font-size: 13px;
+}
+
+.crisis-state {
+  border-left: 4px solid var(--ochre-600);
 }
 
 .choice-row .button-skin {

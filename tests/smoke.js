@@ -103,6 +103,37 @@ function compactContent(events) {
   return { version: "smoke", meta: { title: "smoke", source: "test", isPlaceholder: true }, events, endingCards: [] };
 }
 
+function activePracticeFixture() {
+  const baseEvent = (id, title, lifeMonths) => ({
+    id,
+    title,
+    text: "测试事件",
+    stage: "act2",
+    weight: 1,
+    resultText: "结果",
+    failureText: "失败",
+    bridgeText: "承接",
+    nextEventTrigger: "下一步",
+    timeBeats: [],
+    lifeAdvance: { months: lifeMonths, source: "event", reason: "测试时间", basis: "测试依据" },
+    options: [{ label: "继续", effects: {}, successRate: 1 }]
+  });
+  return {
+    version: "active-practice-test",
+    meta: { title: "主动修行测试", source: "test", isPlaceholder: true },
+    activePractice: { windowId: "preparation_window_01", defaultDaoId: "DAO01", startMedicine: 0, maxActionSlots: 3, breakthroughTimingId: "breakthrough_timing_01" },
+    events: [baseEvent("act2_herb_shelter", "药棚", 12), baseEvent("act2_first_blood", "村口", 6)],
+    endingCards: []
+  };
+}
+
+function activePracticeTemplate() {
+  return compactTemplate({
+    engine: { mode: "event-choice", stageSequence: ["act2"], eventsPerStage: { act2: { min: 2, max: 2 } }, maxEvents: 2, weightedDraw: false, noRepeatWithinRun: true, age: { enabled: true, start: 16 } },
+    stages: { act2: { label: "第二幕", description: "测试", minEvents: 2, maxEvents: 2 } }
+  });
+}
+
 function consumeTransition(session, transition, state = {}) {
   let current = transition;
   let guard = 0;
@@ -323,6 +354,104 @@ function testR31OptionFeedbackGraybox() {
   void first;
 }
 
+function startPracticeSession(seedState = {}) {
+  const session = createSession(activePracticeTemplate(), activePracticeFixture(), {
+    attributes: { power: 20, health: 80, sanity: 100 },
+    growthState: { daoId: "DAO01", medicine: 0 },
+    ...seedState
+  }, null, createRandom(20261009));
+  session.start();
+  let transition = session.advance();
+  assert.equal(transition.kind, "event");
+  const first = session.chooseOption(0, 1);
+  assert.ok(!first.error, first.error);
+  const herb = session.continueOutcome();
+  assert.equal(herb.preparationWindow, "preparation_window_01");
+  assert.equal(herb.phase, "preparation");
+  assert.equal(session.advance().kind, "preparation");
+  return session;
+}
+
+function testActivePracticeLoop() {
+  const dao01 = startPracticeSession();
+  assert.deepEqual(dao01.snapshot().growthState.usedActions, []);
+  const practice = dao01.chooseGrowthAction("action_practice_dao");
+  assert.ok(!practice.error, practice.error);
+  assert.equal(practice.snapshot.growthState.actionSlotsRemaining, 2);
+  assert.equal(dao01.continueOutcome().timeAdvance.months, 12);
+  const outing = dao01.chooseGrowthAction("action_outing_find_medicine", 0);
+  assert.equal(outing.result.success, true);
+  assert.equal(dao01.continueOutcome().timeAdvance.months, 8);
+  assert.equal(dao01.snapshot().growthState.medicine, 1);
+  const recover = dao01.chooseGrowthAction("action_recover_injury");
+  assert.ok(!recover.error, recover.error);
+  const recovered = dao01.continueOutcome();
+  assert.equal(recovered.timeAdvance.months, 6);
+  assert.equal(dao01.snapshot().growthState.actionSlotsRemaining, 0);
+  assert.equal(dao01.snapshot().growthState.windowPressure, "late_window");
+  assert.equal(dao01.advance().kind, "breakthrough");
+  const breakthrough = dao01.resolveBreakthrough("attempt", 20);
+  assert.equal(breakthrough.result.success, true);
+  assert.equal(breakthrough.snapshot.growthState.breakthroughState, "succeeded");
+  assert.ok(breakthrough.snapshot.flags.includes("dao01_breakthrough"));
+  const crisis = dao01.advance();
+  assert.equal(crisis.kind, "event");
+  assert.equal(crisis.event.id, "act2_first_blood");
+  assert.ok(crisis.event.options.some((option) => option.growthCrisis === "fortify"));
+  assert.ok(crisis.event.options.every((option) => option.growthCrisis !== "alchemy"));
+  const fortifyIndex = crisis.event.options.findIndex((option) => option.growthCrisis === "fortify");
+  const fortified = dao01.chooseOption(fortifyIndex, 1);
+  assert.ok(!fortified.error, fortified.error);
+  const fortifiedEnd = dao01.continueOutcome();
+  assert.equal(fortifiedEnd.snapshot.growthState.crisisApproach, "fortify");
+  assert.ok(fortifiedEnd.snapshot.flags.includes("dao01_crisis_fortify"));
+
+  const dao02 = startPracticeSession({ attributes: { power: 20, health: 80, sanity: 100 }, growthState: { daoId: "DAO02", medicine: 1 } });
+  const dao2Practice = dao02.chooseGrowthAction("action_practice_dao");
+  assert.ok(!dao2Practice.error, dao2Practice.error);
+  dao02.continueOutcome();
+  assert.equal(dao02.selectGrowthDao("DAO01").error, "growth_dao_locked_after_action");
+  assert.equal(dao02.advance().kind, "preparation");
+  const finish = dao02.finishPreparation();
+  assert.equal(finish.kind, "breakthrough");
+  const dao2Breakthrough = dao02.advance();
+  assert.equal(dao2Breakthrough.kind, "breakthrough");
+  const alchemyBreakthrough = dao02.resolveBreakthrough("attempt", 20);
+  assert.equal(alchemyBreakthrough.result.success, true);
+  assert.equal(alchemyBreakthrough.snapshot.growthState.medicine, 0);
+  const alchemyCrisis = dao02.advance();
+  assert.equal(alchemyCrisis.event.id, "act2_first_blood");
+  assert.ok(alchemyCrisis.event.options.some((option) => option.growthCrisis === "alchemy"));
+  const alchemyIndex = alchemyCrisis.event.options.findIndex((option) => option.growthCrisis === "alchemy");
+  const alchemy = dao02.chooseOption(alchemyIndex, 1);
+  assert.ok(!alchemy.error, alchemy.error);
+  const alchemyEnd = dao02.continueOutcome();
+  assert.equal(alchemyEnd.snapshot.growthState.crisisApproach, "alchemy");
+  assert.ok(alchemyEnd.snapshot.flags.includes("dao02_crisis_alchemy"));
+
+  const damaged = startPracticeSession({ attributes: { power: 20, health: 28, sanity: 100 }, growthState: { daoId: "DAO02", medicine: 0 } });
+  assert.equal(damaged.chooseGrowthAction("action_practice_dao").error, "health_too_low_to_practice");
+  const hurtOuting = damaged.chooseGrowthAction("action_outing_find_medicine", 1);
+  assert.equal(hurtOuting.result.success, false);
+  damaged.continueOutcome();
+  assert.equal(damaged.snapshot().growthState.actionSlotsRemaining, 2);
+  assert.equal(damaged.chooseGrowthAction("action_outing_find_medicine").error, "growth_action_already_used");
+  const savePoint = damaged.snapshot();
+  const restored = createSession(activePracticeTemplate(), activePracticeFixture(), null, savePoint, createRandom(2));
+  assert.deepEqual(restored.snapshot().growthState, savePoint.growthState);
+  assert.equal(restored.advance().kind, "preparation");
+
+  const failed = startPracticeSession({ attributes: { power: 28, health: 35, sanity: 100 }, growthState: { daoId: "DAO01", medicine: 0 } });
+  assert.equal(failed.advance().kind, "preparation");
+  const failedTiming = failed.finishPreparation();
+  assert.equal(failedTiming.kind, "breakthrough");
+  const failedResult = failed.resolveBreakthrough("attempt", 1);
+  assert.equal(failedResult.result.success, false);
+  assert.equal(failedResult.snapshot.growthState.breakthroughState, "failed");
+  assert.equal(failed.resolveBreakthrough("attempt", 20).error, "breakthrough_not_ready");
+  assert.equal(failed.resolveBreakthrough("skip").error, "breakthrough_not_ready");
+}
+
 function testR3EpisodeAdvanceAndFortune() {
   const event = {
     id: "episode_time",
@@ -439,6 +568,29 @@ function playSessionToEnd(session, onOutcome) {
   let guard = 0;
   while (guard < 120) {
     guard += 1;
+    if (transition.kind === "preparation") {
+      const actionPlan = ["action_practice_dao", "action_outing_find_medicine", "action_recover_injury"];
+      for (const actionId of actionPlan) {
+        const action = session.chooseGrowthAction(actionId, actionId === "action_outing_find_medicine" ? 0 : undefined);
+        assert.ok(!action.error, action.error);
+        const settled = session.continueOutcome();
+        assert.ok(!settled.error, settled.error);
+        assert.equal(settled.actionId, actionId);
+        assert.ok(settled.timeAdvance?.months > 0);
+        transition = session.advance();
+        if (transition.kind !== "preparation") break;
+      }
+      if (transition.kind === "preparation") transition = session.finishPreparation();
+      continue;
+    }
+    if (transition.kind === "breakthrough") {
+      const skipped = session.resolveBreakthrough("skip");
+      assert.ok(!skipped.error, skipped.error);
+      assert.equal(skipped.result.eventId, "breakthrough_timing_01");
+      assert.equal(skipped.snapshot.growthState.breakthroughState, "skipped");
+      transition = session.advance();
+      continue;
+    }
     if (transition.kind === "event") {
       const event = transition.event;
       const result = session.chooseOption(0, 0.5);
@@ -500,10 +652,16 @@ function testFullR3RunClosure() {
   assert.ok(snapshot.ledger.remainingYears >= 0);
   assert.ok(snapshot.timeline.length > 0, "run must expose a time ledger");
   const expectedTimeline = snapshot.history.flatMap((record) => [record.timeAdvance, ...record.windowTimeAdvances]).filter((entry) => entry?.months > 0);
-  assert.equal(snapshot.timeline.length, expectedTimeline.length, "timeline must be the unique projection of history time entries");
+  const eventTimeline = snapshot.timeline.filter((entry) => entry.source !== "growth_action");
+  const growthTimeline = snapshot.timeline.filter((entry) => entry.source === "growth_action");
+  assert.equal(eventTimeline.length, expectedTimeline.length, "event timeline must remain the unique projection of history time entries");
+  assert.equal(growthTimeline.length, 3, "active practice must add exactly three action time entries in the full run");
+  assert.ok(growthTimeline.every((entry) => entry.eventId === "preparation_window_01"));
+  for (let index = 0; index < eventTimeline.length; index += 1) {
+    assert.deepEqual(eventTimeline[index], expectedTimeline[index], `timeline/history mismatch at ${index}`);
+  }
   for (let index = 0; index < snapshot.timeline.length; index += 1) {
     const entry = snapshot.timeline[index];
-    assert.deepEqual(entry, expectedTimeline[index], `timeline/history mismatch at ${index}`);
     assert.ok(entry.months > 0, "timeline entries must only record actual advances");
     assert.ok(entry.years > 0, "timeline entries must only record actual advances");
     assertClose(entry.toAge, entry.fromAge + entry.years, "timeline age arithmetic must be explicit");
@@ -555,6 +713,24 @@ function testControllerAllocationAndMigration() {
   let guard = 0;
   while (guard < 140) {
     guard += 1;
+    if (transition.kind === "preparation") {
+      for (const actionId of ["action_practice_dao", "action_outing_find_medicine", "action_recover_injury"]) {
+        const action = game.chooseGrowthAction(actionId, actionId === "action_outing_find_medicine" ? 0 : undefined);
+        assert.ok(!action.error, action.error);
+        const settled = game.continueOutcome();
+        assert.ok(!settled.error, settled.error);
+        transition = game.advance();
+        if (transition.kind !== "preparation") break;
+      }
+      if (transition.kind === "preparation") transition = game.continuePreparation();
+      continue;
+    }
+    if (transition.kind === "breakthrough") {
+      const skipped = game.resolveBreakthrough("skip");
+      assert.ok(!skipped.error, skipped.error);
+      transition = game.advance();
+      continue;
+    }
     if (transition.kind === "event") {
       const choice = game.choose(0, 0.5);
       assert.ok(!choice.error, choice.error);
@@ -572,7 +748,9 @@ function testControllerAllocationAndMigration() {
   assert.equal(runResult.sections.realm + runResult.sections.story + runResult.sections.living + runResult.sections.legacy, runResult.score);
   assert.equal(runResult.pointsEarned, pointsFor(runResult.score));
   assert.ok(runResult.ledger?.worldYear >= 1, "controller result must expose the shared world-year ledger");
-  assert.equal(runResult.timeline.length, runResult.history.flatMap((record) => [record.timeAdvance, ...(record.windowTimeAdvances || [])]).filter((entry) => entry?.months > 0).length);
+  const expectedEventTimeline = runResult.history.flatMap((record) => [record.timeAdvance, ...(record.windowTimeAdvances || [])]).filter((entry) => entry?.months > 0);
+  assert.equal(runResult.timeline.filter((entry) => entry.source !== "growth_action").length, expectedEventTimeline.length);
+  assert.equal(runResult.timeline.filter((entry) => entry.source === "growth_action").length, 3);
 
   const allocation = game.saveFourDimAllocation({ naturalTalent: 5, aptitude: 2, bloodline: 1, fortune: 1 }, 20);
   assert.equal(allocation.ok, true);
@@ -628,6 +806,7 @@ testLifespanAndD20();
 testSacrificeSemantics();
 testR3ContentContract();
 testR31OptionFeedbackGraybox();
+testActivePracticeLoop();
 testR3EpisodeAdvanceAndFortune();
 testDaoStudy();
 testPowerSourceFiltering();
