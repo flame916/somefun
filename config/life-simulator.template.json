@@ -1,30 +1,74 @@
 {
-  "id": "life-simulator",
-  "name": "人生模拟器",
-  "version": "0.2.0",
+  "id": "life-simulator-8act",
+  "name": "八幕仙途人生模拟器",
+  "version": "0.6.0-r3",
   "engine": {
     "mode": "event-choice",
-    "stageSequence": ["youth", "prime", "late"],
+    "stageSequence": [
+      "act1",
+      "act2",
+      "act3",
+      "act4",
+      "act5",
+      "act6",
+      "act7",
+      "act8"
+    ],
     "eventsPerStage": {
-      "youth": { "min": 4, "max": 5 },
-      "prime": { "min": 5, "max": 6 },
-      "late": { "min": 4, "max": 5 }
+      "act1": {
+        "min": 2,
+        "max": 2
+      },
+      "act2": {
+        "min": 2,
+        "max": 2
+      },
+      "act3": {
+        "min": 2,
+        "max": 2
+      },
+      "act4": {
+        "min": 2,
+        "max": 2
+      },
+      "act5": {
+        "min": 2,
+        "max": 2
+      },
+      "act6": {
+        "min": 2,
+        "max": 2
+      },
+      "act7": {
+        "min": 2,
+        "max": 2
+      },
+      "act8": {
+        "min": 2,
+        "max": 2
+      }
     },
     "maxEvents": 16,
     "weightedDraw": true,
     "noRepeatWithinRun": true,
     "allowRepeatAcrossRuns": true,
-    "guaranteedEvents": {
-      "youth": ["ev_youth_first_step"]
-    },
     "age": {
       "enabled": true,
-      "start": 12,
-      "stepPerStage": {
-        "youth": 0,
-        "prime": 18,
-        "late": 25
-      }
+      "start": 16
+    }
+  },
+  "score": {
+    "enabled": true,
+    "label": "精彩度",
+    "range": {
+      "min": 0,
+      "max": 1000
+    },
+    "sections": {
+      "realm": 250,
+      "story": 250,
+      "living": 250,
+      "legacy": 250
     }
   },
   "attributes": {
@@ -35,7 +79,7 @@
       "max": 100,
       "group": "resource",
       "displayOrder": 1,
-      "color": "#b8860b"
+      "color": "#9c6a35"
     },
     "power": {
       "label": "修为",
@@ -44,7 +88,7 @@
       "max": 100,
       "group": "growth",
       "displayOrder": 2,
-      "color": "#2f6f4f"
+      "color": "#4f6b58"
     },
     "fame": {
       "label": "声望",
@@ -53,7 +97,7 @@
       "max": 100,
       "group": "growth",
       "displayOrder": 3,
-      "color": "#7c5cbf"
+      "color": "#a3362b"
     },
     "bond": {
       "label": "羁绊",
@@ -62,7 +106,7 @@
       "max": 100,
       "group": "growth",
       "displayOrder": 4,
-      "color": "#c2574f"
+      "color": "#7a4e5e"
     },
     "sanity": {
       "label": "理智",
@@ -71,8 +115,8 @@
       "max": 100,
       "group": "state",
       "displayOrder": 5,
-      "color": "#3d6ea5",
-      "zeroMessage": "理智已归零，你再也无法思考。"
+      "color": "#5c6b7a",
+      "zeroMessage": "理智已耗尽，你再也无法分辨真实与幻觉。"
     },
     "health": {
       "label": "健康",
@@ -81,148 +125,228 @@
       "max": 100,
       "group": "state",
       "displayOrder": 6,
-      "color": "#3a8a6f",
-      "zeroMessage": "健康已归零，你的身体撑不住了。"
-    }
-  },
-  "score": {
-    "enabled": true,
-    "label": "精彩度",
-    "range": {
-      "min": 0,
-      "max": 100
-    },
-    "base": 40,
-    "delta": {
-      "risk": 8,
-      "success": 4,
-      "sacrifice": 3,
-      "custom": 2,
-      "safe": 1
-    },
-    "endingBonus": {
-      "bright": 20,
-      "warm": 12,
-      "dark": 5,
-      "neutral": 3
-    },
-    "reincarnation": {
-      "enabled": true,
-      "label": "来世传承",
-      "inheritAttrs": ["wealth", "power", "fame", "bond"],
-      "cap": 12,
-      "rate": 0.3
+      "color": "#6b7f5a",
+      "zeroMessage": "健康已耗尽，这具身体再也撑不下去。"
     }
   },
   "stages": {
-    "youth": {
-      "label": "第一幕 · 入局",
-      "description": "你刚踏入江湖，一切都在试探你的分寸。",
-      "interlude": "少年岁月转瞬即逝，你已长出第一副筋骨。",
-      "minEvents": 4,
-      "maxEvents": 5
+    "act1": {
+      "label": "第一幕 · 死而复生",
+      "description": "你在荒村尸堆中醒来，脑中多了一道来历不明的声响，四周的妖兽正循着血腥味靠近。",
+      "interlude": "第一幕结束：你活过了最初那场死局，也第一次听见了命运的节拍。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
     },
-    "prime": {
-      "label": "第二幕 · 抉择",
-      "description": "名声、责任与野心同时找上门来。",
-      "interlude": "正当壮年，你的名字开始被人提起。",
-      "minEvents": 5,
-      "maxEvents": 6
+    "act2": {
+      "label": "第二幕 · 小村风云",
+      "description": "你带着新得的底气回到人间，藏宝阁、山村与故人的名字一同找上门来。",
+      "interlude": "第二幕结束：你护住了脚下的土地，也第一次有了不愿放手的人。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
     },
-    "late": {
-      "label": "第三幕 · 收束",
-      "description": "风浪渐渐平息，命运到了清点的时刻。",
-      "interlude": "暮年将至，你开始回望走过的路。",
-      "minEvents": 4,
-      "maxEvents": 5
+    "act3": {
+      "label": "第三幕 · 五国棋盘",
+      "description": "旧日的身份被掀开一角，五国宗门在暗处落子，你的名字被写上了棋盘。",
+      "interlude": "第三幕结束：你站在棋局中央，终于看清复仇与退让都只是两条不同的路。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
+    },
+    "act4": {
+      "label": "第四幕 · 炸天帮崛起",
+      "description": "乱世里人不如草芥，你决定把散落在五国的故人收拢成一方自己的旗帜。",
+      "interlude": "第四幕结束：帮派立起来了，你的肩上从此多了一群人的生死。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
+    },
+    "act5": {
+      "label": "第五幕 · 乱世将临",
+      "description": "五行山深处传出异动，五国边境同时燃起烽烟，有人说是邪魔在暗中推着这盘棋。",
+      "interlude": "第五幕结束：你探过深渊也吹过反攻的号角，乱世的轮廓第一次清晰起来。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
+    },
+    "act6": {
+      "label": "第六幕 · 回地球",
+      "description": "天门洞开的一瞬，你看见了熟悉的水泥森林：那是你上一世出生、又早已遗忘的故乡。",
+      "interlude": "第六幕结束：两个世界都向你伸手，你开始计算哪一边更需要你。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
+    },
+    "act7": {
+      "label": "第七幕 · 仙云洲风暴",
+      "description": "永夜殿的魔核流出域外，仙云洲的宗门却互相指控，一场针对天门的阴谋正等着被揭穿。",
+      "interlude": "第七幕结束：真相压过了流言，你的战力也走到了此世的最顶端。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
+    },
+    "act8": {
+      "label": "第八幕 · 神域之门",
+      "description": "中央天门悬于云端，四帝环伺，小柔被困在门后的牢笼里。这是此世最后一次选择。",
+      "interlude": "第八幕结束：门已开，此生的答卷也到了落笔之时。",
+      "minEvents": 2,
+      "maxEvents": 2,
+      "weight": 100
     }
   },
   "endings": {
-    "ending_collapse": {
-      "label": "抱憾退场",
-      "description": "理智或健康归零时强制触发。",
-      "tone": "dark",
-      "conditions": {
-        "mode": "any",
-        "thresholds": [
-          { "attribute": "sanity", "op": "lte", "value": 0 },
-          { "attribute": "health", "op": "lte", "value": 0 }
-        ]
-      }
-    },
-    "ending_balanced": {
-      "label": "圆满谢幕",
-      "description": "四项成长属性中至少三项达标。",
+    "ending_g01_gate_opener": {
+      "label": "神域开拓者",
+      "description": "修为登顶、名震八方，你救回小柔并推开神域之门，天地的边界从此由你重写。",
       "tone": "bright",
       "conditions": {
-        "mode": "threshold",
+        "mode": "all",
         "thresholds": [
-          { "attribute": "wealth", "op": "gte", "value": 20 },
-          { "attribute": "power", "op": "gte", "value": 15 },
-          { "attribute": "fame", "op": "gte", "value": 10 },
-          { "attribute": "bond", "op": "gte", "value": 15 }
+          {
+            "attribute": "power",
+            "op": "gte",
+            "value": 90
+          },
+          {
+            "attribute": "fame",
+            "op": "gte",
+            "value": 70
+          }
         ],
-        "countOfThresholds": 3
+        "requiredFlags": [
+          "opened_gate",
+          "rescued_xiaorou"
+        ]
       }
     },
-    "ending_power": {
-      "label": "一鸣惊人",
-      "description": "修为一路走高。",
+    "ending_g02_immortal_peak": {
+      "label": "仙云洲之主",
+      "description": "你没有追逐虚名，而是握住天门权柄，让仙云洲在你的秩序下重归一统。",
       "tone": "bright",
       "conditions": {
-        "mode": "any",
+        "mode": "all",
         "thresholds": [
-          { "attribute": "power", "op": "gte", "value": 25 }
+          {
+            "attribute": "power",
+            "op": "gte",
+            "value": 90
+          },
+          {
+            "attribute": "fame",
+            "op": "lt",
+            "value": 70
+          }
+        ],
+        "requiredFlags": [
+          "explored",
+          "counterattack",
+          "exposed_conspiracy"
         ]
       }
     },
-    "ending_wealth": {
-      "label": "富贵闲人",
-      "description": "财富成为你最厚的底气。",
+    "ending_g03_jianghu_legend": {
+      "label": "江湖传说",
+      "description": "帮派兴盛、故友俱在，你的名字比修为更早传遍天下，成了真正的江湖传说。",
       "tone": "warm",
       "conditions": {
-        "mode": "any",
+        "mode": "all",
         "thresholds": [
-          { "attribute": "wealth", "op": "gte", "value": 25 }
+          {
+            "attribute": "fame",
+            "op": "gte",
+            "value": 80
+          }
+        ],
+        "requiredFlags": [
+          "gang_founded",
+          "partner_alive"
         ]
       }
     },
-    "ending_fame": {
-      "label": "名满天下",
-      "description": "你的名望传遍四方。",
-      "tone": "bright",
-      "conditions": {
-        "mode": "any",
-        "thresholds": [
-          { "attribute": "fame", "op": "gte", "value": 15 }
-        ]
-      }
-    },
-    "ending_bond": {
-      "label": "知心故人",
-      "description": "有人始终记得你的好。",
+    "ending_g04_dual_return": {
+      "label": "双线回归",
+      "description": "你救下了山村与故人，也带着仙缘回到地球。两个世界的牵挂，你都没有辜负。",
       "tone": "warm",
       "conditions": {
-        "mode": "any",
+        "mode": "all",
         "thresholds": [
-          { "attribute": "bond", "op": "gte", "value": 20 }
+          {
+            "attribute": "bond",
+            "op": "gte",
+            "value": 60
+          },
+          {
+            "attribute": "fame",
+            "op": "gte",
+            "value": 60
+          }
+        ],
+        "requiredFlags": [
+          "returned_earth",
+          "saved_village"
         ]
       }
     },
-    "ending_haunted": {
-      "label": "心魔缠身",
-      "description": "理智低于六成，代价开始显形。",
+    "ending_g05_regret": {
+      "label": "遗憾收场",
+      "description": "你的力量与羁绊都不足以叩开最后一扇门，小柔的身影留在了此世够不到的地方。",
+      "tone": "dark",
+      "conditions": {
+        "mode": "all",
+        "thresholds": [
+          {
+            "attribute": "power",
+            "op": "lt",
+            "value": 90
+          },
+          {
+            "attribute": "bond",
+            "op": "lt",
+            "value": 60
+          }
+        ],
+        "missingFlags": [
+          "rescued_xiaorou"
+        ]
+      }
+    },
+    "ending_g06_fall": {
+      "label": "覆灭",
+      "description": "修为崩盘或遭强敌反杀，你倒在了通往终局的路中央。",
       "tone": "dark",
       "conditions": {
         "mode": "any",
         "thresholds": [
-          { "attribute": "sanity", "op": "lt", "value": 60 }
+          {
+            "attribute": "power",
+            "op": "lt",
+            "value": 45
+          }
+        ],
+        "requiredFlags": [
+          "defeated"
         ]
       }
     },
-    "ending_plain": {
+    "ending_g07_haunted": {
+      "label": "心魔缠身",
+      "description": "理智被恐惧与执念吞没，你最终被自己的影子追上。",
+      "tone": "dark",
+      "conditions": {
+        "mode": "any",
+        "thresholds": [
+          {
+            "attribute": "sanity",
+            "op": "lt",
+            "value": 60
+          }
+        ]
+      }
+    },
+    "ending_g08_plain": {
       "label": "平凡一生",
-      "description": "波澜不惊，也算一种结局。",
+      "description": "没有惊天动地的名字，日子就这样平平淡淡走到了尽头。",
       "tone": "neutral",
       "conditions": {
         "mode": "fallback"
@@ -233,12 +357,59 @@
     "enabled": true,
     "maxHistory": 5,
     "autoSave": true,
-    "storageKeyPrefix": "novel-game:life-simulator"
+    "storageKeyPrefix": "novel-game:life-simulator-8act"
   },
   "ui": {
-    "title": "人生模拟器",
-    "startButton": "开始一段人生",
-    "restartButton": "再来一局",
+    "title": "八幕仙途 · 轮回卷",
+    "subtitle": "十世轮回 · 四段评分 · 一命一抉择",
+    "startButton": "落笔入世",
+    "restartButton": "再入一世",
     "showFlags": false
+  },
+  "cycle": {
+    "livesPerCycle": 10,
+    "recapAtLife": 10,
+    "archiveFromLife": 11
+  },
+  "learningSystem": {
+    "maxStageIndex": 3,
+    "initialRecords": [
+      {
+        "id": "dao01",
+        "lifeIndex": 1,
+        "category": "cultivation",
+        "name": "五行镇岳诀",
+        "rank": "凡品残篇",
+        "stages": [
+          "入门",
+          "小成",
+          "大成",
+          "圆满"
+        ],
+        "stageIndex": 0,
+        "source": "系统礼包残篇",
+        "awakened": true,
+        "current": true,
+        "effect": "入门解锁修炼行动；小成护体止损；大成解锁特殊关口；圆满可承接献祭型道路。"
+      },
+      {
+        "id": "dao02",
+        "lifeIndex": 1,
+        "category": "elixir",
+        "name": "星芒九转丹术",
+        "rank": "凡品",
+        "stages": [
+          "入门",
+          "小成",
+          "大成",
+          "圆满"
+        ],
+        "stageIndex": 0,
+        "source": "天香谷试炼塔",
+        "awakened": true,
+        "current": true,
+        "effect": "入门可炼止血散；小成炼二品丹；大成养脉、定心；圆满留一世唯一丹药。"
+      }
+    ]
   }
 }

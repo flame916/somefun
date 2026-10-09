@@ -41,6 +41,44 @@ function createStorage(prefix, fallbackStore) {
   };
 }
 
+function migrateSave(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const data = JSON.parse(JSON.stringify(raw));
+  if (data.version === 2 && data.fourDims && data.phase) return data;
+  const legacyState = { ...(data.attributes || {}), ...(data.state || {}) };
+  const legacySoulPoints = Number(data.soul_points ?? data.soulPoints ?? 0) || 0;
+  const fourDims = {
+    naturalTalent: Number(data.four_dims?.naturalTalent ?? data.fourDims?.naturalTalent ?? 0) || 0,
+    aptitude: Number(data.four_dims?.aptitude ?? data.fourDims?.aptitude ?? 0) || 0,
+    bloodline: Number(data.four_dims?.bloodline ?? data.fourDims?.bloodline ?? 0) || 0,
+    fortune: Number(data.four_dims?.fortune ?? data.fourDims?.fortune ?? 0) || 0
+  };
+  return {
+    ...data,
+    version: 2,
+    phase: data.phase || (data.currentEventId ? "event" : "event"),
+    stageIndex: Number(data.stageIndex) || 0,
+    eventIndexInStage: Number(data.eventIndexInStage) || 0,
+    currentEventId: data.currentEventId || null,
+    flags: Array.isArray(data.flags) ? data.flags : [],
+    history: Array.isArray(data.history) ? data.history : [],
+    usedEventIds: Array.isArray(data.usedEventIds) ? data.usedEventIds : [],
+    state: legacyState,
+    attributes: legacyState,
+    cycle: Number(data.cycle ?? data.lives_in_cycle ?? 1) || 1,
+    livesInCycle: Number(data.livesInCycle ?? data.lives_in_cycle ?? 1) || 1,
+    powerSource: data.power_source || data.powerSource || "system",
+    systemGuidanceState: data.system_guidance_state || data.systemGuidanceState || "quiet",
+    fourDims,
+    learningRecords: Array.isArray(data.learning_records) ? data.learning_records : Array.isArray(data.learningRecords) ? data.learningRecords : [],
+    memoryFragments: Array.isArray(data.memory_fragments) ? data.memory_fragments : Array.isArray(data.memoryFragments) ? data.memoryFragments : [],
+    unfinishedBusiness: Array.isArray(data.unfinished_business) ? data.unfinished_business : Array.isArray(data.unfinishedBusiness) ? data.unfinishedBusiness : [],
+    grudgeAnchors: Array.isArray(data.grudge_anchors) ? data.grudge_anchors : Array.isArray(data.grudgeAnchors) ? data.grudgeAnchors : [],
+    personLedger: Array.isArray(data.person_ledger) ? data.person_ledger : Array.isArray(data.personLedger) ? data.personLedger : [],
+    legacySoulPoints
+  };
+}
+
 function createSaveSystem(config, storage) {
   const save = config.save || {};
   const store = storage || createStorage(save.storageKeyPrefix || "novel-game");
@@ -74,7 +112,23 @@ function createSaveSystem(config, storage) {
     store.remove(activeKey);
   }
 
-  return { readHistory, saveResult, saveActive, loadActive, clearActive };
+  function clearAll() {
+    store.remove(activeKey);
+    store.remove(historyKey);
+    store.remove("fourDimAllocation");
+    store.remove("soulAllocation");
+  }
+
+  return {
+    readHistory,
+    saveResult,
+    saveActive,
+    loadActive,
+    clearActive,
+    migrateSave,
+    clearAll,
+    raw: () => store
+  };
 }
 
-export { createSaveSystem, createStorage };
+export { createSaveSystem, createStorage, migrateSave };

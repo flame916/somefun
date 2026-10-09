@@ -29,13 +29,13 @@ code/
   tests/
     smoke.js                        引擎冒烟测试
     mobile-layout.mjs               移动端布局自测（375/390 视口，需本机 Chrome）
-  index.html                        可直接打开的 MVP 入口
+  index.html                        静态页面入口（需本地静态服务器）
   AD_PLACEMENT.md                   广告接入预留说明
 ```
 
 ## 运行
 
-纯前端，无构建依赖。直接打开 `game-project/code/index.html` 即可试玩；也可以在当前目录启动任意静态服务器。
+纯前端，无构建依赖。页面用 `fetch` 加载配置，直接双击 `file://` 入口会被浏览器 CORS 拦截，请在项目根启动静态服务器后访问。
 
 本地快速预览：
 
@@ -69,8 +69,8 @@ node game-project/code/tests/smoke.js
 
 ```bash
 python -m http.server 8000
-$env:CDP_URL="http://127.0.0.1:8000/"
+$env:CDP_URL="http://127.0.0.1:8000/game-project/code/"
 node game-project/code/tests/mobile-layout.mjs
 ```
 
-脚本会在 375×667 与 390×844 视口下完整跑通 首页 → 事件 → 属性 → 幕间 → 结局 → 返回首页，并检查无横向溢出、按钮可点、历史记录已保存。
+脚本会在 1440×900、375×667 与 390×844 视口下完整跑通 首页 → 事件 → d20/结果节拍 → 时间窗 → 轮回页 → 出生选择 → 历史，并检查选项数量、首屏可见性、滚动可达性、44px 最小点击区、遮挡命中、时间推进说明、无横向溢出、图片加载与历史记录保存。

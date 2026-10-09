@@ -4,26 +4,66 @@
   "description": "玩法模板配置。更换模板时新增/修改本文件与对应内容包，不改引擎核心。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "name", "engine", "attributes", "stages", "endings", "save"],
+  "required": [
+    "id",
+    "name",
+    "engine",
+    "attributes",
+    "stages",
+    "endings",
+    "save"
+  ],
   "properties": {
-    "id": { "type": "string" },
-    "name": { "type": "string" },
-    "version": { "type": "string" },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
     "soulTest": {
       "type": "object",
       "description": "2026-09-07 定版预留：魂性问心题库与第一世角色推荐映射配置；旧模板可不带，第一版仍可直接开始单世。"
     },
     "cycle": {
       "type": "object",
-      "description": "2026-09-07 定版预留：十世周期配置（livesPerCycle、第 10 世大结算、第 11 世起最老一世入史等）；旧模板不带时按单世运行。"
+      "additionalProperties": true,
+      "properties": {
+        "livesPerCycle": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "recapAtLife": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "archiveFromLife": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
     },
     "engine": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "stageSequence", "eventsPerStage", "maxEvents"],
+      "required": [
+        "mode",
+        "stageSequence",
+        "eventsPerStage",
+        "maxEvents"
+      ],
       "properties": {
-        "mode": { "const": "event-choice" },
-        "stageSequence": { "type": "array", "items": { "type": "string" } },
+        "mode": {
+          "const": "event-choice"
+        },
+        "stageSequence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "eventsPerStage": {
           "type": "object",
           "description": "每个阶段的事件抽取数量。min 用于条件不足时保底，max 为实际抽取上限。",
@@ -31,25 +71,70 @@
             "^.+$": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["min", "max"],
+              "required": [
+                "min",
+                "max"
+              ],
               "properties": {
-                "min": { "type": "integer", "minimum": 1 },
-                "max": { "type": "integer", "minimum": 1 }
+                "min": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "max": {
+                  "type": "integer",
+                  "minimum": 1
+                }
               }
             }
           }
         },
-        "maxEvents": { "type": "integer", "minimum": 1 },
-        "weightedDraw": { "type": "boolean", "default": true },
-        "noRepeatWithinRun": { "type": "boolean", "default": true },
-        "allowRepeatAcrossRuns": { "type": "boolean", "default": true },
+        "maxEvents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "weightedDraw": {
+          "type": "boolean",
+          "default": true
+        },
+        "noRepeatWithinRun": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowRepeatAcrossRuns": {
+          "type": "boolean",
+          "default": true
+        },
         "interlude": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "description": "阶段切换时的结算文案与展示配置。",
           "properties": {
-            "enabled": { "type": "boolean" },
-            "template": { "type": "string" }
+            "enabled": {
+              "type": "boolean"
+            },
+            "template": {
+              "type": "string"
+            }
           }
+        },
+        "age": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "start": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "defaultTimeAdvanceYears": {
+          "type": "number",
+          "minimum": 0
         }
       }
     },
@@ -57,24 +142,117 @@
       "type": "object",
       "description": "精彩度评分与来世传承配置。",
       "additionalProperties": false,
-      "required": ["enabled", "label", "range", "delta", "endingBonus"],
+      "required": [
+        "enabled",
+        "label",
+        "range"
+      ],
       "properties": {
-        "enabled": { "type": "boolean" },
-        "label": { "type": "string" },
+        "enabled": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string"
+        },
         "range": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["min", "max"],
+          "required": [
+            "min",
+            "max"
+          ],
           "properties": {
-            "min": { "type": "number" },
-            "max": { "type": "number" }
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
           }
         },
-        "base": { "type": "number" },
+        "endingBands": {
+          "type": "array",
+          "description": "R1 结局分档：按结局 id 给出低值 min 与高值 max，与运行时 endings 键一一对应；缺省时引擎使用内置 G01-G08/fallback 档位。",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "endingId",
+              "min",
+              "max"
+            ],
+            "properties": {
+              "endingId": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "description": "R1 连贯性证据分：高风险成功、关键解锁成功、高风险失败三组 points/cap，以及 totalCap；缺省使用 2/6、1/4、1/2、12。",
+          "additionalProperties": false,
+          "properties": {
+            "riskySuccess": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "points": {
+                  "type": "number"
+                },
+                "cap": {
+                  "type": "number"
+                }
+              }
+            },
+            "unlockFlagSuccess": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "points": {
+                  "type": "number"
+                },
+                "cap": {
+                  "type": "number"
+                }
+              }
+            },
+            "dramaticFailure": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "points": {
+                  "type": "number"
+                },
+                "cap": {
+                  "type": "number"
+                }
+              }
+            },
+            "totalCap": {
+              "type": "number"
+            }
+          }
+        },
+        "base": {
+          "type": "number",
+          "description": "deprecated：0.3.0 旧评分公式基础分，R1 起不再消费；旧模板/旧存档只读保留。"
+        },
         "delta": {
           "type": "object",
-          "description": "风险、成功、取舍、自定义、稳妥选项的评分增量。",
-          "additionalProperties": { "type": "number" }
+          "description": "deprecated：0.3.0 旧评分公式选项增量，R1 起不再消费；旧模板/旧存档只读保留。",
+          "additionalProperties": {
+            "type": "number"
+          }
         },
         "soulPoints": {
           "type": "object",
@@ -86,21 +264,75 @@
         },
         "endingBonus": {
           "type": "object",
-          "description": "按结局 tone 附加的评分。",
-          "additionalProperties": { "type": "number" }
+          "description": "deprecated：0.3.0 旧评分公式结局加成，R1 起不再消费；旧模板/旧存档只读保留。",
+          "additionalProperties": {
+            "type": "number"
+          }
         },
         "reincarnation": {
           "type": "object",
-          "description": "来世传承：把上局部分属性按比例带给下一局。",
+          "description": "deprecated：0.3.0 旧 30% 自动继承配置，R1 起不再消费；旧模板/旧存档只读保留。",
           "additionalProperties": false,
-          "required": ["enabled", "label", "inheritAttrs", "cap", "rate"],
+          "required": [
+            "enabled",
+            "label",
+            "inheritAttrs",
+            "cap",
+            "rate"
+          ],
           "properties": {
-            "enabled": { "type": "boolean" },
-            "label": { "type": "string" },
-            "inheritAttrs": { "type": "array", "items": { "type": "string" } },
-            "cap": { "type": "number" },
-            "rate": { "type": "number" }
+            "enabled": {
+              "type": "boolean"
+            },
+            "label": {
+              "type": "string"
+            },
+            "inheritAttrs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "cap": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            }
           }
+        },
+        "sections": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "realm",
+            "story",
+            "living",
+            "legacy"
+          ],
+          "properties": {
+            "realm": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 250
+            },
+            "story": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 250
+            },
+            "living": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 250
+            },
+            "legacy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 250
+            }
+          },
+          "description": "R2：模板只表达四段上限，运行时实际值写入 score_detail.sections。"
         }
       }
     },
@@ -110,17 +342,46 @@
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["label", "init", "min", "max", "group"],
+        "required": [
+          "label",
+          "init",
+          "min",
+          "max",
+          "group"
+        ],
         "properties": {
-          "label": { "type": "string" },
-          "init": { "type": "number" },
-          "min": { "type": "number" },
-          "max": { "type": "number" },
-          "group": { "enum": ["growth", "resource", "state", "custom"] },
-          "displayOrder": { "type": "integer" },
-          "color": { "type": "string" },
-          "decayOnZero": { "type": "boolean" },
-          "zeroMessage": { "type": "string" }
+          "label": {
+            "type": "string"
+          },
+          "init": {
+            "type": "number"
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "group": {
+            "enum": [
+              "growth",
+              "resource",
+              "state",
+              "custom"
+            ]
+          },
+          "displayOrder": {
+            "type": "integer"
+          },
+          "color": {
+            "type": "string"
+          },
+          "decayOnZero": {
+            "type": "boolean"
+          },
+          "zeroMessage": {
+            "type": "string"
+          }
         }
       }
     },
@@ -130,14 +391,32 @@
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["label", "description"],
+        "required": [
+          "label",
+          "description"
+        ],
         "properties": {
-          "label": { "type": "string" },
-          "description": { "type": "string" },
-          "interlude": { "type": "string" },
-          "minEvents": { "type": "integer", "minimum": 1 },
-          "maxEvents": { "type": "integer", "minimum": 1 },
-          "weight": { "type": "integer", "minimum": 0 }
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "interlude": {
+            "type": "string"
+          },
+          "minEvents": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "maxEvents": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "weight": {
+            "type": "integer",
+            "minimum": 0
+          }
         }
       }
     },
@@ -147,61 +426,162 @@
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["label", "description", "conditions"],
+        "required": [
+          "label",
+          "description",
+          "conditions"
+        ],
         "properties": {
-          "label": { "type": "string" },
-          "description": { "type": "string" },
-          "tone": { "type": "string" },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string"
+          },
           "conditions": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["mode"],
+            "required": [
+              "mode"
+            ],
             "properties": {
-              "mode": { "enum": ["any", "all", "threshold", "flag", "fallback"] },
+              "mode": {
+                "enum": [
+                  "any",
+                  "all",
+                  "threshold",
+                  "flag",
+                  "fallback"
+                ]
+              },
               "thresholds": {
                 "type": "array",
                 "items": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["attribute", "op", "value"],
+                  "required": [
+                    "attribute",
+                    "op",
+                    "value"
+                  ],
                   "properties": {
-                    "attribute": { "type": "string" },
-                    "op": { "enum": ["gte", "gt", "lte", "lt", "eq", "between"] },
-                    "value": { "type": "number" },
-                    "min": { "type": "number" },
-                    "max": { "type": "number" }
+                    "attribute": {
+                      "type": "string"
+                    },
+                    "op": {
+                      "enum": [
+                        "gte",
+                        "gt",
+                        "lte",
+                        "lt",
+                        "eq",
+                        "between"
+                      ]
+                    },
+                    "value": {
+                      "type": "number"
+                    },
+                    "min": {
+                      "type": "number"
+                    },
+                    "max": {
+                      "type": "number"
+                    }
                   }
                 }
               },
-              "requiredFlags": { "type": "array", "items": { "type": "string" } },
-              "countOfThresholds": { "type": "integer", "minimum": 1 },
-              "description": { "type": "string" }
+              "requiredFlags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "missingFlags": {
+                "type": "array",
+                "description": "必须缺失的标记；命中结局条件时这些标记不能存在。",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "countOfThresholds": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "description": {
+                "type": "string"
+              }
             }
           },
-          "weight": { "type": "integer", "minimum": 0 }
+          "weight": {
+            "type": "integer",
+            "minimum": 0
+          }
         }
       }
     },
     "save": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["enabled", "maxHistory"],
+      "required": [
+        "enabled",
+        "maxHistory"
+      ],
       "properties": {
-        "enabled": { "type": "boolean" },
-        "maxHistory": { "type": "integer", "minimum": 1 },
-        "autoSave": { "type": "boolean" },
-        "storageKeyPrefix": { "type": "string" }
+        "enabled": {
+          "type": "boolean"
+        },
+        "maxHistory": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "autoSave": {
+          "type": "boolean"
+        },
+        "storageKeyPrefix": {
+          "type": "string"
+        }
       }
     },
     "ui": {
       "type": "object",
       "description": "页面文案与展示层配置，可被模板覆盖。",
       "properties": {
-        "title": { "type": "string" },
-        "startButton": { "type": "string" },
-        "restartButton": { "type": "string" },
-        "confirmFlagLabels": { "type": "object" },
-        "showFlags": { "type": "boolean" }
+        "title": {
+          "type": "string"
+        },
+        "startButton": {
+          "type": "string"
+        },
+        "restartButton": {
+          "type": "string"
+        },
+        "confirmFlagLabels": {
+          "type": "object"
+        },
+        "showFlags": {
+          "type": "boolean"
+        }
+      }
+    },
+    "learningSystem": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "maxStageIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "initialRecords": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
       }
     }
   }

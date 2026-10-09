@@ -1,512 +1,1886 @@
 {
-  "version": "1.0",
+  "version": "1.0.0-r3",
   "meta": {
-    "title": "人生模拟器占位内容包",
-    "source": "B 阶段原型事件改写，未使用任何小说原文",
+    "title": "八幕仙途 · R3 占位包",
+    "source": "A/B R3 占位内容（非小说原文）",
     "isPlaceholder": true,
-    "contentRoute": "none"
+    "contentRoute": "C",
+    "note": "用于验证 R3 抉择循环、时间账本与结果反馈链；正式文本由 A 内容包替换。"
+  },
+  "optionFeedback": {
+    "act1_awaken_night": [
+      { "resultText": "你先把喘息的人拖到柴门后，苏小柔认出你是在救人。", "failureText": "你护住伤者却被火把逼退，村人记住了你的选择，伤势也因此拖慢。", "bridgeText": "有人因你活下来，黎明时愿意替你指认安全的出村路。", "unlockFlag": "act1_saved_witness" },
+      { "resultText": "你循声击退黑影，半截兽骨落入手中，追兵暂时改道。", "failureText": "黑影反扑，你只抢回半截兽骨，胸口的伤让追兵闻到了血。", "bridgeText": "兽骨上的刻痕指向村外，追兵沿血迹把你逼向药棚。", "unlockFlag": "act1_hunted_trace", "failureUnlockFlag": "act1_wounded_trace" },
+      { "resultText": "你点火聚起村人，陌生的名字第一次在荒村传开。", "failureText": "火光招来更多黑影，村人虽记住了你，柴门却被撞出裂口。", "bridgeText": "火光留下的名声传到村口，追兵和愿意帮你的人同时赶来。", "unlockFlag": "act1_public_name", "failureUnlockFlag": "act1_burned_shelter" }
+    ],
+    "act1_system_escape": [
+      { "resultText": "你留下令符修好义仓，村人把粮册交给你保管。", "failureText": "你保住了义仓，却来不及抹掉令符上的印记，宗门知道你在这里。", "bridgeText": "粮册中的缺口指向村口药棚，下一场追查已经有了落脚处。", "unlockFlag": "act1_ledger_keeper" },
+      { "resultText": "你掀开黑铺夺回账册，商队的换防时刻被你记在心里。", "failureText": "库门提前落下，你只摸到空白符，还给自己添了一个宗门仇敌。", "bridgeText": "账册把你引向药棚；空白符则让追兵比你更早知道目的地。", "unlockFlag": "act1_stolen_ledger", "failureUnlockFlag": "act1_sect_grudge" },
+      { "resultText": "你当众替掌柜解围，换来一笔买命钱和一条官道消息。", "failureText": "掌柜没有领情，名声只换来一笔小钱，伤口反而再次崩开。", "bridgeText": "官道消息把商队推到药棚门前，苏小柔不得不替你作证。", "unlockFlag": "act1_shopkeeper_debt", "failureUnlockFlag": "act1_shopkeeper_grudge" }
+    ],
+    "act2_herb_shelter": [
+      { "resultText": "你带村民转移，药棚和人一起保住，苏小柔把你列入可信的人。", "failureText": "撤离保住了大多数人，药棚却被烧掉，苏小柔的药方只剩半页。", "bridgeText": "活下来的人在村口等你决定：追兽巢，还是先把药方送出去。", "unlockFlag": "act2_village_saved", "failureUnlockFlag": "act2_shelter_burned" },
+      { "resultText": "你独自追到兽巢，拔掉祸根并取回一枚带血的兽牙。", "failureText": "兽巢没有被清空，你带伤逃回，村口从此不再相信单人冒险。", "bridgeText": "兽牙上的咒痕把首杀的线索推到村口，恶徒知道有人在追查。", "unlockFlag": "act2_beast_root", "failureUnlockFlag": "act2_beast_survivor" },
+      { "resultText": "你分人守村并回去报信，援军按时赶到，村民记住了你的调度。", "failureText": "分兵让守村的人吃了亏，援军虽到，村口也留下了你的失误。", "bridgeText": "报信带回的军符让官差提前出现，所有人要在村口对质。", "unlockFlag": "act2_called_aid", "failureUnlockFlag": "act2_split_defense" }
+    ],
+    "act2_first_blood": [
+      { "resultText": "你认下此事换来三天期限，村民和官差都把这笔人情记在账上。", "failureText": "道理没有换来期限，官差只给你一夜；村民仍愿意替你作证。", "bridgeText": "三天或一夜的期限把你推向宗门巡逻队，必须处理尸体与药材。", "unlockFlag": "act2_three_day_pact" },
+      { "resultText": "令牌在官差面前折断，村口暂时服了你的威，敌意也写在每个人脸上。", "failureText": "你折断令牌却没压住场面，伤口和罚单一起落在身上。", "bridgeText": "这场立威让姜红颜的线人注意到你，巡逻队带着画像赶来。", "unlockFlag": "act2_broken_token", "failureUnlockFlag": "act2_official_grudge" },
+      { "resultText": "老人联名作保，声势压住了第一轮盘问，药材账也多了一份证人。", "failureText": "联名没有挡住盘问，几位老人反被牵连，村民对你的信任出现裂缝。", "bridgeText": "联名的名字引来宗门记录，旧身份线索从纸面上浮出来。", "unlockFlag": "act2_elder_witnesses", "failureUnlockFlag": "act2_elder_cost" }
+    ],
+    "act3_old_identity": [
+      { "resultText": "你坦言旧事并护住眼前人，姜红颜把你的名字写进密档。", "failureText": "旧事说得太迟，眼前人仍受牵连，但密档留下了你的真实来路。", "bridgeText": "密档把旧契与试炼塔资格绑在一起，逃避也会成为一种选择。", "unlockFlag": "act3_identity_truth" },
+      { "resultText": "你展露修为镇住场面，众人退开半步，却开始计算你的价值。", "failureText": "修为没有压住质疑，你带伤收场，旧案反而多了一条可攻击的证据。", "bridgeText": "威势换来的资格很快要在试炼塔里兑现，塔门不等人。", "unlockFlag": "act3_power_revealed", "failureUnlockFlag": "act3_power_doubted" },
+      { "resultText": "你把旧案讲成自己的声望故事，得到资源，也让真相更难说清。", "failureText": "故事被识破，声望没有涨，心神却被旧案反噬。", "bridgeText": "被包装过的旧案进入五国案卷，试炼塔审查因此更加严苛。", "unlockFlag": "act3_reputation_mask", "failureUnlockFlag": "act3_story_exposed" }
+    ],
+    "act3_trial_tower": [
+      { "resultText": "你量力而退让出机会，同门活着出来，铜药杵却记下了你的克制。", "failureText": "你退得太晚，同门仍受伤；你保住了资格，却失去一部分信任。", "bridgeText": "药田边的炉火为炸天帮埋下第一枚传承种子。", "unlockFlag": "act3_measured_retreat" },
+      { "resultText": "你连闯三层拓下功法，修为暴涨，手臂却留下塔纹。", "failureText": "毒雾和塔纹一起入骨，功法残缺，今后每次破境都要面对旧伤。", "bridgeText": "塔纹把你和沉渊古祭的门槛连上，强行前进会付出代价。", "unlockFlag": "act3_tower_imprint", "failureUnlockFlag": "act3_tower_wound" },
+      { "resultText": "你请全宗观礼借势取塔，功法不如独闯深，却让更多人站到你身后。", "failureText": "观礼变成围观，声势没有换来功法，盟友也开始观望。", "bridgeText": "观礼留下的名单成为立帮时的第一批可用人脉。", "unlockFlag": "act3_public_ally", "failureUnlockFlag": "act3_public_doubt" }
+    ],
+    "act4_bandit_founded": [
+      { "resultText": "你立帮规收留流民，第一批帮众有了粮、有了名字，也有了共同债。", "failureText": "帮规立下却缺粮，流民只留下一半，剩下的人把你的名字记成承诺。", "bridgeText": "帮规和欠下的人情把五城围名的通牒送到你桌上。", "unlockFlag": "act4_gang_code" },
+      { "resultText": "你以强横手段压服各方，旗子立得快，反弹也在暗处聚拢。", "failureText": "敌仓是空仓，骨干受伤，帮旗被烧掉一角。", "bridgeText": "烧过的旗成为围城时最先被攻击的目标。", "unlockFlag": "act4_hardline_flag", "failureUnlockFlag": "act4_burned_flag" },
+      { "resultText": "你请老盟主出面借名望建帮，帮派少走弯路，却欠下一份人情。", "failureText": "老盟主的名望没有压住反对者，帮派多了一条脆弱的依附线。", "bridgeText": "盟主的人情在围城时变成一封必须兑现的求援信。", "unlockFlag": "act4_old_pact", "failureUnlockFlag": "act4_dependency_fracture" }
+    ],
+    "act4_fame_siege": [
+      { "resultText": "你与段九德立下同生之誓，帮众第一次把两人的命运看成一件事。", "failureText": "誓言挡住了第一轮围杀，却没能救下所有伤兵。", "bridgeText": "同生之誓让北海预警优先送到你手里。", "unlockFlag": "act4_partner_oath" },
+      { "resultText": "你让段九德留后方，自己扛下危险，旗保住了，帮内却留下亏欠。", "failureText": "你扛住了第一击，段九德替你挡下追杀，关系因此出现裂口。", "bridgeText": "伤兵名单随岁贡车队传到北海，妖潮预警被迫提前。", "unlockFlag": "act4_solo_burden", "failureUnlockFlag": "act4_partner_wounded" },
+      { "resultText": "你当众拜段九德为副帮主，名声与组织都稳住了。", "failureText": "拜任没有换来认同，帮众把权力争执带进了下一场围城。", "bridgeText": "副帮主的名义让北海守军愿意听你调度。", "unlockFlag": "act4_partner_deputy", "failureUnlockFlag": "act4_power_split" }
+    ],
+    "act5_abyss_expedition": [
+      { "resultText": "小队稳扎稳打带回古图和活着的证人，沉渊碑的入口显形。", "failureText": "稳扎稳打仍有人掉队，古图保住了，队伍却不再完整。", "bridgeText": "古图把九年后的北海妖潮写进你的行程。", "unlockFlag": "act5_survivor_map", "failureUnlockFlag": "act5_missing_explorer" },
+      { "resultText": "你抛下辎重先行，抢到完整古印，身上的黑纹也开始看风向。", "failureText": "古印离坛即碎，劫气缠上你，黑纹从胸口一路蔓延。", "bridgeText": "黑纹能感到北海潮眼，却把你推向不可逆的代价。", "unlockFlag": "act5_black_mark", "failureUnlockFlag": "act5_black_mark" },
+      { "resultText": "各宗共签探山盟约，资源少一点，回来的路却有人守。", "failureText": "盟约被人撕毁，队伍失去补给，沉渊线只剩半卷记录。", "bridgeText": "盟约或裂痕都会决定北海城门是否向难民开放。", "unlockFlag": "act5_expedition_pact", "failureUnlockFlag": "act5_broken_pact" }
+    ],
+    "act5_north_tide": [
+      { "resultText": "你配合民兵固守，鹿野城保住灯火，沈望潮把守城名册交给你。", "failureText": "援军迟到，城门仍保住一半，沈望潮把伤亡名册交到你手里。", "bridgeText": "名册上的沉渊碑线索把古祭推到你面前。", "unlockFlag": "act5_city_hold", "failureUnlockFlag": "act5_city_wounded" },
+      { "resultText": "你趁夜反攻邪修营寨，潮眼暂退，敌营留下可追查的旗印。", "failureText": "反攻失手，沈望潮替你挡下潮击，北三城的旗先后熄灭。", "bridgeText": "旗印或伤亡会改变沉渊古祭对你的回应。", "unlockFlag": "act5_night_counter", "failureUnlockFlag": "act5_commander_wounded" },
+      { "resultText": "你传书诸侯插上义旗，援军与难民一起涌入城中。", "failureText": "诸侯只回了一纸空令，义旗仍在，但城里开始缺粮。", "bridgeText": "义旗的名声将成为回地球后解释两个世界的证据。", "unlockFlag": "act5_justice_banner", "failureUnlockFlag": "act5_famine_debt" }
+    ],
+    "act6_return_earth": [
+      { "resultText": "你回去安顿亲人，旧屋留下了可回来的灯，仙缘暂时沉入箱底。", "failureText": "你赶到旧屋却迟了一步，亲人只留下地址和一张未寄出的纸。", "bridgeText": "旧屋的光纹让天人族降临无从隐藏。", "unlockFlag": "act6_earth_home", "failureUnlockFlag": "act6_late_home" },
+      { "resultText": "你撕掉引路符直入天门，修为抢先一步，地球线从此断在身后。", "failureText": "引路符碎裂，天门反噬你的神识，地球坐标被陌生人截获。", "bridgeText": "坐标截获让天人族的降临提前，回头已不是原路。", "unlockFlag": "act6_cut_earth_route", "failureUnlockFlag": "act6_exposed_coordinate" },
+      { "resultText": "你带仙缘回村换来一世安稳，村人的名字因此写进你的传承线。", "failureText": "仙缘只换来短暂安稳，村人因你被盯上，保护变成一笔债。", "bridgeText": "村人的证词会在天人族来临时决定你是否公开真相。", "unlockFlag": "act6_village_legacy", "failureUnlockFlag": "act6_village_debt" }
+    ],
+    "act6_celestial_descent": [
+      { "resultText": "你回村收尾，承诺兑现，苏小柔把两封信交到你手里。", "failureText": "你回村太迟，只收回一封信，另一封落进天人族手里。", "bridgeText": "信里的光纹把仙界坐标推到天门选拔。", "unlockFlag": "act6_kept_promise", "failureUnlockFlag": "act6_lost_letter" },
+      { "resultText": "你压下所有信件登天门，抢到先手，也把地球的证据锁在砚下。", "failureText": "信件被截，神识受损，苏小柔的名字出现在追捕名单。", "bridgeText": "名单会在天门选拔时成为你必须公开的证据。", "unlockFlag": "act6_sealed_letters", "failureUnlockFlag": "act6_rou_targeted" },
+      { "resultText": "你把信写成檄文让天下看见，真相扩散，追兵也有了方向。", "failureText": "檄文只传出半篇，名声先涨，证据却被人篡改。", "bridgeText": "公开的檄文把阴谋名单带入天门选拔。", "unlockFlag": "act6_public_manifesto", "failureUnlockFlag": "act6_forged_manifesto" }
+    ],
+    "act7_gate_selection": [
+      { "resultText": "中立长老会收下名单，调查令与魔核密室资格一起落到你手中。", "failureText": "长老会只收下一半名单，调查令有了，但关键证人消失。", "bridgeText": "密室提前失控，名单上的名字决定谁愿意与你并肩。", "unlockFlag": "act7_neutral_inquiry", "failureUnlockFlag": "act7_missing_witness" },
+      { "resultText": "你端掉永夜殿分坛，逼出幕后印记，修为与仇债同时上升。", "failureText": "分坛反噬，魔核碎片嵌入经脉，风月华获得了你的伤口。", "bridgeText": "印记或碎片会在魔核反噬时选择它的下一个宿主。", "unlockFlag": "act7_branch_raid", "failureUnlockFlag": "act7_core_fragment" },
+      { "resultText": "你当众念出名单，舆论压垮第一层阴谋，天下开始盯着审判台。", "failureText": "名单被说成伪证，名声没有倒，但你失去了一部分证人。", "bridgeText": "舆论或失去的证人会改变魔核密室的撤退窗口。", "unlockFlag": "act7_public_exposure", "failureUnlockFlag": "act7_public_doubt" }
+    ],
+    "act7_magic_core_duel": [
+      { "resultText": "你护住伤员边战边退，证词和活人一起离开魔核密室。", "failureText": "你保住了撤退线，却没能带走所有伤员，证词缺了一角。", "bridgeText": "活人和残缺证词都指向中央天门的小柔气息。", "unlockFlag": "act7_survivor_testimony", "failureUnlockFlag": "act7_missing_testimony" },
+      { "resultText": "你以全部修为压住魔核，魔核退却，反噬黑纹却刻进经脉。", "failureText": "魔核反噬，你的右手经脉焦黑，尖啸追着你直到中央天门。", "bridgeText": "黑纹让你听见小柔的气息，也让神域门缝更难关闭。", "unlockFlag": "act7_core_suppressed", "failureUnlockFlag": "act7_core_corruption" },
+      { "resultText": "众生之力结阵镇住魔核，众人的名字被写入这场胜利。", "failureText": "结阵松动，众生留下的愿力反噬心神，阵外的人开始互相指责。", "bridgeText": "众生愿力会在救小柔时变成见证，也可能变成新的代价。", "unlockFlag": "act7_common_array", "failureUnlockFlag": "act7_common_backlash" }
+    ],
+    "act8_rescue_rou": [
+      { "resultText": "你与四帝谈条件换回小柔，她抓住你的袖子，门枢暂时安静。", "failureText": "条件谈崩，小柔只被放回一半，四帝把门枢推向关闭。", "bridgeText": "小柔是否完整归来决定最后是封门守成，还是再开神域。", "unlockFlag": "act8_rou_rescued", "failureUnlockFlag": "act8_rou_partial" },
+      { "resultText": "你掀翻牢笼夺人，救出小柔，也让四帝和同伴都带伤。", "failureText": "你赢下两场却输在第三场，小柔被门光带走一半。", "bridgeText": "伤势与半身门光让最后的推门变成不可逆选择。", "unlockFlag": "act8_rou_force_rescue", "failureUnlockFlag": "act8_rou_lost_half" },
+      { "resultText": "你请四帝作见证，救人变成天下大事，所有目光都压到门枢上。", "failureText": "见证反成审判，四帝退回门内，小柔的名字被从记录中抹去。", "bridgeText": "公开见证会在推门时给予盟友，也会让失败无法掩藏。", "unlockFlag": "act8_public_rescue", "failureUnlockFlag": "act8_erased_rou" }
+    ],
+    "act8_push_sky_gate": [
+      { "resultText": "你推开半扇门留出退路，小柔、同伴与仙洲都站在门这边。", "failureText": "半扇门仍被余劲推回，同伴受伤，但退路没有消失。", "bridgeText": "门合拢后的石碑会按活况、传承和因果证据结算。", "unlockFlag": "act8_half_gate" },
+      { "resultText": "你燃烧全部修为推开整扇门，神域显形，代价写进此世根基。", "failureText": "残阵反涌，修为与寿元一起下坠，神域只剩一道危险的缝。", "bridgeText": "整门是否值得由结局资格与不可逆代价共同裁定。", "unlockFlag": "act8_full_gate", "failureUnlockFlag": "act8_gate_recoil" },
+      { "resultText": "天下人共推你入主天门，世界形态被众人的选择共同改写。", "failureText": "众愿不齐，门枢震裂，名声留下，盟友却各自承担代价。", "bridgeText": "众愿的完整度会在最终结局中兑现为传承或裂痕。", "unlockFlag": "act8_world_covenant", "failureUnlockFlag": "act8_world_fracture" }
+    ]
   },
   "events": [
     {
-      "id": "ev_youth_first_step",
-      "title": "初入宗门",
-      "text": "占位：你第一次踏入宗门，山门前的长老正打量着每一位新弟子。",
-      "stage": "youth",
+      "id": "act1_awaken_night",
+      "title": "荒村第一夜",
+      "text": "你在尸堆与血腥味之间醒来，脑中那道来历不明的声响时近时远。远处有人举着火把靠近，身前还躺着两个仍在喘气的身影。这一世的第一道题，是先弄清自己是谁，还是先护住眼前能护住的人。",
+      "stage": "act1",
+      "weight": 1,
       "isPlaceholder": true,
-      "weight": 100,
-      "conditions": null,
-      "options": [
+      "resultText": "你把柴门顶死，替村人守到火光退去。苏小柔给你换药时，昨夜那道异响已经远得听不见了。",
+      "failureText": "黑影比你多，你只抢回半截兽骨，胸口被抓出三道深口，醒来时天已亮。",
+      "bridgeText": "天刚亮，村外传来搜查犬的叫声；你只能带着未愈的伤离开。",
+      "timeBeats": [
         {
-          "label": "谦逊行礼",
-          "effects": { "fame": 1, "bond": 1 },
-          "successRate": 1,
-          "resultText": "长老微微点头，记下了你的名字。",
-          "riskTag": "safe"
+          "at": "result",
+          "text": "火把退去后，荒村从闭门转为守望；苏小柔与村民对“这个醒来的人”产生第一次判断。"
         },
         {
-          "label": "昂首而立",
-          "effects": { "power": 2, "sanity": -1 },
-          "successRate": 0.6,
-          "resultText": "有人觉得你狂妄，也有人记住了你。",
-          "failureEffects": { "power": -1 },
-          "failureText": "你撞上了冷眼，气势矮了半截。",
-          "riskTag": "risky"
+          "at": "ledger",
+          "text": "当夜守村与苏醒后的交接，本事件不推进人生账本。"
         }
-      ]
-    },
-    {
-      "id": "ev_youth_bottle",
-      "title": "修炼瓶颈",
-      "text": "占位：你的修炼陷入瓶颈，同门劝你换个思路。",
-      "stage": "youth",
-      "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
-        {
-          "label": "闭关苦修",
-          "effects": { "power": 2 },
-          "successRate": 1,
-          "resultText": "数日之后，你感到体内气息渐稳。",
-          "riskTag": "safe"
-        },
-        {
-          "label": "挑战长老",
-          "effects": { "power": 4, "sanity": -2 },
-          "successRate": 0.5,
-          "resultText": "胜负之间，你看到了自己的极限。",
-          "failureEffects": { "power": -1, "health": -1 },
-          "failureText": "长老只用三招便让你趴在地上。",
-          "riskTag": "risky"
-        }
-      ]
-    },
-    {
-      "id": "ev_youth_letter",
-      "title": "深夜来信",
-      "text": "占位：深夜有人送来一封密信，邀你赴约。",
-      "stage": "youth",
-      "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
-        {
-          "label": "回信宽慰",
-          "effects": { "bond": 2, "sanity": 1 },
-          "successRate": 1,
-          "resultText": "你的一封回信，让远方的人安心下来。",
-          "riskTag": "safe"
-        },
-        {
-          "label": "冒险赴约",
-          "effects": { "bond": 4, "health": -2 },
-          "successRate": 0.55,
-          "resultText": "夜色里你见到了写信的人，也踩进了对方的陷阱。",
-          "failureEffects": { "health": -2, "sanity": -1 },
-          "failureText": "你被围堵在窄巷，带伤而归。",
-          "riskTag": "risky"
-        }
-      ]
-    },
-    {
-      "id": "ev_youth_city",
-      "title": "城中有难",
-      "text": "占位：城中百姓受难，有人请求你出手。",
-      "stage": "youth",
-      "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
-        {
-          "label": "捐出积蓄",
-          "effects": { "wealth": -2, "fame": 2 },
-          "successRate": 1,
-          "resultText": "你的慷慨被城中人传扬。",
-          "riskTag": "sacrifice"
-        },
-        {
-          "label": "亲自救援",
-          "effects": { "bond": 3, "health": -2 },
-          "successRate": 0.65,
-          "resultText": "你救下了一家人，也付出了一些代价。",
-          "failureEffects": { "health": -3, "fame": -1 },
-          "failureText": "你冲得太急，反被乱局困住。",
-          "riskTag": "risky"
-        }
-      ]
-    },
-    {
-      "id": "ev_youth_rest",
-      "title": "山间小憩",
-      "text": "占位：你在山间溪边歇脚，看见一位老人在钓鱼。",
-      "stage": "youth",
-      "isPlaceholder": true,
-      "weight": 8,
-      "conditions": null,
-      "options": [
-        {
-          "label": "坐下听故事",
-          "effects": { "sanity": 3, "bond": 1 },
-          "successRate": 1,
-          "resultText": "老人的话像溪水，把焦躁冲淡了。",
-          "riskTag": "safe"
-        },
-        {
-          "label": "向老人求教",
-          "effects": { "power": 1, "sanity": 2 },
-          "successRate": 1,
-          "resultText": "老人随手点破你练功的一处错漏。",
-          "riskTag": "safe"
-        }
-      ]
-    },
-    {
-      "id": "ev_prime_fame",
-      "title": "名声鹊起",
-      "text": "占位：你的事迹传开，有人邀你在众人面前亮相。",
-      "stage": "prime",
-      "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
-        {
-          "label": "低调谦辞",
-          "effects": { "fame": 1, "sanity": 1 },
-          "successRate": 1,
-          "resultText": "你退回人群，反而被人记得更深。",
-          "riskTag": "safe"
-        },
-        {
-          "label": "高调亮相",
-          "effects": { "fame": 3, "sanity": -2 },
-          "successRate": 0.7,
-          "resultText": "你的锋芒刺痛了一些人的眼睛。",
-          "failureEffects": { "fame": -2, "sanity": -1 },
-          "failureText": "登场时机没选对，台下传来哄笑。",
-          "riskTag": "risky"
-        }
-      ]
-    },
-    {
-      "id": "ev_prime_old_friend",
-      "title": "故人重逢",
-      "text": "占位：多年不见的故人出现在你面前。",
-      "stage": "prime",
-      "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
-        {
-          "label": "设宴叙旧",
-          "effects": { "wealth": -2, "bond": 2 },
-          "successRate": 1,
-          "resultText": "酒过三巡，隔阂消了大半。",
-          "riskTag": "sacrifice"
-        },
-        {
-          "label": "直奔主题",
-          "effects": { "fame": 2, "bond": -1 },
-          "successRate": 1,
-          "resultText": "你问得直接，故人却觉得你变了。",
-          "riskTag": "custom"
-        }
-      ]
-    },
-    {
-      "id": "ev_prime_storm",
-      "title": "山雨欲来",
-      "text": "占位：山雨欲来，有人劝你早做打算。",
-      "stage": "prime",
-      "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
-        {
-          "label": "加固家业",
-          "effects": { "wealth": 2, "health": 1 },
-          "successRate": 1,
-          "resultText": "你把大门修牢，也让自己安稳了几分。",
-          "riskTag": "safe"
-        },
-        {
-          "label": "提前迎战",
-          "effects": { "power": 3, "health": -2 },
-          "successRate": 0.6,
-          "resultText": "你抢在雨前动手，赢下了先机。",
-          "failureEffects": { "power": -1, "health": -2 },
-          "failureText": "你低估了雨势，折损了人手。",
-          "riskTag": "risky"
-        }
-      ]
-    },
-    {
-      "id": "ev_prime_plea",
-      "title": "众生求援",
-      "text": "占位：百姓在门外长跪，求你主持公道。",
-      "stage": "prime",
-      "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
-        {
-          "label": "安抚众人",
-          "effects": { "bond": 2, "sanity": 1 },
-          "successRate": 1,
-          "resultText": "你许下承诺，人心暂时安定。",
-          "riskTag": "safe"
-        },
-        {
-          "label": "孤身入局",
-          "effects": { "power": 2, "fame": 2, "health": -2 },
-          "successRate": 0.6,
-          "resultText": "你独自踏入旋涡，名望升了，身上也添了伤。",
-          "failureEffects": { "health": -3, "bond": -1 },
-          "failureText": "你没能护住所有人，人群散了一半。",
-          "riskTag": "risky"
-        }
-      ]
-    },
-    {
-      "id": "ev_prime_invitation",
-      "title": "豪门邀请",
-      "text": "占位：城中的豪门递来请帖，想与你结盟。",
-      "stage": "prime",
-      "isPlaceholder": true,
-      "weight": 8,
-      "conditions": null,
-      "options": [
-        {
-          "label": "婉言谢绝",
-          "effects": { "bond": 1, "sanity": 1 },
-          "successRate": 1,
-          "resultText": "你守住清净，也守住了自己的立场。",
-          "riskTag": "safe"
-        },
-        {
-          "label": "应邀赴宴",
-          "effects": { "wealth": 3, "fame": 1, "sanity": -1 },
-          "successRate": 1,
-          "resultText": "你与豪门相谈甚欢，却也沾上了是非。",
-          "riskTag": "custom"
-        }
-      ]
-    },
-    {
-      "id": "ev_prime_pit",
-      "title": "暗巷伏击",
-      "text": "占位：有人在暗巷设下埋伏，等你自投罗网。",
-      "stage": "prime",
-      "isPlaceholder": true,
-      "weight": 8,
-      "conditions": {
-        "requiredAttribute": { "name": "power", "min": 8 }
+      ],
+      "nextEventTrigger": "黎明时追兵沿血迹找到村口；系统会在本次结算与承接完成后回应，迫使言缺离开药棚。",
+      "personLedgerEntry": {
+        "character": "苏小柔（荒村药棚孤女）",
+        "slice": "第一夜递灯 / 为你隐瞒血迹 / 在祠堂守到天亮。"
+      },
+      "sceneDuration": "当夜至次日黎明",
+      "lifeAdvance": {
+        "months": 0,
+        "source": "event",
+        "reason": "当夜守村与苏醒后的交接",
+        "basis": "`sceneDuration` 为当夜至次日黎明；`lifeAdvance = 0`；不得因选项标题或受伤自动跨年。"
       },
       "options": [
         {
-          "label": "绕道而行",
-          "effects": { "sanity": 1 },
+          "label": "先救人，守住本能",
+          "effects": {
+            "bond": 5,
+            "fame": 4
+          },
           "successRate": 1,
-          "resultText": "你避开险路，损失的是时间。",
-          "riskTag": "safe"
+          "unlockFlag": "system_active",
+          "riskTag": "safe",
+          "semantic": "safe"
         },
         {
-          "label": "正面破局",
-          "effects": { "power": 2, "fame": 2 },
-          "successRate": 0.65,
-          "resultText": "你在阴影中反杀，让对方记住了你的名字。",
-          "failureEffects": { "health": -3, "power": -1 },
-          "failureText": "伏击者比传闻中更多，你吃了暗亏。",
-          "riskTag": "risky"
+          "label": "循声追敌，以力开路",
+          "effects": {
+            "power": 12,
+            "wealth": 5,
+            "fame": 2
+          },
+          "successRate": 0.8,
+          "failureEffects": {
+            "power": 2,
+            "health": -8,
+            "sanity": -8
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act1_deadly_awakening_1",
+            "target": 7,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "点火聚人，先传开名字",
+          "effects": {
+            "fame": 5,
+            "power": 1,
+            "bond": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "health": -4
+          },
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act1_deadly_awakening_2",
+            "target": 7,
+            "kind": "event",
+            "modifierSource": "none"
+          }
         }
+      ],
+      "powerSource": "system",
+      "requiresPowerSource": null,
+      "fateChain": "死生初醒",
+      "fateInstance": "act1_1",
+      "fateChainStage": "浮现",
+      "memoryFragment": "梦里有一卷被水浸过的旧地图。",
+      "awakenTrigger": "首次听见系统声"
+    },
+    {
+      "id": "act1_system_escape",
+      "title": "藏宝阁旧账",
+      "text": "天亮后，你在挂着金算盘幌子的旧铺前停步。掌柜说你带着一枚来历不明的令符，若能抵押，可换一笔买命钱；若不肯，村外的麻烦今晚就会找上门。",
+      "stage": "act1",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把系统提示压到脑后，跟商队走官道。伤口没有崩开，荒村也少了搜查借口，但宝库换防的时机已经过去。",
+      "failureText": "库门提前落下，你只摸到一张空白符。追兵看见你的脸，你带着伤逃进夜里，从此多了一个宗门仇敌。",
+      "bridgeText": "商队把你送到小村外，你才发现苏小柔一路替你把血迹掩掉了。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "系统在事件 01 的结果页与承接完成后固定显形；荒村因藏匿你而承担风险；逃走路线的选择改变你与天武宗、村人的第一层关系。"
+        },
+        {
+          "at": "ledger",
+          "text": "疗伤、离村与系统新手任务衔接，人生账本推进 3 个月。"
+        }
+      ],
+      "nextEventTrigger": "巡逻队循着兽骨与血迹逼近，必须决定是借官道脱身、潜入敌方库房，还是用精血催符。",
+      "personLedgerEntry": {
+        "character": "苏小柔（荒村）",
+        "slice": "替你藏起血衣 / 把药钱塞进商队货箱 / 在你离开后独自面对盘查。"
+      },
+      "sceneDuration": "数日到一旬",
+      "lifeAdvance": {
+        "months": 3,
+        "source": "event",
+        "reason": "疗伤、离村与系统新手任务衔接",
+        "basis": "`sceneDuration` 为数日到一旬；稳妥疗伤可推进数月，冒险与献祭不自动补年。"
+      },
+      "options": [
+        {
+          "label": "留下令符，先修村口义仓",
+          "effects": {
+            "bond": 4,
+            "fame": 4,
+            "power": 1
+          },
+          "successRate": 1,
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "掀了这黑铺，夺回账册",
+          "effects": {
+            "power": 10,
+            "wealth": 6,
+            "fame": 1,
+            "sanity": -3,
+            "health": -2
+          },
+          "successRate": 0.8,
+          "failureEffects": {
+            "power": 2,
+            "health": -8,
+            "wealth": -2
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act1_old_debt_1",
+            "target": 7,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "当众替掌柜解围，博个名声",
+          "effects": {
+            "fame": 5,
+            "power": 1,
+            "wealth": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "wealth": -2,
+            "health": -3
+          },
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act1_old_debt_2",
+            "target": 7,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "system",
+      "requiresPowerSource": null,
+      "fateChain": "死生初醒",
+      "fateInstance": "act1_2",
+      "fateChainStage": "浮现"
+    },
+    {
+      "id": "act2_herb_shelter",
+      "title": "雨夜叩门",
+      "text": "暴雨冲垮了村西的堤坝，满身泥水的邻人拍开你的门：妖兽循着哭声摸进村子，老弱还困在堤下。与此同时，另一条路上有人正喊你的名字。",
+      "stage": "act2",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把药棚改成临时炉房，先救发热的孩子，再替村人配止血散。苏小柔第一次把药方背面写成你的名字。",
+      "failureText": "商队是诱饵。你被围在盐井旁，药材烧了，村口也被挂了火。苏小柔替你圆了谎，却不再让你一个人出村。",
+      "bridgeText": "药棚保住后，恶徒发现村里多了一个“会配药的外乡人”，第二天就堵住了村口。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "荒村药棚的库存与舆情变化；苏小柔从被保护者变为能替你承担风险的人。"
+        },
+        {
+          "at": "ledger",
+          "text": "药棚驻留与药荒善后，人生账本推进 12 个月。"
+        }
+      ],
+      "nextEventTrigger": "村外药材被劫，恶徒要求交出“藏人”的药方；你必须决定是守制度、追贼还是把命火分给小柔。",
+      "personLedgerEntry": {
+        "character": "苏小柔与孟婆婆",
+        "slice": "药棚试药 / 铜药杵抵门 / 把第一锅汤药留给你。"
+      },
+      "sceneDuration": "数日到一季",
+      "lifeAdvance": {
+        "months": 12,
+        "source": "event",
+        "reason": "药棚驻留与药荒善后",
+        "basis": "`sceneDuration` 为数日到一季；稳妥可停一季到一年，其他路线不超过半年。"
+      },
+      "options": [
+        {
+          "label": "带村民转移，先把人救下",
+          "effects": {
+            "bond": 8,
+            "fame": 5,
+            "wealth": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "saved_village",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "独自追向兽巢，从根上解决",
+          "effects": {
+            "power": 9,
+            "fame": 2,
+            "health": -4
+          },
+          "successRate": 0.8,
+          "failureEffects": {
+            "power": 2,
+            "health": -12,
+            "sanity": -5
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act2_rain_night_cry_1",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "分一半人守村，自己回去报信",
+          "effects": {
+            "fame": 5,
+            "bond": 2,
+            "power": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -2,
+            "health": -6
+          },
+          "unlockFlag": "saved_village",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act2_rain_night_cry_2",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "礼包",
+      "requiresPowerSource": null,
+      "fateChain": "故土牵系",
+      "fateInstance": "act2_3",
+      "fateChainStage": "孕育"
+    },
+    {
+      "id": "act2_first_blood",
+      "title": "村口对质",
+      "text": "藏宝阁的人带着官差堵住村口，说你要么交出令符，要么让他们带走昨夜帮你敲门的女人。身后的村子已经把你当成了靠山。",
+      "stage": "act2",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把尸体和药方交给巡逻队，逼他们当场登记。有人被关进牢里，也有人趁乱出了村，但荒村第一次有了纸面上的保护。",
+      "failureText": "余党故意留下假账。你追进废祠，被爆炸震伤，药箱和证人一起沉进河底。",
+      "bridgeText": "笔录上的名字引来了姜红颜的线人，也让你成为天武宗眼里的“可用之人”。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "恶徒链条被斩断或转移；天武宗开始以“疑似逃犯”处理荒村；苏小柔第一次选择是否替你隐瞒死亡。"
+        },
+        {
+          "at": "ledger",
+          "text": "村口战斗与追捕善后，人生账本推进 6 个月。"
+        }
+      ],
+      "nextEventTrigger": "宗门巡逻队带着画像抵达村口，村人必须先决定如何解释尸体和失踪的药材。",
+      "personLedgerEntry": {
+        "character": "苏小柔",
+        "slice": "替你擦掉刀上的血 / 在巡逻队前承认你是药棚学徒 / 拒绝说出你去了哪里。"
+      },
+      "sceneDuration": "一夜战斗到数日追捕",
+      "lifeAdvance": {
+        "months": 6,
+        "source": "event",
+        "reason": "村口战斗与追捕善后",
+        "basis": "`sceneDuration` 为一夜战斗到数日追捕；选择报官可拖出半年。"
+      },
+      "options": [
+        {
+          "label": "上前认下此事，用道理换三天期限",
+          "effects": {
+            "bond": 5,
+            "fame": 4,
+            "power": 1,
+            "wealth": 1
+          },
+          "successRate": 1,
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "当着官差的面折断令牌，立威",
+          "effects": {
+            "power": 8,
+            "fame": 2,
+            "bond": -2,
+            "health": -3
+          },
+          "successRate": 0.85,
+          "failureEffects": {
+            "power": 1,
+            "health": -8,
+            "fame": -2
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act2_village_standoff_1",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "让全村老人联名作保，把声势做大",
+          "effects": {
+            "fame": 6,
+            "bond": 2,
+            "power": 2,
+            "wealth": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -1,
+            "health": -4
+          },
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act2_village_standoff_2",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "礼包",
+      "requiresPowerSource": null,
+      "fateChain": "故土牵系",
+      "fateInstance": "act2_4",
+      "fateChainStage": "孕育"
+    },
+    {
+      "id": "act3_old_identity",
+      "title": "旧卷上的姓氏",
+      "text": "仙门使者送来一卷旧案，说你上一世的姓氏曾牵动五国朝堂。宗门外姓人围在驿馆外，要你当众交代来历。",
+      "stage": "act3",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把旧契送进公开案卷，逼五国书吏逐条抄录。有人想烧，有人想抢，但第一份能拿去作证的档案留下来了。",
+      "failureText": "旧府等的就是你。卷宗只翻到半页，阵法就合上；你带着重伤逃出，真相又多了一层假。",
+      "bridgeText": "案卷副本被姜红颜截下，她在女帝殿前第一次替你出面。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "原身被采补的契约线浮出水面；女帝旧案与五国关系开始重排；你与言缺这个名字的关系发生变化。"
+        },
+        {
+          "at": "ledger",
+          "text": "查档、赴审与身份核验，人生账本推进 18 个月。"
+        }
+      ],
+      "nextEventTrigger": "水国女帝送来一份可赴审也可焚毁的旧契，试炼塔的资格与此契绑定。",
+      "personLedgerEntry": {
+        "character": "姜红颜",
+        "slice": "在女帝殿前替你作证 / 把旧契副本藏进火漆 / 问你愿不愿意不以驸马身份活。"
+      },
+      "sceneDuration": "查档、赴审或潜行的数周",
+      "lifeAdvance": {
+        "months": 18,
+        "source": "event",
+        "reason": "查档、赴审与身份核验",
+        "basis": "`sceneDuration` 为查档、赴审或潜行的数周；`lifeAdvance` 可为数月至两年，禁止只写“为了推进剧情过了两年”。"
+      },
+      "options": [
+        {
+          "label": "坦言旧事，只护住眼前人",
+          "effects": {
+            "bond": 4,
+            "fame": 5,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "identity_revealed",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "当众展露修为，先镇住场面",
+          "effects": {
+            "power": 10,
+            "fame": 3,
+            "sanity": -2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "power": 2,
+            "fame": -2,
+            "health": -5
+          },
+          "unlockFlag": "identity_revealed",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act3_identity_exposed_1",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "把旧案讲成自己的声望故事",
+          "effects": {
+            "fame": 7,
+            "power": 2,
+            "wealth": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "sanity": -5
+          },
+          "unlockFlag": "identity_revealed",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act3_identity_exposed_2",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "师承",
+      "requiresPowerSource": null,
+      "fateChain": "旧姓因果",
+      "fateInstance": "act3_5",
+      "fateChainStage": "激化",
+      "memoryFragment": "你想起前世曾在同一扇门前停步。",
+      "awakenTrigger": "旧姓被念出",
+      "unfinishedBusiness": [
+        "旧姓留下的因果尚未查清"
       ]
     },
     {
-      "id": "ev_prime_repair",
-      "title": "重整旗鼓",
-      "text": "占位：连番奔波后，你终于有了一段喘息时间。",
-      "stage": "prime",
+      "id": "act3_trial_tower",
+      "title": "试炼塔三层",
+      "text": "宗门开试炼塔，三层之内藏着一部残缺功法。守塔人说：凭修为硬闯可得其力，凭名望周旋可得其势，两条路都只能选一条。",
+      "stage": "act3",
+      "weight": 1,
       "isPlaceholder": true,
-      "weight": 8,
-      "conditions": null,
-      "options": [
+      "resultText": "你没登塔顶，却在药田边守了三季炉火。五行吐纳稳住了，孟婆婆把铜药杵递给你，说这才像能活久一点的人。",
+      "failureText": "毒雾先一步封层。你只摘到一叶草，丹方被火吞掉；醒来时塔外已经换了值守人，女帝线也向别人倾斜。",
+      "bridgeText": "炉火保住了，主株却被人提前摘走；塔门一开，天香谷要你查出是谁动的锁。",
+      "timeBeats": [
         {
-          "label": "闭关养伤",
-          "effects": { "health": 3, "sanity": 1 },
-          "successRate": 1,
-          "resultText": "你关起门来休整，气血渐渐复原。",
-          "riskTag": "safe"
+          "at": "result",
+          "text": "星芒草的归属、孟婆婆的炉火状态、天香谷对言缺的评估变化；塔外的王朝局势随三年到五年推进。"
         },
         {
-          "label": "走访旧友",
-          "effects": { "bond": 2, "sanity": 2 },
-          "successRate": 1,
-          "resultText": "旧友的谈笑让你重新有了精神。",
-          "riskTag": "safe"
+          "at": "ledger",
+          "text": "塔内试炼与塔外修整，人生账本推进 36 个月。"
         }
-      ]
+      ],
+      "nextEventTrigger": "塔门关闭前，守炉人发现药炉将熄，而唯一的备用核心在你手里。",
+      "personLedgerEntry": {
+        "character": "孟婆婆",
+        "slice": "把铜药杵塞给你 / 在炉火前承认你是守炉人 / 把星芒草种藏进药囊。"
+      },
+      "sceneDuration": "塔内数日",
+      "lifeAdvance": {
+        "months": 36,
+        "source": "event",
+        "reason": "塔内试炼与塔外修整",
+        "basis": "`sceneDuration` 为塔内数日；稳妥换路可把塔外修炼拉长到数年。"
+      },
+      "options": [
+        {
+          "label": "量力而退，把机会让给同门",
+          "effects": {
+            "bond": 4,
+            "fame": 4,
+            "power": 2
+          },
+          "successRate": 1,
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "连闯三层，强行拓印功法",
+          "effects": {
+            "power": 14,
+            "fame": 1,
+            "health": -3
+          },
+          "successRate": 0.75,
+          "failureEffects": {
+            "power": 2,
+            "health": -10,
+            "sanity": -4
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act3_trial_tower_1",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "请全宗观礼，借势取塔",
+          "effects": {
+            "fame": 7,
+            "power": 2,
+            "bond": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -2,
+            "power": 1
+          },
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act3_trial_tower_2",
+            "target": 10,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "师承",
+      "requiresPowerSource": null,
+      "fateChain": "旧姓因果",
+      "fateInstance": "act3_6",
+      "fateChainStage": "激化"
     },
     {
-      "id": "ev_late_legacy",
-      "title": "传承抉择",
-      "text": "占位：有人请你收徒，把一身本事传下去。",
-      "stage": "late",
+      "id": "act4_bandit_founded",
+      "title": "聚义亭上的旗",
+      "text": "乱世流民涌进城门，有人想推举你为王，有人劝你把江湖散人收拢成旗。聚义亭里坐着三拨人，等你先开口。",
+      "stage": "act4",
+      "weight": 1,
       "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
+      "resultText": "你在公开文书上按下手印，炸天帮第一次有了合法门牌。段九德骂你太慢，却还是把那块旧门牌擦得发亮。",
+      "failureText": "敌仓是空仓。你们被伏击在河滩，骨干伤了一半，最后只带回一面被烧过的旗。",
+      "bridgeText": "登记引来同盟审查，也让更多走投无路的人找到了你们的门槛。",
+      "timeBeats": [
         {
-          "label": "亲自传道",
-          "effects": { "bond": 2, "fame": 1, "health": -1 },
-          "successRate": 1,
-          "resultText": "你收下弟子，把自己的路交给了后来人。",
-          "riskTag": "sacrifice"
+          "at": "result",
+          "text": "地盘、账目与成员结构变化；二狗子和段九德从合作者变为有公开身份的伙伴；五行山旧势力注意到新旗。"
         },
         {
-          "label": "留下心法",
-          "effects": { "fame": 1, "sanity": 1 },
-          "successRate": 1,
-          "resultText": "你不愿再耗心力，只留下几句口诀。",
-          "riskTag": "safe"
+          "at": "ledger",
+          "text": "立旗、登记与帮务接管，人生账本推进 12 个月。"
         }
-      ]
+      ],
+      "nextEventTrigger": "五城同盟把炸天帮列入围剿名单，但先送来一份“缴纳或归顺”的最后通牒。",
+      "personLedgerEntry": {
+        "character": "二狗子与段九德",
+        "slice": "二狗子守着空门牌吹牛 / 段九德抄完第一本金册 / 立旗后没有离开。"
+      },
+      "sceneDuration": "立旗的数日",
+      "lifeAdvance": {
+        "months": 12,
+        "source": "event",
+        "reason": "立旗、登记与帮务接管",
+        "basis": "`sceneDuration` 为立旗的数日；经营层可推进数月到一年。"
+      },
+      "options": [
+        {
+          "label": "立下帮规，先收留流民",
+          "effects": {
+            "bond": 5,
+            "fame": 6,
+            "power": 1,
+            "wealth": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "gang_founded",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "以强横手段压服各方，立自己的旗",
+          "effects": {
+            "power": 8,
+            "fame": 2,
+            "wealth": 3
+          },
+          "successRate": 0.85,
+          "failureEffects": {
+            "power": 2,
+            "health": -8,
+            "fame": -2
+          },
+          "unlockFlag": "gang_founded",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act4_found_gang_1",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "请老盟主出面，借名望建帮",
+          "effects": {
+            "fame": 7,
+            "power": 1,
+            "bond": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "wealth": -2,
+            "bond": -1
+          },
+          "unlockFlag": "gang_founded",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act4_found_gang_2",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "传承",
+      "requiresPowerSource": null,
+      "fateChain": "聚众成誓",
+      "fateInstance": "act4_7",
+      "fateChainStage": "转机"
     },
     {
-      "id": "ev_late_reunion",
-      "title": "旧地重游",
-      "text": "占位：你回到年轻时第一次踏入的那座山门。",
-      "stage": "late",
+      "id": "act4_fame_siege",
+      "title": "对饮立誓",
+      "text": "建帮当夜，老友端着酒走到你面前：有人愿把命押在帮旗上，也有人提醒你，这条路上他会第一个替你挡刀。",
+      "stage": "act4",
+      "weight": 1,
       "isPlaceholder": true,
-      "weight": 10,
-      "conditions": null,
-      "options": [
+      "resultText": "你把最好的灵石装上对方的车，换回被扣的人。段九德骂你亏，二狗子却把第一碗热汤端给伤兵，帮派没有散。",
+      "failureText": "你输了半招，帮众替你挡下追杀。旗没拿到，伤兵却多了一排。",
+      "bridgeText": "岁贡车队经过北海，天机簿把妖潮预警送到你手里。",
+      "timeBeats": [
         {
-          "label": "向山门鞠躬",
-          "effects": { "sanity": 2, "bond": 1 },
-          "successRate": 1,
-          "resultText": "山风穿过石阶，你忽然觉得一切都值得。",
-          "riskTag": "safe"
+          "at": "result",
+          "text": "五城同盟的版图变化、帮派成员伤亡与地盘转移；北海妖潮预警第一次进入天机簿；段九德和二狗子承担留守职责。"
         },
         {
-          "label": "写下生平",
-          "effects": { "fame": 1, "power": 1 },
-          "successRate": 1,
-          "resultText": "你把这一生的起落写成了一卷旧书。",
-          "riskTag": "custom"
+          "at": "ledger",
+          "text": "围城、退让与伤兵安置，人生账本推进 18 个月。"
         }
-      ]
+      ],
+      "nextEventTrigger": "围城结束后，天机簿显出九年后北海妖潮将卷过九座边城，你的名字也在潮头。",
+      "personLedgerEntry": {
+        "character": "段九德",
+        "slice": "在城门前点数伤员 / 把最后一枚令牌交给流民头领 / 没有跟着败军离开。"
+      },
+      "sceneDuration": "围城数日",
+      "lifeAdvance": {
+        "months": 18,
+        "source": "event",
+        "reason": "围城、退让与伤兵安置",
+        "basis": "`sceneDuration` 为围城数日；退让、经营和疗伤可推进数月到三年。"
+      },
+      "options": [
+        {
+          "label": "与他立下同生之誓",
+          "effects": {
+            "bond": 8,
+            "fame": 4,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "partner_alive",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "让他留在后方，自己扛下危险",
+          "effects": {
+            "power": 10,
+            "bond": 2,
+            "fame": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "power": 2,
+            "health": -8,
+            "bond": -3
+          },
+          "unlockFlag": "partner_alive",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act4_partner_oath_1",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "当众拜他为副帮主",
+          "effects": {
+            "fame": 7,
+            "bond": 2,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "partner_alive",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act4_partner_oath_2",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "传承",
+      "requiresPowerSource": null,
+      "fateChain": "聚众成誓",
+      "fateInstance": "act4_8",
+      "fateChainStage": "转机"
     },
     {
-      "id": "ev_late_illness",
-      "title": "旧伤复发",
-      "text": "占位：旧伤在夜里复发，大夫摇头叹气。",
-      "stage": "late",
+      "id": "act5_abyss_expedition",
+      "title": "五行山裂口",
+      "text": "五行山深处裂开一道口子，进去的探子只传回半句话：门在后面。山外各宗都想独吞机缘，没人愿意结伴。",
+      "stage": "act5",
+      "weight": 1,
       "isPlaceholder": true,
-      "weight": 8,
-      "conditions": null,
-      "options": [
+      "resultText": "你绕开谷底，把伤员和古图一起带出雾。地图不完整，但每一条路都活着走回来了。",
+      "failureText": "古印离坛即碎，劫气顺着裂缝缠上你。你只抢回半卷图，胸口多了一道会看风向的黑纹。",
+      "bridgeText": "半卷潮图指向北海，迫使你在时间窗到来前决定是否闭关。",
+      "timeBeats": [
         {
-          "label": "安心静养",
-          "effects": { "health": 2, "sanity": -1 },
-          "successRate": 1,
-          "resultText": "你放下所有事，身体慢慢有了起色。",
-          "riskTag": "safe"
+          "at": "result",
+          "text": "古图、伤兵与边城灾情变化；北海潮图指向谷底祭坛；二狗子带回的骨头引发埋骨旧事。"
         },
         {
-          "label": "强撑出席",
-          "effects": { "fame": 2, "health": -3 },
-          "successRate": 1,
-          "resultText": "你带病露面，众人只看见你的体面。",
-          "riskTag": "sacrifice"
+          "at": "ledger",
+          "text": "谷内勘查与伤员带离，人生账本推进 48 个月。"
         }
-      ]
+      ],
+      "nextEventTrigger": "谷底祭坛开缝，印痕指向北海；你必须决定是否先处理九年后潮灾，还是继续深入。",
+      "personLedgerEntry": {
+        "character": "二狗子",
+        "slice": "叼回半卷古图 / 在谷口守了三夜 / 记得你忘掉的那一页。"
+      },
+      "sceneDuration": "谷内数日",
+      "lifeAdvance": {
+        "months": 48,
+        "source": "event",
+        "reason": "谷内勘查与伤员带离",
+        "basis": "`sceneDuration` 为谷内数日；外围勘查与长期修炼可推进两到六年。"
+      },
+      "options": [
+        {
+          "label": "带一支小队稳扎稳打",
+          "effects": {
+            "bond": 4,
+            "fame": 5,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "explored",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "抛下辎重，独自先行深入",
+          "effects": {
+            "power": 12,
+            "fame": 2,
+            "sanity": -4,
+            "health": -2
+          },
+          "successRate": 0.8,
+          "failureEffects": {
+            "power": 2,
+            "sanity": -12,
+            "health": -6
+          },
+          "unlockFlag": "explored",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act5_five_element_crack_1",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "请各宗共签探山盟约",
+          "effects": {
+            "fame": 7,
+            "power": 1,
+            "bond": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -2,
+            "wealth": -2
+          },
+          "unlockFlag": "explored",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act5_five_element_crack_2",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "奇遇",
+      "requiresPowerSource": null,
+      "fateChain": "五行裂局",
+      "fateInstance": "act5_9",
+      "fateChainStage": "激化"
     },
     {
-      "id": "ev_late_will",
-      "title": "分配家业",
-      "text": "占位：家人们围坐堂前，等你决定如何分配家业。",
-      "stage": "late",
+      "id": "act5_north_tide",
+      "title": "边境烽火",
+      "text": "邪修借裂口偷袭边境，村寨接连起火。五国援军还在路上，斥候说只要顶住一夜，就能等来反攻的时机。",
+      "stage": "act5",
+      "weight": 1,
       "isPlaceholder": true,
-      "weight": 8,
-      "conditions": null,
-      "options": [
+      "resultText": "你没有抢第二道潮头，而是把城门全开给逃难的人。三城丢了两座，鹿野城却留下了整营活人，沈望潮把最后一盏灯交给你。",
+      "failureText": "潮水比预判更深，你被卷出三里。北三城破了两座，沈望潮死在旗边，潮图只剩半卷。",
+      "bridgeText": "护潮营在灯下拼出沉渊碑拓片，古祭的因果线指向你。",
+      "timeBeats": [
         {
-          "label": "平分众人",
-          "effects": { "bond": 2, "wealth": -2 },
-          "successRate": 1,
-          "resultText": "众人散去时都记得你的公平。",
-          "riskTag": "sacrifice"
+          "at": "result",
+          "text": "北三城是否改旗、沈望潮是否活着、潮图是否完整；潮退后沿海商路与护潮营重建；闭关或避祭的人看到的是另一份世界账单。"
         },
         {
-          "label": "留作善款",
-          "effects": { "fame": 2, "wealth": -3 },
-          "successRate": 1,
-          "resultText": "你把这笔家业散给了更需要的人。",
-          "riskTag": "sacrifice"
+          "at": "ledger",
+          "text": "T1 到窗，时间由 eventWindow 统一结算，本事件不推进人生账本。"
         }
-      ]
+      ],
+      "nextEventTrigger": "潮眼退去后留下一块沉渊碑，碑上刻着与你影子相同的名字，逼你追向古祭。",
+      "personLedgerEntry": {
+        "character": "沈望潮与沈棠",
+        "slice": "沈望潮在旗边等你 / 沈棠把半卷潮图交给你 / 潮退后他们在北岸立灯。"
+      },
+      "sceneDuration": "T1 到窗后的数日战斗",
+      "lifeAdvance": {
+        "months": 0,
+        "source": "event",
+        "reason": "T1 到窗，时间由 eventWindow 统一结算",
+        "basis": "事件由 T1 `eventWindow` 触发；到场战斗为数日，撤离与长期修固可推进一月到三年。错过事件时，世界先按 `eventWindow` 结算。"
+      },
+      "options": [
+        {
+          "label": "配合民兵固守，等援军",
+          "effects": {
+            "bond": 5,
+            "fame": 4,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "counterattack",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "趁夜反攻邪修营寨",
+          "effects": {
+            "power": 10,
+            "fame": 1,
+            "health": -4
+          },
+          "successRate": 0.8,
+          "failureEffects": {
+            "power": 2,
+            "health": -12,
+            "bond": -3
+          },
+          "unlockFlag": "counterattack",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act5_border_counter_1",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "传书诸侯，把义旗插上城头",
+          "effects": {
+            "fame": 7,
+            "power": 1,
+            "wealth": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -1,
+            "sanity": -4
+          },
+          "unlockFlag": "counterattack",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act5_border_counter_2",
+            "target": 13,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "奇遇",
+      "requiresPowerSource": null,
+      "fateChain": "五行裂局",
+      "fateInstance": "act5_10",
+      "fateChainStage": "激化",
+      "eventWindow": {
+        "id": "t1_beihai_tide",
+        "name": "北海妖潮",
+        "monthsFromNow": 108,
+        "announceAfterEvent": "act4_fame_siege",
+        "resolveAtEvent": "act5_north_tide",
+        "karmaOnAvoid": false
+      }
     },
     {
-      "id": "ev_late_farewell",
-      "title": "最后远行",
-      "text": "占位：你决定在还能走动时，去看一眼没看过的远方。",
-      "stage": "late",
+      "id": "act6_return_earth",
+      "title": "天门回望",
+      "text": "天门开合的一瞬，你看见水泥森林里的旧窗台：那里是你上一世出生、又早已遗忘的家。守门人只放你回去一盏茶的时间。",
+      "stage": "act6",
+      "weight": 1,
       "isPlaceholder": true,
-      "weight": 8,
-      "conditions": null,
-      "options": [
+      "resultText": "你替家里修好屋子，把从仙界带回的东西一件件收进旧箱。没有人知道你去过哪里，但你第一次让两个世界都没有立刻崩塌。",
+      "failureText": "消息先被机构截获。你没能解释清楚，旧友被带走，地球线从此多了一群追你的人。",
+      "bridgeText": "天象还是来了，旧同学把一段不属于地球的光发给你，躲不掉了。",
+      "timeBeats": [
         {
-          "label": "独自远行",
-          "effects": { "sanity": 2, "health": -1 },
-          "successRate": 1,
-          "resultText": "你走在长路上，心里前所未有地安静。",
-          "riskTag": "safe"
+          "at": "result",
+          "text": "旧友与家人的生活已经改变；地球线出现天人族异常天象；仙界战线因你离开而失去一次窗口。"
         },
         {
-          "label": "邀友同行",
-          "effects": { "bond": 2, "sanity": 1 },
-          "successRate": 1,
-          "resultText": "旧友陪你走完了最后一段路。",
-          "riskTag": "safe"
+          "at": "ledger",
+          "text": "归乡处理家事与身份封存，人生账本推进 12 个月。"
         }
-      ]
+      ],
+      "nextEventTrigger": "旧同学手机上出现不属于地球的光纹，天人族降临前夕，你必须决定隐藏、公开还是封闭回仙界的路。",
+      "personLedgerEntry": {
+        "character": "苏小柔或旧友",
+        "slice": "旧友替你保管不能解释的旧物 / 苏小柔的信跨越两界落在桌上 / 你第一次承认自己怕回不去。"
+      },
+      "sceneDuration": "地球线数日",
+      "lifeAdvance": {
+        "months": 12,
+        "source": "event",
+        "reason": "归乡处理家事与身份封存",
+        "basis": "`sceneDuration` 为地球线数日；若留下处理家事，`lifeAdvance` 可推进一到两年。仙界与地球的时间差只由 B 的单一账本表达，不由界面自行计算。"
+      },
+      "options": [
+        {
+          "label": "回去看一眼，安顿亲人",
+          "effects": {
+            "bond": 5,
+            "fame": 4,
+            "power": 1,
+            "health": 2
+          },
+          "successRate": 1,
+          "unlockFlag": "returned_earth",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "撕掉引路符，转身直入天门",
+          "effects": {
+            "power": 9,
+            "fame": 1,
+            "sanity": -2,
+            "health": -2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "power": 2,
+            "sanity": -8,
+            "health": -4
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act6_sky_gate_glimpse_1",
+            "target": 16,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "带仙缘回去，替村子换一世安稳",
+          "effects": {
+            "fame": 6,
+            "bond": 2,
+            "power": 1,
+            "wealth": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -2,
+            "health": -3
+          },
+          "unlockFlag": "returned_earth",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act6_sky_gate_glimpse_2",
+            "target": 16,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "天命",
+      "requiresPowerSource": null,
+      "fateChain": "两界回声",
+      "fateInstance": "act6_11",
+      "fateChainStage": "转机",
+      "memoryFragment": "门后的灯影与某个故人重叠。",
+      "awakenTrigger": "天门回望"
+    },
+    {
+      "id": "act6_celestial_descent",
+      "title": "两界传书",
+      "text": "地球的故人寄来一卷信，说你上一世的债还挂在人间；仙云的盟友也送来战书，说天门之战少你不可。两封信摊在同一张桌上。",
+      "stage": "act6",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把会飞的东西拍到直播镜头前，先让人撤离，再解释。没有人全信，但最后一栋楼空了，天人族第一次没能用恐惧换到顺从。",
+      "failureText": "光核在你手里炸开，城市失去半边电网。你抢回一块母阵残片，却背上了无法回避的伤亡名单。",
+      "bridgeText": "光核落入你手里，坐标指向仙云洲；想保住地球，你必须回去。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "城市与村镇的伤亡、地球势力对超常事件的反应、天人族与仙界旧门的关系；回地球目标从“归乡”变成“守界”。"
+        },
+        {
+          "at": "ledger",
+          "text": "救灾、修复与两界坐标处理，人生账本推进 3 个月。"
+        }
+      ],
+      "nextEventTrigger": "天人族遗落的光核把仙界天门坐标点亮，必须回仙界参加选拔；不愿回去也要解释原因。",
+      "personLedgerEntry": {
+        "character": "轩辕婉蓉",
+        "slice": "替地球挡下第一道光 / 在废墟里确认你仍可被信任 / 以天选者身份接你回仙界。"
+      },
+      "sceneDuration": "数周到数月",
+      "lifeAdvance": {
+        "months": 3,
+        "source": "event",
+        "reason": "救灾、修复与两界坐标处理",
+        "basis": "`sceneDuration` 为数周到数月；救灾与修复可推进一季，但不自动补年。"
+      },
+      "options": [
+        {
+          "label": "先回村把承诺收尾",
+          "effects": {
+            "bond": 6,
+            "fame": 5,
+            "power": 1
+          },
+          "successRate": 1,
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "把信都压在砚下，先登天门",
+          "effects": {
+            "power": 8,
+            "fame": 2,
+            "wealth": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "power": 1,
+            "sanity": -6,
+            "bond": -3
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act6_two_worlds_letter_1",
+            "target": 16,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "把两封信写成檄文，让天下人看见",
+          "effects": {
+            "fame": 6,
+            "bond": 1,
+            "power": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "sanity": -4,
+            "bond": -1
+          },
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act6_two_worlds_letter_2",
+            "target": 16,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "天命",
+      "requiresPowerSource": null,
+      "fateChain": "两界回声",
+      "fateInstance": "act6_12",
+      "fateChainStage": "转机"
+    },
+    {
+      "id": "act7_gate_selection",
+      "title": "永夜殿疑云",
+      "text": "永夜殿的魔核流出域外，仙云洲各大宗门却互相指控。你手里有一份名单，写清谁在半夜见过那口魔核。",
+      "stage": "act7",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把证据交上去，主动退出候选名单。姜红颜骂你躲，却替你保住了能进密室的调查令。",
+      "failureText": "风月华先一步改了卷宗。你被扣在审判台下，证人失踪，只剩一枚带血的魔核碎片。",
+      "bridgeText": "调查令只够带一个人进去，魔核却在里面提前裂开。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "天门候选名单变化、女帝为你作保的代价、T2「劫敲门」是否以影子债务出现；被放弃的古祭路线以世界事件继续演化。"
+        },
+        {
+          "at": "ledger",
+          "text": "T2 到窗，时间由 eventWindow 统一结算，本事件不推进人生账本。"
+        }
+      ],
+      "nextEventTrigger": "选拔最后一关前，魔核密室失控；风月华把失踪者的名单放在你面前。",
+      "personLedgerEntry": {
+        "character": "姜红颜",
+        "slice": "以女帝印压住审判台 / 把调查令交给你 / 在你接下劫债后没有松开手。"
+      },
+      "sceneDuration": "选拔数日",
+      "lifeAdvance": {
+        "months": 0,
+        "source": "event",
+        "reason": "T2 到窗，时间由 eventWindow 统一结算",
+        "basis": "`sceneDuration` 为选拔数日；审查、闭关和 T2 债务处理可推进数月到三年。"
+      },
+      "options": [
+        {
+          "label": "把名单交到中立长老会",
+          "effects": {
+            "bond": 4,
+            "fame": 6,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "exposed_conspiracy",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "带人端掉永夜殿分坛，逼幕后开口",
+          "effects": {
+            "power": 12,
+            "fame": 3,
+            "sanity": -2,
+            "health": -2
+          },
+          "successRate": 0.8,
+          "failureEffects": {
+            "power": 2,
+            "health": -10,
+            "sanity": -5
+          },
+          "unlockFlag": "exposed_conspiracy",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act7_night_palace_scheme_1",
+            "target": 16,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "当众念出名单，让舆论压垮阴谋",
+          "effects": {
+            "fame": 7,
+            "power": 1,
+            "bond": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "sanity": -5,
+            "health": -2
+          },
+          "unlockFlag": "exposed_conspiracy",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act7_night_palace_scheme_2",
+            "target": 16,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "遗物",
+      "requiresPowerSource": null,
+      "fateChain": "魔核风暴",
+      "fateInstance": "act7_13",
+      "fateChainStage": "终章",
+      "eventWindow": {
+        "id": "t2_shenyuan_rite",
+        "name": "沉渊古祭",
+        "monthsFromNow": 60,
+        "announceAfterEvent": "act6_celestial_descent",
+        "resolveAtEvent": "act7_gate_selection",
+        "karmaOnAvoid": true
+      }
+    },
+    {
+      "id": "act7_magic_core_duel",
+      "title": "魔核决战",
+      "text": "幕后之人在天门脚下引爆魔核。天崩地裂，宗门高手四散，只有你站在爆炸最中心。",
+      "stage": "act7",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你没有赌最后一注，先把阵外的人全撤走。阵眼碎了，魔核残响逃出去，但活着的人带回完整证词，足够把风月华钉在审台上。",
+      "failureText": "倒转慢了一步，阵纹把你弹开。右手经脉焦黑，魔核尖啸深了一层，你没能救回所有人。",
+      "bridgeText": "证词救不了被困的人，中央天门却在这时传来苏小柔的气息。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "守阵修士是否存活、风月华与孙老的阴谋暴露程度、仙云洲对“谁镇住魔核”的记忆；疗伤与恢复可跨过多年，由 B 的账本统一结算。"
+        },
+        {
+          "at": "ledger",
+          "text": "封阵、撤离与疗伤，人生账本推进 24 个月。"
+        }
+      ],
+      "nextEventTrigger": "魔核残响指向中央天门，四位仙帝已经带走苏小柔；封阵或撤退都要面对这个结果。",
+      "personLedgerEntry": {
+        "character": "风月华与孙老",
+        "slice": "名单被钉上审台 / 魔核残响被写成封阵誓词 / 仙云洲记住镇魔者或退阵者的名字。"
+      },
+      "sceneDuration": "封阵数日",
+      "lifeAdvance": {
+        "months": 24,
+        "source": "event",
+        "reason": "封阵、撤离与疗伤",
+        "basis": "`sceneDuration` 为封阵数日；稳妥传讯可推进数月到数年，冒险和献祭不自动补年。"
+      },
+      "options": [
+        {
+          "label": "护住伤员边战边退",
+          "effects": {
+            "bond": 5,
+            "fame": 4,
+            "power": 2,
+            "health": -2
+          },
+          "successRate": 1,
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "以全部修为硬压魔核",
+          "effects": {
+            "power": 15,
+            "fame": 1,
+            "health": -3,
+            "sanity": -2
+          },
+          "successRate": 0.75,
+          "failureEffects": {
+            "power": 2,
+            "health": -12,
+            "sanity": -6
+          },
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act7_magic_core_duel_1",
+            "target": 16,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "聚众生之力结阵，共镇魔核",
+          "effects": {
+            "fame": 7,
+            "power": 2,
+            "bond": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "sanity": -6,
+            "health": -2
+          },
+          "riskTag": "custom",
+          "semantic": "sacrifice",
+          "d20": {
+            "id": "act7_magic_core_duel_2",
+            "target": 19,
+            "kind": "sacrifice",
+            "modifierSource": "aptitude"
+          }
+        }
+      ],
+      "powerSource": "遗物",
+      "requiresPowerSource": null,
+      "fateChain": "魔核风暴",
+      "fateInstance": "act7_14",
+      "fateChainStage": "终章"
+    },
+    {
+      "id": "act8_rescue_rou",
+      "title": "门后的牢笼",
+      "text": "天门之后悬着一座牢笼，笼中锁着你这一世最不愿辜负的人。四帝环伺，等你跪拜或开战。",
+      "stage": "act8",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把太乙天石放在门枢上，换回苏小柔。她没有立刻说话，只抓住你的袖子。四位仙帝没有追，因为门向他们关上了。",
+      "failureText": "你赢了两场，输在第三场。小柔被门光带走一半，四帝重伤你也重伤，门却开始自行关闭。",
+      "bridgeText": "人活着退到门外，只剩门枢低声振动；你可以选择封门守成，或再用别的东西开门。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "苏小柔的获救方式、四仙帝是否暂时结盟、太乙天石是否留在手里；门后神域气息变化。"
+        },
+        {
+          "at": "ledger",
+          "text": "天门救援与回撤，人生账本推进 1 个月。"
+        }
+      ],
+      "nextEventTrigger": "苏小柔获救或失声后，天门只剩最后一道门枢；继续守成、撬门还是开门，决定最终世界形态。",
+      "personLedgerEntry": {
+        "character": "苏小柔",
+        "slice": "被救后仍抓住你的袖子 / 记不起门里发生了什么 / 第一次主动要求你选择自己的路。"
+      },
+      "sceneDuration": "天门内数日到一月",
+      "lifeAdvance": {
+        "months": 1,
+        "source": "event",
+        "reason": "天门救援与回撤",
+        "basis": "`sceneDuration` 为天门内数日到一月；回撤或交易可推进数日，禁止在终局自动补年。"
+      },
+      "options": [
+        {
+          "label": "与四帝谈条件，先换人",
+          "effects": {
+            "bond": 8,
+            "fame": 6,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "rescued_xiaorou",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "掀翻牢笼，以力夺人",
+          "effects": {
+            "power": 10,
+            "fame": 2,
+            "bond": 2,
+            "health": -3
+          },
+          "successRate": 0.85,
+          "failureEffects": {
+            "power": 2,
+            "health": -12,
+            "bond": -4
+          },
+          "unlockFlag": "rescued_xiaorou",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act8_cage_behind_gate_1",
+            "target": 19,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "请四帝当见证，把救人变成天下大事",
+          "effects": {
+            "fame": 7,
+            "bond": 2,
+            "power": 1
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -2,
+            "sanity": -3
+          },
+          "unlockFlag": "rescued_xiaorou",
+          "riskTag": "custom",
+          "semantic": "custom",
+          "d20": {
+            "id": "act8_cage_behind_gate_2",
+            "target": 19,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        }
+      ],
+      "powerSource": "血脉",
+      "requiresPowerSource": null,
+      "fateChain": "天门决断",
+      "fateInstance": "act8_15",
+      "fateChainStage": "终章"
+    },
+    {
+      "id": "act8_push_sky_gate",
+      "title": "推开神域之门",
+      "text": "四帝退开，门后只剩一道无人打开过的光缝。有人喊这是僭越，有人跪地请命，光缝之后是你此世最后的答案。",
+      "stage": "act8",
+      "weight": 1,
+      "isPlaceholder": true,
+      "resultText": "你把门一寸寸推回去，直到光只剩一条线。神域没有开，仙云洲却活了下来；四帝、同伴和小柔都站在门这边，这一世可以慢慢过完。",
+      "failureText": "残阵余劲反涌，你被震出三丈。门缝闭得更紧，同伴受伤，神域只剩传说。",
+      "bridgeText": "门合拢后，天洲石碑留空；结局按活况、传承、人物存亡与因果证据结算。",
+      "timeBeats": [
+        {
+          "at": "result",
+          "text": "神域是否开启、四仙帝与仙云洲如何处置、苏小柔与同伴是否在门边；世界从“守成时代”或“开门时代”二选一，不能同时吃满。"
+        },
+        {
+          "at": "ledger",
+          "text": "门枢处置与终局结算，人生账本推进 1 个月。"
+        }
+      ],
+      "nextEventTrigger": "无下一关键事件；根据门、寿元、人物存亡、传承与因果证据进入结局判定。",
+      "personLedgerEntry": {
+        "character": "苏小柔与四仙帝",
+        "slice": "小柔在门边等你回头 / 四帝接受守成、臣服或共治 / 天门石留下开门者、撬门者或守门者的名字。"
+      },
+      "sceneDuration": "门开到最后的一段时间，即刻到数月",
+      "lifeAdvance": {
+        "months": 1,
+        "source": "event",
+        "reason": "门枢处置与终局结算",
+        "basis": "`sceneDuration` 为门开到最后的一段时间，即刻到数月；结算后直接进入结局，不自动补年。"
+      },
+      "options": [
+        {
+          "label": "推开半扇门，留退路给身后人",
+          "effects": {
+            "bond": 6,
+            "fame": 5,
+            "power": 1
+          },
+          "successRate": 1,
+          "unlockFlag": "opened_gate",
+          "riskTag": "safe",
+          "semantic": "safe"
+        },
+        {
+          "label": "燃烧全部修为，把整扇门推开",
+          "effects": {
+            "power": 12,
+            "fame": 3,
+            "health": -3
+          },
+          "successRate": 0.8,
+          "failureEffects": {
+            "power": 2,
+            "health": -10,
+            "sanity": -5
+          },
+          "unlockFlag": "opened_gate",
+          "riskTag": "risky",
+          "semantic": "risky",
+          "d20": {
+            "id": "act8_push_sky_gate_1",
+            "target": 19,
+            "kind": "event",
+            "modifierSource": "none"
+          }
+        },
+        {
+          "label": "让天下人共推你入主天门",
+          "effects": {
+            "fame": 7,
+            "power": 1,
+            "bond": 2
+          },
+          "successRate": 0.9,
+          "failureEffects": {
+            "fame": 1,
+            "bond": -2,
+            "sanity": -3
+          },
+          "unlockFlag": "opened_gate",
+          "riskTag": "custom",
+          "semantic": "sacrifice",
+          "d20": {
+            "id": "act8_push_sky_gate_2",
+            "target": 19,
+            "kind": "sacrifice",
+            "modifierSource": "aptitude"
+          }
+        }
+      ],
+      "powerSource": "血脉",
+      "requiresPowerSource": null,
+      "fateChain": "天门决断",
+      "fateInstance": "act8_16",
+      "fateChainStage": "终章"
     }
   ],
   "endingCards": [
     {
-      "id": "ending_collapse",
-      "title": "抱憾退场",
-      "text": "占位：命运没有给你更多的机会，你在此处停下。",
+      "id": "ending_g01_gate_opener",
+      "title": "神域开拓者",
+      "text": "你推开那扇从未有人打开过的门，把故人从牢笼里带回。天地的边界从此由你重写，这是八幕里最亮的一条路。",
+      "tone": "bright",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_g02_immortal_peak",
+      "title": "仙云洲之主",
+      "text": "你没有追逐虚名，只握住足够强的力量。天门权柄落在你掌心，仙云洲在你的秩序下重归一统。",
+      "tone": "bright",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_g03_jianghu_legend",
+      "title": "江湖传说",
+      "text": "旗帜立起来了，老友也都还在。你的名字比修为更早传遍天下，成了真正的江湖传说。",
+      "tone": "warm",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_g04_dual_return",
+      "title": "双线回归",
+      "text": "你护住了山村，也回了一趟旧日人间。两个世界的牵挂都没有辜负，此世落幕时你身边站满了人。",
+      "tone": "warm",
+      "isPlaceholder": true
+    },
+    {
+      "id": "ending_g05_regret",
+      "title": "遗憾收场",
+      "text": "门关上了，人也没有接回来。你站在此世够不到的地方，把未完的遗憾留给下一次呼吸。",
       "tone": "dark",
       "isPlaceholder": true
     },
     {
-      "id": "ending_balanced",
-      "title": "圆满谢幕",
-      "text": "占位：你走过的路不算平坦，却在每个岔口都留下了分寸。",
-      "tone": "bright",
+      "id": "ending_g06_fall",
+      "title": "覆灭",
+      "text": "强敌在前，修为崩盘。你倒在了通往终局的路中央，故事在这里停成一页无人续写的断章。",
+      "tone": "dark",
       "isPlaceholder": true
     },
     {
-      "id": "ending_power",
-      "title": "一鸣惊人",
-      "text": "占位：你的名字与实力一起，成了后人口中的传说。",
-      "tone": "bright",
-      "isPlaceholder": true
-    },
-    {
-      "id": "ending_wealth",
-      "title": "富贵闲人",
-      "text": "占位：你守着家业与安稳，把风浪留在了门外。",
-      "tone": "warm",
-      "isPlaceholder": true
-    },
-    {
-      "id": "ending_fame",
-      "title": "名满天下",
-      "text": "占位：天下人提起你时，都先说那一句好名声。",
-      "tone": "bright",
-      "isPlaceholder": true
-    },
-    {
-      "id": "ending_bond",
-      "title": "知心故人",
-      "text": "占位：你未必得到天下，却得到了最难得到的人心。",
-      "tone": "warm",
-      "isPlaceholder": true
-    },
-    {
-      "id": "ending_haunted",
+      "id": "ending_g07_haunted",
       "title": "心魔缠身",
-      "text": "占位：你的每一步都踩在悬崖边上，最终被自己的影子追上。",
+      "text": "你听过太多声音，看过太多门。最后那道影子追上了你，分不清是现实还是幻觉。",
       "tone": "dark",
       "isPlaceholder": true
     },
     {
-      "id": "ending_plain",
+      "id": "ending_g08_plain",
       "title": "平凡一生",
-      "text": "占位：你没有掀起波澜，但日子就这样安安稳稳地过去了。",
+      "text": "没有惊天动地的名字，也没有来不及说完的告别。日子平平淡淡走到尽头，也算一种完整的答案。",
       "tone": "neutral",
       "isPlaceholder": true
     }
-  ]
+  ],
+  "soulTest": {
+    "title": "魂性问心",
+    "intro": "五问没有对错，只照见你重入轮回时最不肯放手的东西。",
+    "questions": [
+      {
+        "id": "q1",
+        "text": "若只能带走一样，你选？",
+        "options": [
+          {
+            "label": "一段旧约",
+            "style": "bond"
+          },
+          {
+            "label": "一身本领",
+            "style": "power"
+          },
+          {
+            "label": "一页真相",
+            "style": "truth"
+          }
+        ]
+      },
+      {
+        "id": "q2",
+        "text": "面对挡路的高墙，你更常？",
+        "options": [
+          {
+            "label": "翻过去",
+            "style": "risky"
+          },
+          {
+            "label": "绕过去",
+            "style": "safe"
+          },
+          {
+            "label": "把墙拆掉",
+            "style": "sacrifice"
+          }
+        ]
+      },
+      {
+        "id": "q3",
+        "text": "修行尽头若只剩孤独？",
+        "options": [
+          {
+            "label": "仍要登顶",
+            "style": "power"
+          },
+          {
+            "label": "回头寻人",
+            "style": "bond"
+          },
+          {
+            "label": "留下传承",
+            "style": "legacy"
+          }
+        ]
+      },
+      {
+        "id": "q4",
+        "text": "你如何对待旧日仇怨？",
+        "options": [
+          {
+            "label": "血债血偿",
+            "style": "revenge"
+          },
+          {
+            "label": "先记后算",
+            "style": "patience"
+          },
+          {
+            "label": "以彼之道",
+            "style": "custom"
+          }
+        ]
+      },
+      {
+        "id": "q5",
+        "text": "如果结局注定残缺？",
+        "options": [
+          {
+            "label": "拼到最后一刻",
+            "style": "risky"
+          },
+          {
+            "label": "护住身边人",
+            "style": "bond"
+          },
+          {
+            "label": "把路留给来世",
+            "style": "legacy"
+          }
+        ]
+      }
+    ],
+    "recommendations": [
+      {
+        "id": "role_01",
+        "name": "念旧行者",
+        "source": "传承",
+        "summary": "为旧人旧约重走一世。"
+      },
+      {
+        "id": "role_02",
+        "name": "逆命客",
+        "source": "天命",
+        "summary": "明知不可为仍要叩门。"
+      },
+      {
+        "id": "role_03",
+        "name": "守卷人",
+        "source": "师承",
+        "summary": "把功法与故人一并护住。"
+      }
+    ]
+  },
+  "characterBiographies": {
+    "shen_wangchao": {
+      "name": "沈望潮",
+      "title": "等在潮头的最后一夜",
+      "slices": [
+        "荒村第一夜递来一盏灯。",
+        "北三城风雪里替你守过缺口。",
+        "潮图铺开时只说了一句：别回头。",
+        "北海妖潮将起，他没有求援。",
+        "多年后传说里只剩半枚湿透的铜钱。",
+        "你若觉醒，会在梦里听见潮声。"
+      ]
+    },
+    "meng_po": {
+      "name": "孟婆婆",
+      "title": "把丹炉交给后来人",
+      "slices": [
+        "天香谷外，她问你为何要活得更久。",
+        "第一次炼丹失败，她替你把炉火压低。",
+        "她说传承不是名字，是把路续上。",
+        "星芒草开时，她只在门外看了一会儿。",
+        "她从未离开丹炉，却认识许多回来的人。",
+        "未觉醒前，你只会觉得药香似曾相识。"
+      ]
+    },
+    "xiaorou": {
+      "name": "小柔",
+      "title": "门后未曾熄灭的灯",
+      "slices": [
+        "她在荒村把最后半块饼塞给你。",
+        "你离开时，她没有问归期。",
+        "门后牢笼里，她仍认得你的脚步声。",
+        "世界把她写成筹码，她却先问别人是否安全。",
+        "救援若失败，这盏灯会转入下一世。",
+        "若记忆觉醒，应先想起她怕黑。"
+      ]
+    }
+  }
 }

@@ -4,9 +4,16 @@
   "description": "内容包配置：事件、结局卡、可选的占位标记。事件与结局均支持条件和随机抽取。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "meta", "events", "endingCards"],
+  "required": [
+    "version",
+    "meta",
+    "events",
+    "endingCards"
+  ],
   "properties": {
-    "version": { "type": "string" },
+    "version": {
+      "type": "string"
+    },
     "soulTest": {
       "type": "object",
       "description": "2026-09-07 定版预留：魂性问心题库与第一世角色推荐映射（5-8 题）。旧内容包可不带，引擎按单世通用运行。"
@@ -18,13 +25,54 @@
     "meta": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["title", "source", "isPlaceholder"],
+      "required": [
+        "title",
+        "source",
+        "isPlaceholder"
+      ],
       "properties": {
-        "title": { "type": "string" },
-        "source": { "type": "string" },
-        "isPlaceholder": { "type": "boolean" },
-        "novelTitle": { "type": "string" },
-        "contentRoute": { "enum": ["A", "B", "C", "none"] }
+        "title": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "isPlaceholder": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string"
+        },
+        "novelTitle": {
+          "type": "string"
+        },
+        "contentRoute": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "none"
+          ]
+        }
+      }
+    },
+    "optionFeedback": {
+      "type": "object",
+      "description": "R3.1 选项级即时回执与稳定状态 ID；按事件 ID 与选项索引对齐，由运行时合并到 options。",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["resultText", "failureText", "bridgeText"],
+          "properties": {
+            "resultText": { "type": "string" },
+            "failureText": { "type": "string" },
+            "bridgeText": { "type": "string" },
+            "unlockFlag": { "type": "string" },
+            "failureUnlockFlag": { "type": "string" }
+          }
+        }
       }
     },
     "events": {
@@ -32,82 +80,241 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "title", "text", "stage", "options", "weight"],
+        "required": [
+          "id",
+          "title",
+          "text",
+          "stage",
+          "options",
+          "weight"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "title": { "type": "string" },
-          "text": { "type": "string" },
-          "stage": { "type": "string" },
-          "weight": { "type": "integer", "minimum": 0 },
-          "isPlaceholder": { "type": "boolean", "default": true },
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "isPlaceholder": {
+            "type": "boolean",
+            "default": true
+          },
+          "sceneDuration": {
+            "type": "string",
+            "minLength": 1,
+            "description": "R3：纯呈现时长；不得改变 age/remainingYears/worldYear。"
+          },
+          "lifeAdvance": {
+            "$ref": "#/definitions/lifeAdvance"
+          },
+          "resultText": {
+            "type": "string",
+            "minLength": 1,
+            "description": "R3：事件级成功结果正文。"
+          },
+          "failureText": {
+            "type": "string",
+            "minLength": 1,
+            "description": "R3：事件级失败结果正文。"
+          },
+          "bridgeText": {
+            "type": "string",
+            "minLength": 1,
+            "description": "R3：同幕下一事件前的具体承接。"
+          },
+          "timeBeats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/timeBeat"
+            },
+            "description": "R3：有序时间叙事节拍；只用于呈现，不改账本。"
+          },
+          "nextEventTrigger": {
+            "type": "string",
+            "minLength": 1,
+            "description": "R3：下一事件现在发生的原因。"
+          },
+          "personLedgerEntry": {
+            "$ref": "#/definitions/personLedgerEntry"
+          },
           "conditions": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "minAge": { "type": "number" },
+              "minAge": {
+                "type": "number"
+              },
               "requiredAttribute": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["name"],
+                "required": [
+                  "name"
+                ],
                 "properties": {
-                  "name": { "type": "string" },
-                  "min": { "type": "number" },
-                  "max": { "type": "number" }
+                  "name": {
+                    "type": "string"
+                  },
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "type": "number"
+                  }
                 }
               },
-              "requiredFlag": { "type": "string" },
-              "requiredAnyFlag": { "type": "array", "items": { "type": "string" } },
-              "requiredAllFlags": { "type": "array", "items": { "type": "string" } }
+              "requiredFlag": {
+                "type": "string"
+              },
+              "requiredAnyFlag": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "requiredAllFlags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           },
           "powerSource": {
             "type": "string",
-            "description": "2026-09-07 定版预留：本世力量来源（system/师承/血脉/传承/奇遇/遗物/天命等）。system 只绑定第一世；旧事件不带则按单世通用。"
+            "description": "R2 生效：本世力量来源。system 只绑定第一世；旧事件不带时按单世通用。"
           },
           "requiresPowerSource": {
-            "type": ["string", "null"],
-            "description": "2026-09-07 定版预留：事件要求的 powerSource，非系统世按力量来源过滤；大劫事件不得因此被过滤为可选。"
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "R2 生效：事件要求的力量来源；null 表示不限制。"
           },
-          "fateChain": { "type": "string", "description": "2026-09-07 定版预留：所属命运链 id（守护/复仇/证道/传承等）。" },
-          "fateInstance": { "type": "string", "description": "2026-09-07 定版预留：命运链在当前纪元的实例 id；跨世同一链文本不同、逻辑一致。" },
-          "fateChainStage": { "type": "string", "description": "2026-09-07 定版预留：孕育/浮现/激化/转机/终章/回响等阶段，与 fateChain 配套。" },
-          "memoryFragment": { "type": "string", "description": "2026-09-07 定版预留：觉醒时揭示的记忆碎片内容/来源。觉醒前不暴露完整前世。" },
-          "awakenTrigger": { "type": "string", "description": "2026-09-07 定版预留：碎片觉醒触发条件；平时只以梦/既视感/直觉呈现。" },
+          "fateChain": {
+            "type": "string",
+            "description": "2026-09-07 定版预留：所属命运链 id（守护/复仇/证道/传承等）。"
+          },
+          "fateInstance": {
+            "type": "string",
+            "description": "2026-09-07 定版预留：命运链在当前纪元的实例 id；跨世同一链文本不同、逻辑一致。"
+          },
+          "fateChainStage": {
+            "type": "string",
+            "description": "2026-09-07 定版预留：孕育/浮现/激化/转机/终章/回响等阶段，与 fateChain 配套。"
+          },
+          "memoryFragment": {
+            "type": "string",
+            "description": "2026-09-07 定版预留：觉醒时揭示的记忆碎片内容/来源。觉醒前不暴露完整前世。"
+          },
+          "awakenTrigger": {
+            "type": "string",
+            "description": "2026-09-07 定版预留：碎片觉醒触发条件；平时只以梦/既视感/直觉呈现。"
+          },
           "unfinishedBusiness": {
-            "type": "object",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "2026-09-07 定版预留：本事件涉及的可承接未竟之事（情债/仇债/恩债等）。因果稀疏化，活跃上限 3-5 条，玩家可接/放。"
           },
-          "grudgeAnchor": { "type": "string", "description": "2026-09-07 定版预留：血仇/执念锚点 id，指向 fateChain 跨世承接。" },
+          "grudgeAnchor": {
+            "type": "string",
+            "description": "2026-09-07 定版预留：血仇/执念锚点 id，指向 fateChain 跨世承接。"
+          },
           "options": {
             "type": "array",
             "minItems": 1,
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["label", "effects"],
+              "required": [
+                "label",
+                "effects"
+              ],
               "properties": {
-                "label": { "type": "string" },
+                "label": {
+                  "type": "string"
+                },
                 "effects": {
                   "type": "object",
-                  "additionalProperties": { "type": "number" }
+                  "additionalProperties": {
+                    "type": "number"
+                  }
                 },
-                "successRate": { "type": "number", "minimum": 0, "maximum": 1 },
-                "resultText": { "type": "string" },
+                "successRate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
                 "failureEffects": {
                   "type": "object",
-                  "additionalProperties": { "type": "number" }
+                  "additionalProperties": {
+                    "type": "number"
+                  }
                 },
-                "failureText": { "type": "string" },
-                "nextEvent": { "type": ["string", "null"] },
-                "unlockFlag": { "type": ["string", "null"] },
-                "riskTag": { "enum": ["safe", "risky", "sacrifice", "custom"] },
+                "resultText": {
+                  "type": "string",
+                  "description": "R3.1 选项级成功结果；优先于事件级 resultText。"
+                },
+                "failureText": {
+                  "type": "string",
+                  "description": "R3.1 选项级失败结果；优先于事件级 failureText。"
+                },
+                "bridgeText": {
+                  "type": "string",
+                  "description": "R3.1 选项级承接；优先于事件级 bridgeText。"
+                },
+                "failureUnlockFlag": {
+                  "type": ["string", "null"],
+                  "description": "R3.1 失败侧稳定分支旗标。"
+                },
+                "nextEvent": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "unlockFlag": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "riskTag": {
+                  "enum": [
+                    "safe",
+                    "risky",
+                    "sacrifice",
+                    "custom"
+                  ]
+                },
                 "style": {
                   "type": "string",
                   "description": "2026-09-07 定版预留：本选项行事风格 aggressive/stealth/diplomatic/sacrifice/custom 等，与魂性问心结果同语言。"
                 },
-                "counterStyle": { "type": "string", "description": "2026-09-07 定版预留：克制本选项的风格，用于互克判定。" },
-                "beats": { "type": "integer", "minimum": 1, "description": "2026-09-07 定版预留：本选项的次数/节拍权重，用于互克与倾向玩法。" },
-                "losesTo": { "type": "string", "description": "2026-09-07 定版预留：被击败/克制的目标（另一选项 id 或 style）。" },
+                "counterStyle": {
+                  "type": "string",
+                  "description": "2026-09-07 定版预留：克制本选项的风格，用于互克判定。"
+                },
+                "beats": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "2026-09-07 定版预留：本选项的次数/节拍权重，用于互克与倾向玩法。"
+                },
+                "losesTo": {
+                  "type": "string",
+                  "description": "2026-09-07 定版预留：被击败/克制的目标（另一选项 id 或 style）。"
+                },
                 "successRateBase": {
                   "type": "number",
                   "minimum": 0,
@@ -117,9 +324,71 @@
                 "successRateShift": {
                   "type": "number",
                   "description": "2026-09-07 定版预留：互克判定后的成功率偏移；运行时仍使用 successRate。"
+                },
+                "semantic": {
+                  "enum": [
+                    "safe",
+                    "risky",
+                    "sacrifice",
+                    "custom"
+                  ],
+                  "description": "R2 生效：sacrifice 成败两侧都不得给正修为。"
+                },
+                "d20": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "required": [
+                    "target"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "enum": [
+                        7,
+                        10,
+                        13,
+                        16,
+                        19
+                      ]
+                    },
+                    "kind": {
+                      "enum": [
+                        "event",
+                        "breakthrough",
+                        "study",
+                        "sacrifice",
+                        "karma"
+                      ]
+                    },
+                    "modifier": {
+                      "type": "number"
+                    },
+                    "modifierSource": {
+                      "enum": [
+                        "none",
+                        "aptitude",
+                        "fortune"
+                      ]
+                    }
+                  },
+                  "description": "R2 生效：d20 检定，成功为 roll + modifier >= target；1 大凶、20 大成功。"
+                },
+                "unfinishedBusiness": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
+          },
+          "eventWindow": {
+            "$ref": "#/definitions/eventWindow"
           }
         }
       }
@@ -129,13 +398,130 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "title", "text"],
+        "required": [
+          "id",
+          "title",
+          "text"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "title": { "type": "string" },
-          "text": { "type": "string" },
-          "tone": { "type": "string" },
-          "isPlaceholder": { "type": "boolean", "default": true }
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string"
+          },
+          "isPlaceholder": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "timeBeat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "at",
+        "text"
+      ],
+      "properties": {
+        "at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "lifeAdvance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "months",
+        "source",
+        "reason",
+        "basis"
+      ],
+      "properties": {
+        "months": {
+          "type": "number",
+          "minimum": 0
+        },
+        "source": {
+          "const": "event"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "personLedgerEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "character",
+        "slice"
+      ],
+      "properties": {
+        "character": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slice": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "eventWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "monthsFromNow",
+        "announceAfterEvent",
+        "resolveAtEvent",
+        "karmaOnAvoid"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "monthsFromNow": {
+          "type": "number",
+          "minimum": 0
+        },
+        "announceAfterEvent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolveAtEvent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "karmaOnAvoid": {
+          "type": "boolean"
         }
       }
     }

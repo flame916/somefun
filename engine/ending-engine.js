@@ -20,24 +20,32 @@ function evaluateConditions(conditions, state, flags) {
   if (mode === "fallback") return true;
 
   const thresholds = conditions.thresholds || [];
+  const missingFlags = conditions.missingFlags || [];
   if (mode === "threshold") {
     const passed = thresholds.filter((t) =>
       t.attribute in state && compareValue(state[t.attribute], t.op, t.value)
     );
     const needed = conditions.countOfThresholds || thresholds.length || 1;
-    return passed.length >= needed;
+    return passed.length >= needed && missingFlags.every((flag) => !flags.has(flag));
   }
   if (mode === "flag") {
-    return (conditions.requiredFlags || []).every((flag) => flags.has(flag));
+    return (
+      (conditions.requiredFlags || []).every((flag) => flags.has(flag)) &&
+      missingFlags.every((flag) => !flags.has(flag))
+    );
   }
   if (mode === "any") {
-    return thresholds.some((t) =>
-      t.attribute in state && compareValue(state[t.attribute], t.op, t.value)
-    ) || (conditions.requiredFlags || []).some((flag) => flags.has(flag));
+    const anyPassed =
+      thresholds.some((t) =>
+        t.attribute in state && compareValue(state[t.attribute], t.op, t.value)
+      ) ||
+      (conditions.requiredFlags || []).some((flag) => flags.has(flag));
+    return anyPassed && missingFlags.every((flag) => !flags.has(flag));
   }
   return thresholds.every((t) =>
     t.attribute in state && compareValue(state[t.attribute], t.op, t.value)
-  ) && (conditions.requiredFlags || []).every((flag) => flags.has(flag));
+  ) && (conditions.requiredFlags || []).every((flag) => flags.has(flag))
+    && missingFlags.every((flag) => !flags.has(flag));
 }
 
 function judgeEnding(config, state, flags) {
