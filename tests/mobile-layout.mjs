@@ -193,6 +193,7 @@ async function assertChoiceList(screen) {
   }
   await assertEventChoiceLayers(screen);
   await assertEventChoicePaint(screen);
+  await assertChoiceRowVisualContract(screen);
   return result.count;
 }
 
@@ -214,6 +215,7 @@ async function assertEventChoiceLayers(screen) {
         return {
           className: layer.className,
           text: (layer.textContent || '').trim(),
+          color: style.color,
           position: style.position,
           zIndex: style.zIndex,
           display: style.display,
@@ -225,6 +227,10 @@ async function assertEventChoiceLayers(screen) {
       });
       return {
         index,
+        backgroundColor: getComputedStyle(button).backgroundColor,
+        borderColor: getComputedStyle(button).borderTopColor,
+        borderStyle: getComputedStyle(button).borderTopStyle,
+        borderWidth: getComputedStyle(button).borderTopWidth,
         skinZIndex: skinStyle?.zIndex || null,
         skinPosition: skinStyle?.position || null,
         layers
@@ -234,6 +240,12 @@ async function assertEventChoiceLayers(screen) {
 
   if (!result.length) throw new Error(`${screen}: no event choices found for layer checks`);
   for (const button of result) {
+    if (button.backgroundColor === 'transparent' || button.backgroundColor === 'rgba(0, 0, 0, 0)') {
+      throw new Error(`${screen}: event choice ${button.index + 1} has transparent computed background`);
+    }
+    if (button.borderStyle === 'none' || button.borderWidth === '0px' || button.borderColor === 'rgba(0, 0, 0, 0)') {
+      throw new Error(`${screen}: event choice ${button.index + 1} has no visible computed border`);
+    }
     if (button.skinPosition !== 'absolute') throw new Error(`${screen}: event choice ${button.index + 1} button skin is not absolutely layered`);
     const skinZIndex = Number(button.skinZIndex);
     if (!Number.isFinite(skinZIndex)) throw new Error(`${screen}: event choice ${button.index + 1} button skin has no numeric z-index`);
@@ -248,6 +260,50 @@ async function assertEventChoiceLayers(screen) {
         throw new Error(`${screen}: event choice ${button.index + 1} ${layer.className} z-index ${layer.zIndex} is not above button skin ${button.skinZIndex}`);
       }
     }
+  }
+}
+
+function colorRgb(value) {
+  const match = String(value).match(/rgba?\(\s*([\d.]+)[, ]+\s*([\d.]+)[, ]+\s*([\d.]+)/i);
+  return match ? match.slice(1, 4).map(Number) : null;
+}
+
+function contrastRatio(foreground, background) {
+  const fg = colorRgb(foreground);
+  const bg = colorRgb(background);
+  if (!fg || !bg) return 0;
+  const luminance = (rgb) => rgb.map((channel) => {
+    const value = channel / 255;
+    return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  }).reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0);
+  const light = luminance(fg);
+  const dark = luminance(bg);
+  return (Math.max(light, dark) + 0.05) / (Math.min(light, dark) + 0.05);
+}
+
+async function assertChoiceRowVisualContract(screen) {
+  const result = await evaluate(`(() => ({ viewportWidth: window.innerWidth, rows: Array.from(document.querySelectorAll('.choice-row')).map((node) => {
+    const style = getComputedStyle(node);
+    const label = node.querySelector('.choice-label, .button-label, .choice-top');
+    const labelStyle = label ? getComputedStyle(label) : null;
+    return {
+      backgroundColor: style.backgroundColor,
+      borderColor: style.borderTopColor,
+      borderStyle: style.borderTopStyle,
+      borderWidth: style.borderTopWidth,
+      color: labelStyle?.color || style.color,
+      overflowX: style.overflowX,
+      width: node.getBoundingClientRect().width,
+      right: node.getBoundingClientRect().right
+    };
+  }) }))()`);
+  if (!result.rows.length) throw new Error(`${screen}: no choice rows for visual contract`);
+  for (const row of result.rows) {
+    if (row.backgroundColor === 'transparent' || row.backgroundColor === 'rgba(0, 0, 0, 0)') throw new Error(`${screen}: choice row background is transparent`);
+    if (row.borderStyle === 'none' || row.borderWidth === '0px' || row.borderColor === 'rgba(0, 0, 0, 0)') throw new Error(`${screen}: choice row border is invisible`);
+    if (contrastRatio(row.color, row.backgroundColor) < 4.5) throw new Error(`${screen}: choice row text contrast is below 4.5:1`);
+    if (row.overflowX !== 'visible' && row.width <= 0) throw new Error(`${screen}: choice row has invalid layout width`);
+    if (row.right > result.viewportWidth + 0.5) throw new Error(`${screen}: choice row overflows viewport`);
   }
 }
 
