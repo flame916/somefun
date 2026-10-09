@@ -1,4 +1,5 @@
 import { createGameController } from "./game-controller.js?v=20260930-r31-feedback2";
+import { assetUrlFromManifest, loadAssetManifest } from "./asset-paths.js";
 import {
   FOUR_DIMENSIONS,
   FOUR_DIM_COST_TABLE,
@@ -7,17 +8,18 @@ import {
   birthTier
 } from "../engine/score-engine.js";
 
-const [template, content, adConfig, manifest] = await Promise.all([
+const [template, content, adConfig, assetBundle] = await Promise.all([
   fetch("./config/life-simulator.template.json").then((response) => response.json()),
   fetch("./content/life-simulator.placeholder.json?v=20260930-r31-feedback2").then((response) => response.json()),
   fetch("./config/ad-placements.json").then((response) => response.json()),
-  fetch("../ui/assets/asset-manifest.json").then((response) => response.json())
+  loadAssetManifest(fetch, window.location.href)
 ]);
 
+const { manifest, manifestUrl } = assetBundle;
 const assetMap = new Map(manifest.assets.map((asset) => [asset.asset_id, asset]));
 const assetUrl = (id) => {
   const asset = assetMap.get(id);
-  return asset ? new URL(`../ui/assets/${asset.file}`, window.location.href).href : "";
+  return asset ? assetUrlFromManifest(manifestUrl, asset.file) : "";
 };
 for (const asset of manifest.assets) {
   const image = new Image();

@@ -24,12 +24,12 @@ import { createAdService } from "../app/ad-service.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const assetRoot = fs.existsSync(path.resolve(root, "../ui/assets"))
+  ? path.resolve(root, "../ui/assets")
+  : path.resolve(root, "ui/assets");
 const template = readJson("config/life-simulator.template.json");
 const content = readJson("content/life-simulator.placeholder.json");
 const adConfig = readJson("config/ad-placements.json");
-const assetRoot = fs.existsSync(path.join(root, "ui", "assets"))
-  ? path.join(root, "ui", "assets")
-  : path.resolve(root, "../ui/assets");
 const manifestPath = path.join(assetRoot, "asset-manifest.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const R3_EVENT_IDS = Object.freeze([
