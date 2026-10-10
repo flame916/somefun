@@ -373,6 +373,11 @@ function startPracticeSession(seedState = {}) {
 }
 
 function testActivePracticeLoop() {
+  const uiSource = fs.readFileSync(path.join(root, "app/main.js"), "utf8");
+  assert.match(uiSource, /renderSettledResult\(result, \(\) => routeTransition\(game\.continueOutcome\(\)\)\)/, "growth action continuation must route-render the next screen");
+  for (const actionId of ["action_practice_dao", "action_recover_injury", "action_outing_find_medicine"]) {
+    assert.match(uiSource, new RegExp(actionId), `UI must render ${actionId}`);
+  }
   const dao01 = startPracticeSession();
   assert.deepEqual(dao01.snapshot().growthState.usedActions, []);
   const practice = dao01.chooseGrowthAction("action_practice_dao");

@@ -368,7 +368,7 @@ function renderPreparation(snapshot) {
     action.addEventListener("click", () => {
       const result = game.chooseGrowthAction(actionId);
       if (result.error) { showToast(result.error === "health_too_low_to_practice" ? "伤势过重，无法研修" : "这项行动现在不能执行"); return; }
-      renderSettledResult(result, () => game.continueOutcome());
+      renderSettledResult(result, () => routeTransition(game.continueOutcome()));
     });
     actions.append(action);
   }

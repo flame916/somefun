@@ -958,6 +958,16 @@ async function runViewport(width, height) {
   if (!(await waitFor(`window.innerWidth === ${width} && window.innerHeight === ${height}`))) {
     throw new Error(`viewport not applied: expected ${width}x${height}`);
   }
+  const continuationContract = await evaluate(`(async () => {
+    const source = await fetch('app/main.js').then((response) => response.text());
+    return {
+      growthActions: ['action_practice_dao', 'action_recover_injury', 'action_outing_find_medicine'].every((id) => source.includes(id)),
+      routesGrowthContinuation: source.includes('renderSettledResult(result, () => routeTransition(game.continueOutcome()))')
+    };
+  })()`);
+  if (!continuationContract.growthActions || !continuationContract.routesGrowthContinuation) {
+    throw new Error(`growth action continuation UI contract failed at ${width}x${height}`);
+  }
   const started = await playToRebirth();
   const history = await verifyHistory();
   return { viewport: `${width}x${height}`, ...started, historyRows: history.rows, replayScreen: history.replayScreen };
