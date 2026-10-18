@@ -1,0 +1,49 @@
+:root {
+  color-scheme: light;
+  --rice: #f4ecda;
+  --paper: #fbf4e6;
+  --paper-deep: #ede0c4;
+  --ink: #2b221c;
+  --line: #4a3729;
+  --cinnabar: #a3362b;
+  --cinnabar-pressed: #7e241d;
+  font-family: "Noto Serif CJK SC", "Songti SC", "SimSun", serif;
+  color: var(--ink);
+  background: #e7dcc7;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 280px; background: linear-gradient(180deg, #e7dcc7, #f4ecda 34rem); }
+button { color: inherit; font: inherit; }
+.r6-page { width: min(100%, 414px); min-height: 100dvh; margin: 0 auto; padding: calc(env(safe-area-inset-top) + 8px) 12px calc(env(safe-area-inset-bottom) + 12px); }
+.r6-brand { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 36px; font-size: 13px; }
+.r6-brand strong { font-size: 16px; letter-spacing: .08em; }
+.r6-version { border: 1px solid #86715b; border-radius: 999px; padding: 4px 8px; background: #fbf4e6; }
+.r6-status { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; gap: 6px; min-height: 40px; margin: 8px 0; padding: 0 10px; border: 1px solid #8a755e; border-radius: 8px; background: rgba(251,244,230,.96); font-size: 13px; text-align: center; }
+.r6-status span { white-space: nowrap; }
+.r6-status .r6-save-status { grid-column: 1 / -1; font-size: 11px; text-align: right; color: #514131; }
+.r6-location { margin: 10px 2px 6px; font-size: 20px; }
+.r6-scene-frame { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid #6e5943; border-radius: 8px; background-color: #e8dcc4; background-position: center; background-repeat: no-repeat; background-size: cover; }
+.r6-scene-frame:not([data-location="r4_loc_ashspring"]) { background-image: linear-gradient(145deg,#e6dcc8,#cbbd9f); }
+.r6-section { margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(251,244,230,.96); }
+.r6-section:empty { display: none; }
+.r6-section h2 { margin: 0 0 8px; font-size: 18px; }
+.r6-copy { margin: 6px 0; font-size: 15px; line-height: 1.65; white-space: pre-line; }
+.r6-source { margin: 8px 0 0; color: #514131; font: 12px/1.55 sans-serif; }
+.r6-option-list { display: grid; gap: 8px; margin-top: 10px; }
+.r6-button { display: flex; width: 100%; min-height: 56px; align-items: center; justify-content: flex-start; gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.45; text-align: left; cursor: pointer; touch-action: manipulation; }
+.r6-button:active { background: var(--paper-deep); }
+.r6-button.primary { justify-content: center; border-color: var(--cinnabar); background: var(--cinnabar); color: #fbf4e6; font-weight: 700; text-align: center; }
+.r6-button.primary:active { background: var(--cinnabar-pressed); }
+.r6-button:disabled { border-color: #76624d; background: var(--paper-deep); color: var(--ink); cursor: not-allowed; }
+.r6-button.hotspot { position: absolute; z-index: 2; left: 41%; top: 43%; width: auto; min-width: 48px; min-height: 48px; max-width: 58%; background: rgba(251,244,230,.96); }
+.r6-scene-actions { display: grid; gap: 8px; }
+.r6-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0 2px; padding-bottom: 4px; }
+.r6-overlay-backdrop { position: fixed; z-index: 20; inset: 0; display: grid; align-items: end; background: rgba(25,19,14,.48); }
+.r6-overlay { width: min(100%,414px); max-height: min(78dvh,720px); overflow: auto; margin: 0 auto; padding: 16px 12px calc(env(safe-area-inset-bottom) + 16px); border: 1px solid var(--line); border-bottom: 0; border-radius: 16px 16px 0 0; background: var(--paper); box-shadow: 0 -8px 30px rgba(25,19,14,.18); }
+.r6-overlay h2 { margin: 0 0 8px; font-size: 19px; }
+.r6-empty { padding: 18px 12px; border: 1px dashed #7a664e; border-radius: 8px; background: rgba(251,244,230,.88); font-size: 15px; line-height: 1.6; }
+.r6-alert { margin-top: 8px; padding: 9px 10px; border-left: 3px solid var(--cinnabar); background: var(--paper); font: 13px/1.5 sans-serif; }
+.r6-error { margin-top: 8px; color: #7e241d; font: 13px/1.5 sans-serif; }
+@media (min-width: 390px) { .r6-page { padding-right: 16px; padding-left: 16px; } }
