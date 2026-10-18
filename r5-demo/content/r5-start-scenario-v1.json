@@ -1,0 +1,68 @@
+{
+  "worldPackId": "r5_world_qingxu",
+  "contentVersion": "5.0.0",
+  "originProfiles": [
+    {
+      "originId": "r4_origin_system",
+      "openingEventId": "r4_opening_crisis",
+      "locationId": "r4_loc_willow_market",
+      "startingResources": { "health": 60, "power": 0, "wealth": 0, "sourceRef": "r4-reference-executor.py:initialize_world" },
+      "initialFacts": { "r4_fact_origin": "system" },
+      "initialKnowledge": [
+        { "key": "openingDanger", "level": "witnessed", "sourceId": "r4_origin_system" },
+        { "key": "originRecord", "level": "witnessed", "sourceId": "r4_origin_system" }
+      ],
+      "birthRecord": { "childhoodHerbWork": false }
+    },
+    {
+      "originId": "r4_origin_herbal",
+      "openingEventId": "r4_acq_family",
+      "locationId": "r4_loc_ashspring",
+      "startingResources": { "health": 60, "power": 0, "wealth": 0, "sourceRef": "r4-reference-executor.py:initialize_world" },
+      "initialFacts": { "r4_fact_origin": "herbal" },
+      "initialKnowledge": [
+        { "key": "originRecord", "level": "witnessed", "sourceId": "r4_origin_herbal" }
+      ],
+      "birthRecord": { "childhoodHerbWork": true }
+    },
+    {
+      "originId": "r4_origin_sect",
+      "openingEventId": "r4_acq_dao01",
+      "locationId": "r4_loc_mirror_stage",
+      "startingResources": { "health": 60, "power": 0, "wealth": 0, "sourceRef": "r4-reference-executor.py:initialize_world" },
+      "initialFacts": { "r4_fact_origin": "sect" },
+      "initialKnowledge": [
+        { "key": "originRecord", "level": "witnessed", "sourceId": "r4_origin_sect" }
+      ],
+      "birthRecord": { "childhoodHerbWork": false }
+    }
+  ],
+  "worldSeed": {
+    "crisisInstances": [],
+    "initialLocations": [
+      { "locationId": "r4_loc_ashspring", "harvestableStock": 3 },
+      { "locationId": "r4_loc_willow_market", "marketId": "r4_loc_willow_market" },
+      { "locationId": "r4_loc_furnace_lane" },
+      { "locationId": "r4_loc_mirror_stage" },
+      { "locationId": "r4_loc_echo_pass" }
+    ],
+    "initialPeople": [
+      { "personId": "r4_npc_herbalist_mo", "alive": true, "locationId": "r4_loc_ashspring" },
+      { "personId": "r4_npc_lu_gatherer", "alive": true, "locationId": "r4_loc_ashspring" },
+      { "personId": "r4_npc_qi_student", "alive": true, "locationId": "r4_loc_mirror_stage" },
+      { "personId": "r4_npc_wen_repairer", "alive": true, "locationId": "r4_loc_furnace_lane" },
+      { "personId": "r4_npc_yan_teacher", "alive": true, "locationId": "r4_loc_mirror_stage" }
+    ]
+  },
+  "instanceRuntime": {
+    "lingxu": {
+      "affectedBatchLocationId": "r4_loc_willow_market",
+      "sourceRef": "r4-reference-executor.py:world_tick"
+    },
+    "resonance": {
+      "participantId": "r4_npc_qi_student",
+      "sourceRef": "r4-reference-executor.py:generate_crisis_instance"
+    }
+  },
+  "sourcePolicy": "World facts, service state, dates, schedules, and crisis generation derive from B runtimeSources. Origin resource baseline mirrors the B reference executor initialize_world fixture (health 60, power 0, wealth 0); no ability, materials, permits, evidence, allies, or counter eligibility are granted. Runtime-generated crisis instance IDs are not content IDs."
+}
