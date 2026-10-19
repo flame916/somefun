@@ -5,6 +5,7 @@ const app = document.querySelector("#r6-app");
 const storage = new R5LocalSaveStore();
 const SAVE_SCHEMA = "R6-MOBILE-SAVE-1";
 const VERSION = "R6 手机连续场景 · 测试版";
+const SCENE_ART_VERSION = "r6-slice-3";
 const scriptUrl = new URL(import.meta.url);
 const isPublishedMirror = /\/r6-demo\/app\/r6-main\.js$/.test(scriptUrl.pathname);
 const publishedRoot = new URL("../", scriptUrl);
@@ -24,6 +25,34 @@ let savedAt = null;
 let busy = false;
 let errorText = "";
 let shell = null;
+let sceneImageAttempt = 0;
+
+function setSceneImageState(state, message) {
+  if (!shell) return;
+  shell.scene.dataset.imageState = state;
+  shell.sceneImage.dataset.state = state;
+  shell.sceneImageStatus.hidden = state === "loaded";
+  shell.sceneImageStatus.setAttribute("role", state === "failed" ? "alert" : "status");
+  shell.sceneImageStatus.replaceChildren(element("span", "", message));
+  if (state === "failed") shell.sceneImageStatus.append(makeButton("重试载入院落画面", loadSceneImage, "r6-button primary"));
+}
+function loadSceneImage() {
+  if (!shell) return;
+  const attempt = ++sceneImageAttempt;
+  setSceneImageState("loading", "院落画面载入中…");
+  const root = isPublishedMirror ? publishedRoot : sourceProjectRoot;
+  const imageUrl = new URL("ui/assets/bg_ashspring_herb_yard_1200x900.png", root);
+  imageUrl.searchParams.set("v", SCENE_ART_VERSION);
+  if (attempt > 1) imageUrl.searchParams.set("retry", String(attempt - 1));
+  const image = shell.sceneImage;
+  image.onload = () => {
+    if (attempt !== sceneImageAttempt) return;
+    if (image.naturalWidth > 0 && image.naturalHeight > 0) setSceneImageState("loaded", "院落画面已载入");
+    else setSceneImageState("failed", "画面暂未显出，可再试一次。");
+  };
+  image.onerror = () => { if (attempt === sceneImageAttempt) setSceneImageState("failed", "画面暂未显出，可再试一次。"); };
+  image.src = imageUrl.href;
+}
 
 function readJson(path) {
   const root = !isPublishedMirror && path.startsWith("design/") ? sourceProjectRoot : publishedRoot;
@@ -126,6 +155,17 @@ function ensureShell() {
   location.id = "r6-location-label";
   const scene = element("section", "r6-scene-frame");
   scene.dataset.node = "r6_living_scene";
+  scene.dataset.location = "r4_loc_ashspring";
+  const sceneImage = element("img", "r6-scene-image");
+  sceneImage.dataset.node = "r6_scene_image";
+  sceneImage.alt = "灰泉镇药户院落与药棚";
+  sceneImage.decoding = "async";
+  sceneImage.loading = "eager";
+  const sceneImageStatus = element("div", "r6-scene-image-status", "院落画面载入中…");
+  sceneImageStatus.dataset.node = "r6_scene_image_status";
+  sceneImageStatus.setAttribute("role", "status");
+  sceneImageStatus.setAttribute("aria-live", "polite");
+  scene.append(sceneImage, sceneImageStatus);
   scene.setAttribute("aria-label", "灰泉镇药户院落场景");
   const event = element("section", "r6-section");
   event.dataset.node = "r6_scene_event";
@@ -141,7 +181,8 @@ function ensureShell() {
   error.setAttribute("role", "alert");
   page.append(brand, status, location, scene, event, result, activity, tools, error, overlays);
   app.replaceChildren(page);
-  shell = { page, status: saveStatus, statusAge, statusStage, statusHealth, location, scene, event, result, activity, tools, overlays, error };
+  shell = { page, status: saveStatus, statusAge, statusStage, statusHealth, location, scene, sceneImage, sceneImageStatus, event, result, activity, tools, overlays, error };
+  loadSceneImage();
 }
 function locationName(locationId) { return aliases[locationId] || locationId; }
 function showLanding(saved = null) {
@@ -216,9 +257,7 @@ function renderSceneContent() {
   shell.statusHealth.textContent = `身况 ${s.character.health}`;
   shell.location.textContent = locationName(state.character.location);
   shell.scene.dataset.location = state.character.location;
-  shell.scene.style.backgroundImage = state.character.location === "r4_loc_ashspring"
-    ? `url("${new URL("ui/assets/bg_ashspring_herb_yard_1200x900.png", isPublishedMirror ? publishedRoot : sourceProjectRoot)}")`
-    : "";
+  shell.sceneImage.hidden = state.character.location !== "r4_loc_ashspring";
   shell.scene.setAttribute("aria-label", `${locationName(state.character.location)}场景`);
   shell.status.textContent = "存档：已保存";
   shell.error.textContent = errorText;
