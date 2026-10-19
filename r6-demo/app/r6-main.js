@@ -4,8 +4,8 @@ import { R5LocalSaveStore } from "./r5-storage.js";
 const app = document.querySelector("#r6-app");
 const storage = new R5LocalSaveStore();
 const SAVE_SCHEMA = "R6-MOBILE-SAVE-1";
-const VERSION = "R6 手机连续场景 · 测试版";
-const SCENE_ART_VERSION = "r6-slice-3";
+const VERSION = "今世";
+const SCENE_ART_VERSION = "r6-slice-4";
 const scriptUrl = new URL(import.meta.url);
 const isPublishedMirror = /\/r6-demo\/app\/r6-main\.js$/.test(scriptUrl.pathname);
 const publishedRoot = new URL("../", scriptUrl);
@@ -24,35 +24,9 @@ let envelope = null;
 let savedAt = null;
 let busy = false;
 let errorText = "";
+let errorAction = null;
 let shell = null;
 let sceneImageAttempt = 0;
-
-function setSceneImageState(state, message) {
-  if (!shell) return;
-  shell.scene.dataset.imageState = state;
-  shell.sceneImage.dataset.state = state;
-  shell.sceneImageStatus.hidden = state === "loaded";
-  shell.sceneImageStatus.setAttribute("role", state === "failed" ? "alert" : "status");
-  shell.sceneImageStatus.replaceChildren(element("span", "", message));
-  if (state === "failed") shell.sceneImageStatus.append(makeButton("重试载入院落画面", loadSceneImage, "r6-button primary"));
-}
-function loadSceneImage() {
-  if (!shell) return;
-  const attempt = ++sceneImageAttempt;
-  setSceneImageState("loading", "院落画面载入中…");
-  const root = isPublishedMirror ? publishedRoot : sourceProjectRoot;
-  const imageUrl = new URL("ui/assets/bg_ashspring_herb_yard_1200x900.png", root);
-  imageUrl.searchParams.set("v", SCENE_ART_VERSION);
-  if (attempt > 1) imageUrl.searchParams.set("retry", String(attempt - 1));
-  const image = shell.sceneImage;
-  image.onload = () => {
-    if (attempt !== sceneImageAttempt) return;
-    if (image.naturalWidth > 0 && image.naturalHeight > 0) setSceneImageState("loaded", "院落画面已载入");
-    else setSceneImageState("failed", "画面暂未显出，可再试一次。");
-  };
-  image.onerror = () => { if (attempt === sceneImageAttempt) setSceneImageState("failed", "画面暂未显出，可再试一次。"); };
-  image.src = imageUrl.href;
-}
 
 function readJson(path) {
   const root = !isPublishedMirror && path.startsWith("design/") ? sourceProjectRoot : publishedRoot;
@@ -72,6 +46,55 @@ function makeButton(label, action, className = "r6-button") {
   node.type = "button";
   node.addEventListener("click", action);
   return node;
+}
+function renderError() {
+  shell.error.replaceChildren();
+  if (errorText) shell.error.append(element("span", "", errorText));
+  if (errorAction) shell.error.append(makeButton(errorAction.label, errorAction.run, "r6-button"));
+  shell.error.hidden = !errorText && !errorAction;
+}
+function safeError(error, fallback = "这一步暂未办妥，原有记录仍在。请查看眼下可作的选择。") {
+  const code = typeof error === "string" ? error : error?.message;
+  if (code === "r6_save_conflict") return "另一处页面已保存新进展；本页没有覆盖，请刷新后继续。";
+  if (code === "insufficient_resource") return "手头物资不够，这次没有办成；光阴与物资没有变化。";
+  if (code === "event_unavailable" || code === "requirements_not_met") return "眼下情形有变，这次没有办成；请重新看看可作的选择。";
+  if (code === "indexeddb_unavailable" || code === "indexeddb_transaction_aborted" || code === "indexeddb_request_failed") return "存档暂时没有写好；这局仍留在本页，请稍后重试保存。";
+  return fallback;
+}
+function renderRecoverableError(message, label, run) {
+  errorText = message;
+  errorAction = label && run ? { label, run } : null;
+  render();
+}
+function setSceneImageState(state, message) {
+  if (!shell) return;
+  shell.scene.dataset.imageState = state;
+  shell.sceneImage.dataset.state = state;
+  shell.sceneImageStatus.hidden = state === "loaded";
+  shell.sceneImageStatus.setAttribute("role", state === "failed" ? "alert" : "status");
+  shell.sceneImageStatus.replaceChildren(element("span", "", message));
+  if (state === "failed") {
+    shell.sceneImageStatus.append(makeButton("重试载入院落画面", loadSceneImage, "r6-button primary"));
+  }
+}
+function loadSceneImage() {
+  if (!shell) return;
+  const attempt = ++sceneImageAttempt;
+  setSceneImageState("loading", "院落画面载入中…");
+  const root = isPublishedMirror ? publishedRoot : sourceProjectRoot;
+  const imageUrl = new URL("ui/assets/bg_ashspring_herb_yard_1200x900.png", root);
+  imageUrl.searchParams.set("v", SCENE_ART_VERSION);
+  if (attempt > 1) imageUrl.searchParams.set("retry", String(attempt - 1));
+  const image = shell.sceneImage;
+  image.onload = () => {
+    if (attempt !== sceneImageAttempt) return;
+    if (image.naturalWidth > 0 && image.naturalHeight > 0) setSceneImageState("loaded", "院落画面已载入");
+    else setSceneImageState("failed", "画面暂未显出，可再试一次。 ");
+  };
+  image.onerror = () => {
+    if (attempt === sceneImageAttempt) setSceneImageState("failed", "画面暂未显出，可再试一次。");
+  };
+  image.src = imageUrl.href;
 }
 function runtimeState() { return engine?.save() || null; }
 function snapshot() { return engine?.snapshot() || null; }
@@ -177,14 +200,17 @@ function ensureShell() {
   tools.setAttribute("aria-label", "只读查看");
   const overlays = element("div");
   overlays.id = "r6-overlays";
-  const error = element("p", "r6-error");
+  const error = element("div", "r6-error");
   error.setAttribute("role", "alert");
   page.append(brand, status, location, scene, event, result, activity, tools, error, overlays);
   app.replaceChildren(page);
   shell = { page, status: saveStatus, statusAge, statusStage, statusHealth, location, scene, sceneImage, sceneImageStatus, event, result, activity, tools, overlays, error };
   loadSceneImage();
 }
-function locationName(locationId) { return aliases[locationId] || locationId; }
+function locationName(locationId) {
+  const localNames = { r4_loc_furnace_lane: "炉巷", r4_loc_mirror_stage: "照影台", r4_loc_echo_pass: "回声关" };
+  return aliases[locationId] || localNames[locationId] || "路上";
+}
 function showLanding(saved = null) {
   ensureShell();
   shell.location.textContent = "一处药户院落";
@@ -197,7 +223,7 @@ function showLanding(saved = null) {
     shell.event.append(makeButton("继续这段人生", () => resumeSaved(), "r6-button primary"));
     shell.event.append(makeButton("另开一段新人生", () => startNewGame(true), "r6-button"));
   } else shell.event.append(makeButton("开始药户新局", () => startNewGame(false), "r6-button primary"));
-  shell.error.textContent = errorText;
+  renderError();
 }
 async function startNewGame(confirmOverwrite) {
   if (busy) return;
@@ -212,10 +238,11 @@ async function startNewGame(confirmOverwrite) {
     envelope = buildFreshEnvelope();
     savedAt = expected;
     errorText = "";
+    errorAction = null;
     render();
     await persistEnvelope();
     render();
-  } catch (error) { errorText = `新局未保存：${error.message}`; showLanding(); }
+  } catch (error) { errorText = safeError(error, "新局暂未保存；原有记录没有删除，请重试。 "); errorAction = { label: "重试开始", run: () => startNewGame(false) }; showLanding(); }
   finally { busy = false; }
 }
 async function resumeSaved() {
@@ -229,14 +256,28 @@ async function resumeSaved() {
     engine = createRuntime();
     engine.restoreDto(envelope.r5Save);
     errorText = "";
+    errorAction = null;
     render();
     if (currentPresentation().pendingAction) await resumePendingAction();
-  } catch (error) { errorText = `恢复未完成：${error.message}`; showLanding(); }
+  } catch (error) { errorText = safeError(error, "这段人生暂未接上；原存档仍保留，请重新读取。 "); errorAction = { label: "重新读取", run: () => resumeSaved() }; showLanding(); }
   finally { busy = false; }
 }
 function availableOptions(eventId) {
   if (!engine?.isEventAvailable(eventId)) return [];
-  return (engine.eventView(eventId)?.options || []).filter((option) => option.available);
+  return (engine.eventView(eventId)?.options || []).filter((option) => option.available).map((option) => {
+    const missing = [];
+    for (const [resource, amount] of Object.entries(option.costs || {})) {
+      const state = runtimeState();
+      const current = resource === "wealth" ? Number(state.character.wealth || 0)
+        : resource === "demandInstance.materials" ? Number(state.world.demandInstance?.materials ?? state.demandInstance?.materials ?? 0)
+          : resource.startsWith("r4_item_") ? Number(state.character.inventory?.[resource] || 0) : 0;
+      if (current < Number(amount)) {
+        const name = resource === "r4_item_powder" ? "止血散" : resource === "wealth" ? "家资" : resource === "demandInstance.materials" ? "可交付物料" : "所需物资";
+        missing.push(`还缺 ${Number(amount) - current} 份${name}`);
+      }
+    }
+    return { ...option, canAfford: missing.length === 0, affordabilityMessage: missing.join("；") };
+  });
 }
 function setEventReference(eventId) {
   const presentation = currentPresentation();
@@ -260,7 +301,7 @@ function renderSceneContent() {
   shell.sceneImage.hidden = state.character.location !== "r4_loc_ashspring";
   shell.scene.setAttribute("aria-label", `${locationName(state.character.location)}场景`);
   shell.status.textContent = "存档：已保存";
-  shell.error.textContent = errorText;
+  renderError();
   shell.result.replaceChildren();
   shell.event.replaceChildren();
   shell.activity.replaceChildren();
@@ -274,7 +315,7 @@ function renderSceneContent() {
   if (presentation.pendingAction) {
     const event = eventDefinitions.get(presentation.pendingAction.actionId);
     const action = presentation.pendingAction;
-    shell.event.append(element("h2", "", event?.presentation?.title || (action.actionId === "r4_action_travel" ? "正在途中" : "正在保存选择")));
+    shell.event.append(element("h2", "", action.actionId === "r4_action_travel" ? "行路途中" : eventTitle(action.actionId, "眼前的事")));
     if (action.actionId === "r4_action_travel") {
       const inFlight = state.inFlightTransaction;
       if (inFlight?.transactionId === action.transactionId && inFlight.pauseReason === "world_node_due" && inFlight.pauseEventId) {
@@ -284,10 +325,10 @@ function renderSceneContent() {
         return;
       }
       const remaining = Math.max(0, Number(inFlight?.targetDay || 0) - Number(state.worldDay || 0));
-      shell.event.append(element("p", "r6-copy", remaining ? `路上还需 ${remaining} 日。你仍在${locationName(presentation.sceneLocationId)}；途中状态已写入真实存档。` : "行程已由运行时结算，正在确认抵达。"));
+      shell.event.append(element("p", "r6-copy", remaining ? `还要走 ${remaining} 日。你仍在${locationName(presentation.sceneLocationId)}。` : "路途已尽，正准备落脚。"));
       shell.event.append(makeButton(remaining ? "继续行程 1 日" : "确认抵达", () => continueTravel(), "r6-button primary"));
     } else {
-      shell.event.append(element("p", "r6-copy", "选择正在由正式运行时处理；请勿重复提交。"));
+      shell.event.append(element("p", "r6-copy", "眼前这件事还没有落定。"));
       const pending = makeButton("正在处理…", () => {}, "r6-button primary");
       pending.disabled = true;
       shell.event.append(pending);
@@ -314,20 +355,25 @@ function renderSceneContent() {
     shell.activity.append(element("p", "r6-copy", "雨意渐近，檐下的药草该收拾了。你走近药架，看看眼下该如何处置。"));
     return;
   }
-  shell.activity.append(element("h2", "", "仍在院落"));
+  const here = locationName(state.character.location);
+  shell.activity.append(element("h2", "", state.character.location === "r4_loc_ashspring" ? "院中还可做的事" : `${here}还可做的事`));
   if (presentation.dialogueRef?.lineId === "arrival") shell.activity.append(element("p", "r6-copy", `路途已尽，你抵达了${locationName(state.character.location)}。`));
-  else shell.activity.append(element("p", "r6-copy", "院中一时安静下来。可理药、接活，也可循已知道路出镇。"));
+  else shell.activity.append(element("p", "r6-copy", `${here}暂时安静下来。可理药、接活，也可循已知道路出镇。`));
   for (const eventId of ["r4_daily_entrust", "r4_daily_herb"]) {
     const options = availableOptions(eventId);
     if (!options.length) continue;
     const definition = eventDefinitions.get(eventId);
-    shell.activity.append(element("h3", "", definition?.presentation?.title || "日常"));
+    shell.activity.append(element("h3", "", eventTitle(eventId, definition?.presentation?.title)));
+    const list = element("div", "r6-option-list");
     for (const option of options) {
-      const choice = makeButton(option.text, () => submitChoice(eventId, option.id));
+      const choice = makeChoiceButton(eventId, option);
       choice.dataset.choiceId = option.id;
       choice.dataset.eventId = eventId;
-      shell.activity.append(choice);
+      list.append(choice);
+      const notice = optionNotice(eventId, option);
+      if (notice) list.append(element("p", "r6-option-note", notice));
     }
+    shell.activity.append(list);
   }
   const routes = pack.runtimeSources.worldInitialization.routes.filter((route) => route.from === state.character.location && state.character.knownLocations?.includes(route.to));
   for (const route of routes) {
@@ -346,36 +392,72 @@ function renderChoiceCard(eventId, title, copy, parent) {
   }
   const list = element("div", "r6-option-list");
   for (const option of options) {
-      const choice = makeButton(choiceLabel(eventId, option), () => submitChoice(eventId, option.id), "r6-button");
+      const choice = makeChoiceButton(eventId, option);
     choice.dataset.choiceId = option.id;
+      choice.dataset.eventId = eventId;
     list.append(choice);
+      const notice = optionNotice(eventId, option);
+      if (notice) list.append(element("p", "r6-option-note", notice));
   }
   parent.append(list);
 }
 function choiceLabel(eventId, option) {
   const natural = {
     "r4_birth_story:respond_to_neighbor": "应下邻里托付",
-    "r4_ev_birth_herbal_roof:save_neighbor_batch": "先护住檐下药草"
+    "r4_birth_story:help_household": "帮家里料理一件日常事",
+    "r4_birth_story:fulfill_early_duty": "把先前答应的事做完",
+    "r4_ev_birth_herbal_roof:save_neighbor_batch": "先护住托管的药草",
+    "r4_ev_birth_herbal_roof:save_household_batch": "先收好自家的药草",
+    "r4_ev_birth_herbal_roof:repair_and_call_help": "先补好棚角，再请人搭把手",
+    "r4_daily_entrust:accept_and_fulfill": "接下帮工，把这份活计做好",
+    "r4_daily_entrust:accept_and_fail": "接下帮工，但这份活没能做完",
+    "r4_daily_entrust:decline": "婉言谢绝",
+    "r4_daily_herb:harvest_for_self": "采下可用的药草",
+    "r4_daily_herb:help_other_gatherer": "送一份止血散，帮采药人一把",
+    "r4_daily_herb:leave_stock": "暂且留下药草"
   };
-  return natural[`${eventId}:${option.id}`] || option.text;
+  const text = natural[`${eventId}:${option.id}`] || option.text;
+  return typeof text === "string" && text.trim() ? text.trim() : "";
+}
+function makeChoiceButton(eventId, option) {
+  const label = choiceLabel(eventId, option);
+  const canSelect = Boolean(label) && option.canAfford !== false;
+  const button = makeButton(label || "此项暂不可选", () => submitChoice(eventId, option.id), "r6-button");
+  if (!canSelect) { button.disabled = true; button.setAttribute("aria-disabled", "true"); }
+  return button;
+}
+function optionNotice(eventId, option) {
+  if (!choiceLabel(eventId, option)) return "这项回应还没有写明白，暂时不能选择。";
+  return option.canAfford === false ? option.affordabilityMessage || "所需物资尚不齐备。" : "";
+}
+function eventTitle(eventId, fallback = "眼前的事") {
+  const titles = {
+    r4_birth_story: "院中旧事",
+    r4_ev_birth_herbal_roof: "雨前收药草",
+    r4_daily_entrust: "一份帮工",
+    r4_daily_herb: "檐下采药"
+  };
+  return titles[eventId] || (typeof fallback === "string" && fallback.trim() ? fallback : "眼前的事");
 }
 function renderPendingResult(pending) {
   const state = runtimeState();
   const result = state.lastResult;
   const event = eventDefinitions.get(pending.eventId);
   const option = event?.options?.find((row) => row.id === result?.optionId);
-  const title = event?.presentation?.title || "本次选择结果";
+  const title = eventTitle(pending.eventId, event?.presentation?.title);
   shell.result.dataset.resultId = pending.resultId;
   shell.result.append(element("h2", "", title));
   shell.result.append(element("p", "r6-copy", option ? choiceLabel(pending.eventId, option) : "这段经历有了结果。"));
   const days = Number(result?.time?.durationDays || 0);
   const succeeded = result?.outcome === "success";
+  const place = locationName(state.character.location);
+  const elapsed = days === 1 ? "一日" : `${days}日`;
   const prose = succeeded
-    ? (days ? `事情妥当了，日头也向前走了一日。你仍在${locationName(state.character.location)}。` : "这份心意落在了今世，光阴未动。")
-    : (days ? `事情未尽如意，一日光阴已过；你仍在${locationName(state.character.location)}。` : "这件事暂未如愿，院中时光仍停在此刻。");
+    ? (days ? `事情办妥了，过了${elapsed}。你现在在${place}。` : "这份心意留在今世，光阴未动。")
+    : (days ? `事情没能如愿，过了${elapsed}。你现在在${place}。` : "这件事没能如愿，眼下光阴未动。");
   shell.result.append(element("p", "r6-copy", prose));
   shell.result.append(element("p", "r6-source", "这段经历已收进行录。"));
-  const continueLabel = pending.eventId === "r4_ev_birth_herbal_roof" ? "收拾停当" : pending.eventId === "r4_daily_entrust" ? "回到院中" : "收下这段经历";
+  const continueLabel = pending.eventId === "r4_ev_birth_herbal_roof" ? "收拾停当" : pending.eventId === "r4_daily_entrust" ? `回到${locationName(state.character.location)}` : "收下这段经历";
   shell.result.append(makeButton(continueLabel, () => acknowledgeResult(), "r6-button primary"));
 }
 async function openRoofEvent() {
@@ -385,13 +467,86 @@ async function openRoofEvent() {
     setEventReference("r4_ev_birth_herbal_roof");
     await persistEnvelope();
     render();
-  } catch (error) { errorText = `场景状态未保存：${error.message}`; render(); }
+  } catch (error) { errorText = safeError(error, "眼前的情形暂未记下；这局仍在，请稍后再试。"); render(); }
   finally { busy = false; }
+}
+function matchingCommittedChoice(eventId, choiceId, tx) {
+  const state = runtimeState();
+  const receipt = state.r5LifeLedger?.transactions?.[`content:${tx}`];
+  const result = state.lastResult;
+  if (receipt?.transactionId !== tx || receipt.eventId !== eventId || receipt.choiceId !== choiceId
+    || !["success", "failure"].includes(receipt.outcome)
+    || result?.kind !== "result" || result.eventId !== eventId || result.optionId !== choiceId || result.outcome !== receipt.outcome) return null;
+  return result;
+}
+function restoreSavedRuntimeBeforeChoice() {
+  engine = createRuntime();
+  engine.restoreDto(envelope.r5Save);
+  const presentation = currentPresentation();
+  presentation.pendingAction = null;
+  presentation.pendingResult = null;
+  presentation.selectedChoiceId = null;
+  presentation.dialogueCursor = 0;
+  syncReturnTarget();
+}
+async function retryEnvelopeSave() {
+  if (busy) return;
+  busy = true;
+  try {
+    await persistEnvelope();
+    errorAction = null;
+    errorText = "记录已保存，可以继续眼下的事。";
+    render();
+  } catch (error) {
+    const conflict = error?.message === "r6_save_conflict";
+    renderRecoverableError(conflict ? safeError(error) : "存档仍未写好；原记录保留，请稍后再试。", conflict ? "刷新并读取最新记录" : "重试保存", conflict ? () => location.reload() : retryEnvelopeSave);
+  } finally { busy = false; }
+}
+async function recoverPendingChoice(eventId, choiceId, tx, error) {
+  const committed = matchingCommittedChoice(eventId, choiceId, tx);
+  if (committed) {
+    try {
+      await commitChoiceResult(eventId, choiceId, tx, committed);
+      errorText = "";
+      errorAction = null;
+      render();
+    } catch (saveError) {
+      const conflict = saveError?.message === "r6_save_conflict";
+      renderRecoverableError(conflict ? safeError(saveError) : "事情已经办妥，但结果还没写进存档。请保存后再继续。", conflict ? "刷新并读取最新记录" : "重试保存结果", conflict ? () => location.reload() : retryEnvelopeSave);
+    }
+    return;
+  }
+
+  const rejectedOption = availableOptions(eventId).find((option) => option.id === choiceId);
+  const shortage = (typeof error === "string" ? error : error?.message) === "insufficient_resource" ? rejectedOption?.affordabilityMessage : "";
+  restoreSavedRuntimeBeforeChoice();
+  errorText = shortage ? `${shortage}；这次没有办成，光阴与物资没有变化。` : safeError(error, "这次没有办成，光阴与物资没有变化。请重新看看可作的选择。");
+  errorAction = null;
+  try {
+    await persistEnvelope();
+    render();
+  } catch (saveError) {
+    const conflict = saveError?.message === "r6_save_conflict";
+    renderRecoverableError(conflict ? safeError(saveError) : "这次没有结算，但存档状态暂未更新。原记录还在，请重试保存。", conflict ? "刷新并读取最新记录" : "重试保存", conflict ? () => location.reload() : retryEnvelopeSave);
+  }
+}
+async function resolvePendingChoice(eventId, choiceId, tx) {
+  try {
+    const raw = engine.resolveWorldChoice(eventId, choiceId, tx);
+    if (raw?.error) return recoverPendingChoice(eventId, choiceId, tx, raw.error);
+    const result = raw?.kind === "duplicate_suppressed" ? matchingCommittedChoice(eventId, choiceId, tx) : raw;
+    if (!result) return recoverPendingChoice(eventId, choiceId, tx, "choice_receipt_unavailable");
+    await commitChoiceResult(eventId, choiceId, tx, result);
+  } catch (error) {
+    await recoverPendingChoice(eventId, choiceId, tx, error);
+  }
 }
 async function submitChoice(eventId, choiceId) {
   if (busy) return;
   const option = availableOptions(eventId).find((row) => row.id === choiceId);
-  if (!option) { errorText = "当前来源或资格已变化，未提交选择。"; render(); return; }
+  if (!option) { errorText = "眼下情形有变，这次没有办成；请重新看看可作的选择。"; errorAction = null; render(); return; }
+  if (!choiceLabel(eventId, option)) { errorText = "这项回应还没有写明白，暂时不能选择。"; errorAction = null; render(); return; }
+  if (!option.canAfford) { errorText = option.affordabilityMessage || "所需物资尚不齐备，这次没有结算。"; errorAction = null; render(); return; }
   busy = true;
   const tx = `${slotId}:${runtimeState().character.lifeIndex}:${crypto.randomUUID()}`;
   try {
@@ -400,13 +555,12 @@ async function submitChoice(eventId, choiceId) {
     presentation.selectedChoiceId = choiceId;
     presentation.pendingAction = { operationId: tx, actionId: eventId, transactionId: tx, status: "submitting" };
     errorText = "";
+    errorAction = null;
     await persistEnvelope();
     render();
-    const result = engine.resolveWorldChoice(eventId, choiceId, tx);
-    await commitChoiceResult(eventId, choiceId, tx, result);
+    await resolvePendingChoice(eventId, choiceId, tx);
   } catch (error) {
-    errorText = error.message === "r6_save_conflict" ? "另一个标签页已更新此局；为避免重复结算，请刷新后继续。" : `本次选择未完成：${error.message}`;
-    render();
+    await recoverPendingChoice(eventId, choiceId, tx, error);
   } finally { busy = false; }
 }
 async function resumePendingAction() {
@@ -423,8 +577,7 @@ async function resumePendingAction() {
     if (action.status === "submitting" && destinationId) return dispatchTravel(destinationId, action.transactionId);
     throw new Error("saved_travel_transaction_missing");
   }
-  const result = engine.resolveWorldChoice(action.actionId, currentPresentation().selectedChoiceId, action.transactionId);
-  await commitChoiceResult(action.actionId, currentPresentation().selectedChoiceId, action.transactionId, result);
+  return resolvePendingChoice(action.actionId, currentPresentation().selectedChoiceId, action.transactionId);
 }
 async function beginTravel(destinationId) {
   if (busy) return;
@@ -441,7 +594,7 @@ async function beginTravel(destinationId) {
     await persistEnvelope();
     render();
     await dispatchTravel(destinationId, tx);
-  } catch (error) { errorText = `出发未完成：${error.message}`; render(); }
+  } catch (error) { errorText = safeError(error, "这趟路暂未启程；原有行程记录仍在。请重新查看路线。"); errorAction = error?.message === "r6_save_conflict" ? { label: "刷新并读取最新记录", run: () => location.reload() } : null; render(); }
   finally { busy = false; }
 }
 async function dispatchTravel(destinationId, tx) {
@@ -473,7 +626,7 @@ async function continueTravel() {
     }
     if (result?.kind !== "result" || runtimeState().character.location !== action.destinationId) throw new Error(result?.error || "travel_not_authoritatively_completed");
     await finishTravel(action.destinationId);
-  } catch (error) { errorText = `行程未推进：${error.message}`; render(); }
+  } catch (error) { errorText = safeError(error, "这趟路暂未继续；行程记录仍在，可以再试一次。"); errorAction = null; render(); }
   finally { busy = false; }
 }
 async function finishTravel(destinationId) {
@@ -490,7 +643,7 @@ async function finishTravel(destinationId) {
   render();
 }
 async function commitChoiceResult(eventId, choiceId, tx, rawResult) {
-  const result = rawResult?.kind === "duplicate_suppressed" ? rawResult.result : rawResult;
+  const result = rawResult?.kind === "duplicate_suppressed" ? matchingCommittedChoice(eventId, choiceId, tx) : rawResult;
   if (result?.kind !== "result") throw new Error(result?.error || result?.reason || result?.kind || "runtime_choice_not_committed");
   const event = engine.eventView(eventId);
   const eventDefinition = eventDefinitions.get(eventId);
@@ -535,7 +688,7 @@ async function acknowledgeResult() {
     syncReturnTarget();
     await persistEnvelope();
     render();
-  } catch (error) { errorText = `已读状态未保存：${error.message}`; render(); }
+  } catch (error) { errorText = safeError(error, "这段经历还没记为已读；原记录仍在，请稍后重试。"); errorAction = error?.message === "r6_save_conflict" ? { label: "刷新并读取最新记录", run: () => location.reload() } : null; render(); }
   finally { busy = false; }
 }
 async function openOverlay(type) {
@@ -547,7 +700,7 @@ async function openOverlay(type) {
   presentation.returnTarget = clone(returnTarget);
   presentation.overlayStack.push({ type, returnTarget: clone(returnTarget) });
   try { await persistEnvelope(); render(); }
-  catch (error) { presentation.overlayStack.pop(); errorText = error.message === "r6_save_conflict" ? "另一处页面已保存新进展；本页未覆盖，请刷新后继续。" : `查看层状态未保存：${error.message}`; render(); }
+  catch (error) { presentation.overlayStack.pop(); errorText = safeError(error, "查看内容未能记下；原有记录仍在。"); errorAction = error?.message === "r6_save_conflict" ? { label: "刷新并读取最新记录", run: () => location.reload() } : null; render(); }
   finally { busy = false; }
 }
 async function closeOverlay() {
@@ -566,7 +719,7 @@ async function closeOverlay() {
   }
   syncReturnTarget();
   try { await persistEnvelope(); render(); }
-  catch (error) { errorText = `查看层关闭状态未保存：${error.message}`; render(); }
+  catch (error) { errorText = safeError(error, "返回状态暂未记下；原有记录仍在。"); errorAction = error?.message === "r6_save_conflict" ? { label: "刷新并读取最新记录", run: () => location.reload() } : null; render(); }
   requestAnimationFrame(() => {
     if (presentation.scrollAnchor && document.getElementById(presentation.scrollAnchor)) {
       const anchor = document.getElementById(presentation.scrollAnchor);
@@ -598,9 +751,9 @@ function renderOverlay() {
     const event = result && eventDefinitions.get(result.eventId);
     const choice = event?.options?.find((row) => row.id === result.optionId);
     panel.append(element("p", "r6-copy", `这一生留下了 ${state.causeLog?.length || 0} 段因果。`));
-    panel.append(element("p", "r6-copy", result ? `${event?.presentation?.title || "当时处境"}：${choice ? choiceLabel(result.eventId, choice) : "一次抉择"} · ${result.outcome === "success" ? "已然" : "未成"}` : "尚未遇见值得记下的事。"));
+    panel.append(element("p", "r6-copy", result ? `${eventTitle(result.eventId, event?.presentation?.title)}：${choice ? choiceLabel(result.eventId, choice) || "一次抉择" : "一次抉择"} · ${result.outcome === "success" ? "办妥了" : "未能办妥"}` : "尚未遇见值得记下的事。"));
   }
-  panel.append(element("p", "r6-source", "只读查看；开关不确认结果、不推进世界日。"));
+  panel.append(element("p", "r6-source", "翻看旧事，不会改变眼前境况。"));
   panel.append(makeButton("返回原处", closeOverlay, "r6-button primary"));
   backdrop.append(panel);
   shell.overlays.append(backdrop);
@@ -627,8 +780,9 @@ async function boot() {
     });
     if (currentPresentation().pendingAction) await resumePendingAction();
   } catch (error) {
-    errorText = `存档读取失败：${error.message}`;
-    showLanding();
+    errorText = "这段人生暂时没能接上，原存档仍保留。请重新读取，不要另开新局。";
+    errorAction = { label: "重新读取这段人生", run: () => location.reload() };
+    if (engine && envelope) render(); else showLanding();
   }
 }
 

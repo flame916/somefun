@@ -36,6 +36,7 @@ button { color: inherit; font: inherit; }
 .r6-copy { margin: 6px 0; font-size: 15px; line-height: 1.65; white-space: pre-line; }
 .r6-source { margin: 8px 0 0; color: #514131; font: 12px/1.55 sans-serif; }
 .r6-option-list { display: grid; gap: 8px; margin-top: 10px; }
+.r6-option-note { margin: -4px 2px 4px; color: #6a3c27; font: 12px/1.5 sans-serif; }
 .r6-button { display: flex; width: 100%; min-height: 56px; align-items: center; justify-content: flex-start; gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.45; text-align: left; cursor: pointer; touch-action: manipulation; }
 .r6-button:active { background: var(--paper-deep); }
 .r6-button.primary { justify-content: center; border-color: var(--cinnabar); background: var(--cinnabar); color: #fbf4e6; font-weight: 700; text-align: center; }
@@ -50,4 +51,5 @@ button { color: inherit; font: inherit; }
 .r6-empty { padding: 18px 12px; border: 1px dashed #7a664e; border-radius: 8px; background: rgba(251,244,230,.88); font-size: 15px; line-height: 1.6; }
 .r6-alert { margin-top: 8px; padding: 9px 10px; border-left: 3px solid var(--cinnabar); background: var(--paper); font: 13px/1.5 sans-serif; }
 .r6-error { margin-top: 8px; color: #7e241d; font: 13px/1.5 sans-serif; }
+.r6-error[hidden] { display: none !important; }
 @media (min-width: 390px) { .r6-page { padding-right: 16px; padding-left: 16px; } }
