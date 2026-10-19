@@ -32,6 +32,12 @@ button { color: inherit; font: inherit; }
 .r6-scene-image-status[hidden] { display: none !important; }
 .r6-section { margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(251,244,230,.96); }
 .r6-section:empty { display: none; }
+.r6-inventory { border-color: #78614a; }
+.r6-inventory h2 { margin: 0 0 8px; font-size: 17px; }
+.r6-next { margin: 8px 0 0; padding: 8px 10px; border-left: 3px solid var(--cinnabar); background: #f4ead6; font-size: 13px; line-height: 1.55; }
+.r6-herb-visual { display: flex; align-items: center; gap: 12px; margin: 4px 0 8px; padding: 8px; border: 1px solid #c3ae8b; border-radius: 8px; background: rgba(244,236,218,.76); }
+.r6-herb-image { display: block; width: 76px; height: 76px; flex: 0 0 76px; object-fit: contain; }
+.r6-herb-visual .r6-source { margin: 0; }
 .r6-section h2 { margin: 0 0 8px; font-size: 18px; }
 .r6-copy { margin: 6px 0; font-size: 15px; line-height: 1.65; white-space: pre-line; }
 .r6-source { margin: 8px 0 0; color: #514131; font: 12px/1.55 sans-serif; }

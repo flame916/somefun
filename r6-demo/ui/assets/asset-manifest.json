@@ -3131,6 +3131,48 @@
           1367
         ]
       }
+    },
+    {
+      "asset_id": "icon_herb_bundle_512x512",
+      "usage": "R6 通用草药束图；不代表特定草药物种或物品ID",
+      "file": "icon_herb_bundle_512x512.png",
+      "path": "game-project/ui/assets/icon_herb_bundle_512x512.png",
+      "size": "512x512",
+      "actual_size": "512x512",
+      "style": "水墨淡彩 · 通用采集草药",
+      "art_brief_ref": "user-approved single generic herb asset request (2026-10-19)",
+      "source": {
+        "provider": "openai_image_gen_builtin",
+        "model": "GPT built-in image generation (model id not exposed)",
+        "prompt": "A single generic bundle of medicinal herbs as a clean isolated item illustration for a Chinese ink-wash folklore life-simulation game. Show a small tied handful of ordinary leafy stems with a modest visible root cluster, clearly recognizable as gathered herbs, centered as one compact object, filling about 75% of the square canvas with generous transparent safe margins. Restrained traditional Chinese ink wash and light watercolor, soft rice-paper brush texture, subdued natural greens, warm muted ochre root, ink-brown tie; match the calm hand-painted palette of the reference herbalist courtyard. Keep the botanical form deliberately generic and ordinary: do not depict or imply a named species, rare magical plant, star pattern, glowing power, potion, pot, tools, shelf or scene. Truly transparent background with alpha. No text, labels, numerals, watermark, UI, border, frame, person, or extra objects.",
+        "requested_aspect_ratio": "1:1",
+        "provider_output_size": "1254x1254",
+        "raw_file": "_rot/senseaudio/r6-herb-single-20261019/raw/icon_herb_bundle_generated.png",
+        "reference_file": "game-project/ui/assets/bg_ashspring_herb_yard_1200x900.png",
+        "generation_record": "Codex image_gen output exec-f344b1a8-ccc3-42b2-a660-da6b530a143c.png",
+        "seed": null
+      },
+      "processing": "Crop to alpha subject bounds; scale subject to 75% canvas height; center on exact 512x512 RGBA canvas; Lanczos resize; preserve alpha",
+      "verification": {
+        "dimensions_ok": true,
+        "mode": "RGBA",
+        "alpha_channel": true,
+        "png_header_ok": true,
+        "non_empty": true,
+        "bytes": 199798,
+        "sha256": "f97343e6eefe385d477182511687ad7fd31ce47e132cd917c812146936503ff5",
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "transparent_pixel_ratio": 0.7752,
+        "alpha_bbox": [
+          67,
+          65,
+          417,
+          443
+        ]
+      }
     }
   ]
 }
