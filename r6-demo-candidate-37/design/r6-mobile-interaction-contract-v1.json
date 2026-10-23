@@ -1,0 +1,120 @@
+{
+  "contractId": "R6-MOBILE-INTERACTION-1",
+  "contractVersion": "1.0.0",
+  "status": "B-verified-for-U-and-C-consumption",
+  "source": {
+    "r5WorldPack": "game-project/design/r5-world-pack-v1.json",
+    "r5WorldPackContentVersion": "5.0.0",
+    "r5EventDefinitions": "game-project/design/r5-event-definitions-v1.json",
+    "r5RuntimeContract": "game-project/design/r5-runtime-contract-v1.json",
+    "r5ReferenceRuntime": "game-project/design/r5-runtime-v1.py"
+  },
+  "saveEnvelopeSchema": "game-project/design/r6-mobile-save-envelope-v1.schema.json",
+  "locationDisplayAliases": [
+    {
+      "locationId": "r4_loc_ashspring",
+      "registeredName": "灰泉村",
+      "productionDisplayAlias": "灰泉镇",
+      "aliasSource": "handoff.md R6 A acceptance summary 2026-10-18",
+      "idChanges": false
+    },
+    {
+      "locationId": "r4_loc_willow_market",
+      "registeredName": "柳汀集",
+      "productionDisplayAlias": "柳溪集",
+      "aliasSource": "handoff.md R6 A acceptance summary 2026-10-18",
+      "idChanges": false
+    }
+  ],
+  "openingPath": {
+    "scenarioId": "R6-MOBILE-FLOW-01",
+    "originId": "r4_origin_herbal",
+    "runtimeOriginArgument": "herbal",
+    "startLocationId": "r4_loc_ashspring",
+    "startStageId": "r5_origin_untrained",
+    "openingEventId": "r4_ev_birth_herbal_roof",
+    "prerequisiteEvent": {
+      "eventId": "r4_birth_story",
+      "choiceId": "respond_to_neighbor",
+      "days": 0
+    },
+    "openingChoiceId": "save_neighbor_batch",
+    "openingEventDays": 1,
+    "sameSceneAfterChoice": true,
+    "optionalWork": {
+      "eventId": "r4_daily_entrust",
+      "choiceId": "accept_and_fulfill",
+      "days": 7,
+      "observedWealthUnits": 2
+    },
+    "optionalHarvest": {
+      "eventId": "r4_daily_herb",
+      "choiceId": "harvest_for_self",
+      "repetitions": 3,
+      "observedDaysPerAction": 1
+    },
+    "optionalTravel": {
+      "actionId": "r4_action_travel",
+      "destinationLocationId": "r4_loc_willow_market",
+      "observedFareUnits": 1,
+      "observedTravelDays": 7,
+      "arrivalOnlyOnActionCompletion": true
+    }
+  },
+  "presentationState": {
+    "saveEnvelopeId": "R6-MOBILE-SAVE-1",
+    "authoritativeState": "r5Save.runtimeState",
+    "viewStateFields": [
+      "sceneLocationId",
+      "sceneInstanceId",
+      "dialogueRef",
+      "eventInstanceRef",
+      "dialogueCursor",
+      "selectedChoiceId",
+      "scrollAnchor",
+      "returnTarget",
+      "overlayStack",
+      "pendingAction",
+      "pendingResult"
+    ],
+    "pendingResult": {
+      "readStates": ["unread", "read"],
+      "identityFields": ["eventId", "instanceId", "outcomeId", "transactionId"],
+      "acknowledgement": "explicit-player-continue-only",
+      "survivesSaveRestore": true,
+      "openingOrClosingOverlayMarksRead": false
+    },
+    "overlay": {
+      "openingAndClosingConsumesWorldTime": false,
+      "returnTargetMustRestore": ["sceneLocationId", "sceneInstanceId", "dialogueRef", "dialogueCursor", "selectedChoiceId", "scrollAnchor", "pendingResult"]
+    },
+    "transaction": {
+      "choiceTransactionIdPersistBeforeDispatch": true,
+      "authoritativeReplayGuard": "R5 r5Transactions + contentEventReceipts keyed by life/event/cause",
+      "presentationLayerMayAwardOrCharge": false,
+      "duplicateResultDelivery": "show-existing-receipt-or-status; never-resolve-again"
+    },
+    "action": {
+      "travelPendingSource": "R4 inFlight transaction from r4_action_travel",
+      "retryWhileInFlight": "resume-existing-transaction; do-not-start-another",
+      "sceneMovesOnlyAfter": "authoritative action completion and character.location update"
+    }
+  },
+  "twoRoundTests": [
+    {
+      "scenarioId": "R6-MOBILE-FLOW-01",
+      "checks": ["clean-start-save", "legal-clean-opening", "same-scene-result", "unread-save-restore", "view-overlay-return", "real-travel"]
+    },
+    {
+      "scenarioId": "R6-MOBILE-RESTORE-02",
+      "checks": ["expired-source-explanation", "no-time-on-failed-choice", "same-transaction-replay", "cross-save-new-transaction-replay", "no-second-outcome-or-score"]
+    }
+  ],
+  "scopeExclusions": [
+    "no-new-event-card-or-gameplay-rule",
+    "no-new-reward-ledger",
+    "closed-cultivation-and-cross-life-crisis-remain-proposals",
+    "no-full-catalog-balance-rerun",
+    "no-final-art-direction-or-image-generation"
+  ]
+}
