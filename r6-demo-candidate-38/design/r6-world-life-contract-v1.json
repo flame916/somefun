@@ -1,0 +1,2634 @@
+{
+  "contractId": "R6-WORLD-LIFE-01",
+  "version": 1,
+  "status": "B rule contract complete; awaiting Secretary receipt; runtime and browser unverified",
+  "supersedes": [
+    "r6-free-survival-contract-v1.json#display-vendor-balance",
+    "R6-FREE-04#one-time-return-as-the-only-egress"
+  ],
+  "sourceOfTruth": "This file is the sole numeric and route source for this slice. The audit reads it and r4-world-pack-v2.1.json; Markdown explains, but does not restate authoritative values.",
+  "sourceFacts": {
+    "r4WorldPack": "game-project/design/r4-world-pack-v2.1.json",
+    "aContentInput": "game-project/docs/r6-world-life-feedback-content.md",
+    "diagnostic": "handoff.md current C static route diagnostic and read-only IAB scene record",
+    "calendarRuleId": "r4_rule_calendar",
+    "lifeClockFactId": "r4_fact_life_clock",
+    "travelActionId": "r4_action_travel",
+    "practiceActionId": "r4_action_practice",
+    "recoverActionId": "r4_action_recover",
+    "alchemyActionId": "r4_action_alchemy",
+    "furnacePermitItemId": "r4_item_furnace_access",
+    "powderItemId": "r4_item_powder",
+    "stargrassItemId": "r4_item_stargrass",
+    "existingRoadEventIds": [
+      "r4_ev_daily_courier",
+      "r4_ev_daily_roadmarker"
+    ],
+    "existingKilnQueueEventId": "r4_ev_daily_kiln_queue",
+    "r4RngImplementation": {
+      "authority": "candidate reference source only; not a runtime test",
+      "path": "game-project/code/private-deploy/candidate-site/r6-demo/engine/r4-world-engine.js",
+      "seedInitLines": "347-348",
+      "nextUint32Lines": "2970-2975",
+      "observedRule": "state.rngState starts as (Number(seed) >>> 0) || 1; each draw applies x ^= x << 13; x ^= x >>> 17; x ^= x << 5; stores (x >>> 0) || 1 and returns state/2^32."
+    }
+  },
+  "referenceSourceReview": {
+    "status": "A incremental source audit limitedly accepted as B input",
+    "documents": [
+      {
+        "path": "E:/workbuddy/游戏1/凡人百世书·经济与出行体系.md",
+        "authority": "user-authorized reference, read-only",
+        "sourceClaim": "The document itself marks everyday currency names/rates and alchemy system as missing; it suggests separate everyday money, cultivator goods, and reincarnation points, with travel by horse/ship and travel encounters as design inspiration."
+      },
+      {
+        "path": "E:/workbuddy/游戏1/凡人百世书·技艺体系.md",
+        "authority": "user-authorized reference, read-only",
+        "sourceClaim": "The document presents skill lineages/costs and production organization as design ideas; it explicitly says reliable alchemy evidence is missing."
+      }
+    ],
+    "verificationBoundary": "These are user-provided research summaries. Their internal chapter-title and evidence labels have not been independently checked against novel text and are not promoted here to verified canon.",
+    "aSourceAuditId": "game-project/docs/r6-world-life-feedback-content.md#增量来源审计：经济、出行与技艺",
+    "aSourceAuditDisposition": "A's source labels remain secondary-source claims, not independently verified quotations. Per the user's latest direction, this limitation is traceability metadata, not a design veto: useful economic strata, craft logic, travel progression, and cited setting terms may enter a provisional editable game framework.",
+    "projectRulePrecedence": "Existing user-approved project rule allowing reincarnation points to preserve an already attained realm takes precedence over any contrary secondary-summary suggestion.",
+    "adopted": [
+      "Separate current-life mortal cash, cultivator currency/resources, and cross-life reincarnation points into distinct ledgers. Cultivator goods remain item inventory; upper-tier markets may denominate registered purchases in spirit stones, never silently merge those balances with mortal cash.",
+      "Keep wish-power distinct from money: model it as a possible strategic obligation/resource with cause-linked gain and backlash, not a vendor tender or cash conversion.",
+      "Adopt a connected progression model: household/work/food and land travel -> local craft apprenticeship/public furnace and markets -> cultivator material and spirit-stone markets -> higher crafts and production -> long-distance steam/extraordinary travel. These are editable setting tiers; the current R6 slice implements only the specified local routes/economy/conditions.",
+      "Use skills, tools, materials, recipes, site permission, time, and consequences as interlocking gates. Preserve R4 registered alchemy logic in the current slice; future tools/lineages extend it rather than silently changing it."
+    ],
+    "gameplayInventions": [
+      "Use a coherent cash hierarchy 文/钱/两银; 1钱=100文, 1两银=10钱=1,000文. Old wealth converts at 1 legacy unit=100文=1钱. These are provisional game denominations because the reference does not identify source currency units.",
+      "Adopt 1 lower-grade spirit stone = 100 taels as a provisional game conversion convention from the reference's explicit completion suggestion; set medium and upper grades at 100 of the preceding grade for exact ledger display. This is adjustable game balance, not verified canon, and no exchange action is enabled in this slice.",
+      "Walking, paid carriage service, ration price, haggling spread, craft progression, and future travel tiers are authored game rules. Current R6 implementation proposals remain WARN until runtime and playtest evidence exist."
+    ],
+    "adoptedSettingFrameworkNotCurrentImplementation": [
+      "Mortal transport may progress from foot/horse/cart/boat to steamship and extraordinary/star routes; route IDs, time, supply, fares, closures, and cause-linked encounters must be registered per era. No current map edge is invented for these tiers.",
+      "Include candidate setting names and craft lines from the references as editable world material: 紫符/金符; 灵器/半步道器/道器/上品道器; 阵法、机关/傀儡、神通与百家传承; 太荒古炉、炼妖炉、彼岸号; low-tier production can scale, high-tier artifacts depend on registered rare causes.",
+      "A future medicine framework can relate healing, breakthrough, enhancement, and longevity products to 黄/玄/地/天 grades. Failure may lead to a registered dangerous result such as 妖丹 only as a designed causal branch; neither grades nor failure products are current R4 facts or current R6 outputs.",
+      "Reference suggestion that reincarnation points cannot preserve realms is adapted to the confirmed project rule: points may preserve only a realm the player has actually attained; they do not purchase an unearned realm or pay for current-life goods.",
+      "Wish-power/public sentiment is a non-cash strategic liability/resource candidate: cause-linked use may create backlash; no conversion rate or purchase behavior is defined until a real registered Qingxu source exists."
+    ],
+    "currentSliceDeferrals": [
+      "No ship, steamship, interworld, or star route is added to the current five-location R6 route graph; these remain present in the editable progression framework for later implementation.",
+      "No profession tree, new R4 alchemy grades, or guaranteed monster-dan failure item is added to the current runtime contract; future nodes require stable IDs, costs, causes, and acceptance evidence."
+    ]
+  },
+  "acceptanceMapping": [
+    {
+      "id": "R6-WL-01",
+      "feedback": 1,
+      "status": "proposed",
+      "contracts": [
+        "routes",
+        "repeatability",
+        "cashPressure"
+      ],
+      "actionIds": [
+        "r4_action_travel"
+      ],
+      "pageNodeIds": [
+        "r6_living_scene",
+        "r6_travel_state",
+        "r6_scene_result"
+      ]
+    },
+    {
+      "id": "R6-WL-02",
+      "feedback": 2,
+      "status": "proposed_invented_names",
+      "contracts": [
+        "currency"
+      ],
+      "pageNodeIds": [
+        "r6_living_scene",
+        "r6_view_overlay"
+      ]
+    },
+    {
+      "id": "R6-WL-03",
+      "feedback": 3,
+      "status": "proposed_terms_and_conditions",
+      "contracts": [
+        "furnaceTerminology",
+        "portableFurnace"
+      ],
+      "actionIds": [
+        "r4_action_alchemy"
+      ],
+      "pageNodeIds": [
+        "r6_living_scene",
+        "r6_scene_event"
+      ]
+    },
+    {
+      "id": "R6-WL-04",
+      "feedback": 4,
+      "status": "proposed_not_runtime_verified",
+      "contracts": [
+        "travelTransaction",
+        "travelModes",
+        "causalInterrupts"
+      ],
+      "actionIds": [
+        "r4_action_travel"
+      ],
+      "eventIds": [
+        "r4_ev_daily_courier",
+        "r4_ev_daily_roadmarker"
+      ],
+      "pageNodeIds": [
+        "r6_travel_state",
+        "r6_scene_event",
+        "r6_scene_result"
+      ]
+    },
+    {
+      "id": "R6-WL-05",
+      "feedback": 5,
+      "status": "proposed_from_existing_calendar",
+      "contracts": [
+        "dateDisplay",
+        "expiryDates"
+      ],
+      "actionIds": [
+        "r4_rule_calendar",
+        "r4_fact_life_clock"
+      ],
+      "pageNodeIds": [
+        "r6_living_scene",
+        "r6_view_overlay",
+        "r6_scene_result"
+      ]
+    },
+    {
+      "id": "R6-WL-06",
+      "feedback": 6,
+      "status": "proposed_not_runtime_verified",
+      "contracts": [
+        "marketPrivacy",
+        "haggling",
+        "ledger"
+      ],
+      "actionIds": [
+        "r4_action_social"
+      ],
+      "pageNodeIds": [
+        "r6_living_scene",
+        "r6_scene_event",
+        "r6_scene_result"
+      ]
+    },
+    {
+      "id": "R6-WL-07",
+      "feedback": 7,
+      "status": "proposed_disabled_without_registered_safe_waystop",
+      "contracts": [
+        "midtripPractice",
+        "portableFurnace"
+      ],
+      "actionIds": [
+        "r4_action_practice",
+        "r4_action_alchemy"
+      ],
+      "pageNodeIds": [
+        "r6_travel_state",
+        "r6_scene_event"
+      ]
+    },
+    {
+      "id": "R6-WL-08",
+      "feedback": 8,
+      "status": "proposed_routes_aliases_need_C_crosswalk",
+      "contracts": [
+        "routes",
+        "aliases",
+        "egress"
+      ],
+      "actionIds": [
+        "r4_action_travel"
+      ],
+      "pageNodeIds": [
+        "r6_living_scene",
+        "r6_travel_state"
+      ]
+    },
+    {
+      "id": "R6-WL-09",
+      "feedback": "button boundary and pressed feedback",
+      "status": "U_spec_required",
+      "contracts": [
+        "buttonStates"
+      ],
+      "pageNodeIds": [
+        "r6_living_scene",
+        "r6_scene_event",
+        "r6_view_overlay"
+      ]
+    },
+    {
+      "id": "R6-WL-10",
+      "feedback": "将交通、补给、旅中暂停与途中事件补成可注册来源闭环",
+      "pageNodeIds": [
+        "r6_travel_state",
+        "r6_scene_event",
+        "r6_scene_result"
+      ],
+      "contracts": [
+        "r6_service_carriage_willow",
+        "r6_service_carriage_mirror",
+        "r6_item_travel_ration",
+        "r6_item_portable_furnace",
+        "r6_site_mirror_post",
+        "r6_source_courier_board",
+        "r6_fact_route_weather_day",
+        "r6_fact_route_flood_closure",
+        "r6_service_carriage_ashspring",
+        "r6_service_carriage_furnace",
+        "r6_ledger_willow_apothecary_working_cash",
+        "r6_ledger_willow_courier_reward_escrow",
+        "r6_fact_delivery_contract",
+        "r6_fact_route_weather_day",
+        "r6_fact_route_flood_closure"
+      ],
+      "status": "B_source_contract_C_runtime_registration_required"
+    }
+  ],
+  "names": {
+    "currencyOrigin": "invented_for_gameplay; not attributed to novel source",
+    "baseUnit": {
+      "id": "wen",
+      "display": "文",
+      "minorUnit": true
+    },
+    "displayRule": "Store integer wen only. Display a derived exact grouping in 文/钱/两银 (1钱=100文; 1两银=10钱). For cultivators, show a separate exact count of lower-grade spirit-stone equivalents using the provisional grade table; never show vague 财富 or floating point.",
+    "denominations": [
+      {
+        "id": "wen",
+        "display": "文",
+        "wen": 1,
+        "status": "game_setting_invention"
+      },
+      {
+        "id": "qian",
+        "display": "钱",
+        "wen": 100,
+        "status": "game_setting_invention"
+      },
+      {
+        "id": "liang_silver",
+        "display": "两银",
+        "wen": 1000,
+        "status": "game_setting_invention"
+      },
+      {
+        "id": "spirit_stone_lower",
+        "display": "下品灵石",
+        "wenEquivalent": 100000,
+        "lowerStoneEquivalent": 1,
+        "status": "provisional_reference_adaptation"
+      },
+      {
+        "id": "spirit_stone_middle",
+        "display": "中品灵石",
+        "wenEquivalent": 10000000,
+        "lowerStoneEquivalent": 100,
+        "status": "provisional_game_conversion"
+      },
+      {
+        "id": "spirit_stone_upper",
+        "display": "上品灵石",
+        "wenEquivalent": 1000000000,
+        "lowerStoneEquivalent": 10000,
+        "status": "provisional_game_conversion"
+      }
+    ],
+    "locationAliases": [
+      {
+        "locationId": "r4_loc_ashspring",
+        "registered": "灰泉村",
+        "reportedLive": "灰泉镇",
+        "status": "alias_report_needs_C_verification"
+      },
+      {
+        "locationId": "r4_loc_willow_market",
+        "registered": "柳汀集",
+        "reportedLive": "柳溪集",
+        "status": "alias_report_needs_C_verification"
+      },
+      {
+        "locationId": "r4_loc_mirror_stage",
+        "registered": "照台城",
+        "reportedLive": "照影台",
+        "status": "alias_report_needs_C_verification"
+      },
+      {
+        "locationId": "r4_loc_echo_pass",
+        "registered": "回声隘",
+        "reportedLive": "回声关",
+        "status": "alias_report_needs_C_verification"
+      },
+      {
+        "locationId": "r4_loc_furnace_lane",
+        "registered": "炉巷",
+        "reportedLive": "炉巷",
+        "status": "reported_same"
+      }
+    ]
+  },
+  "currencyMigration": {
+    "schemaVersion": 2,
+    "legacyUnit": "R4 abstract wealth integer",
+    "conversionWenPerLegacyUnit": 100,
+    "conversion": "Each registered monetary scalar legacyWealth becomes integer wen = legacyWealth*100; no rounded values. Item counts, scores, skill, health, and worldDay are not currency.",
+    "receiptId": "R6-MONEY-MIGRATION-01",
+    "idempotency": "If schemaVersion is 2 and receipt exists, migration is a no-op. Snapshot old values and write one receipt before exposing converted state.",
+    "quotePolicy": "Same-day live quote unit and total monetary fields are multiplied exactly; preserve issue/expiry worldDay and binding. Expired quotes remain expired. Do not mint buyer credit from player balance.",
+    "legacyMoneyFieldClassesToEnumerate": [
+      "character cash balance",
+      "quote unit and total prices",
+      "market hidden finite buyer credit",
+      "quote credit reservations and receipts",
+      "transaction reserved/consumed monetary costs",
+      "owned trade lot unit costs and realized net monetary values"
+    ],
+    "savePreservation": "Preserve location, visited/known route facts, health, item counts, active permit identity/expiry, emergency-used flag, pending event/transaction state, and all non-money IDs. Add the migration receipt once; do not reset or silently relocate the character. Preserve character identity, skills, all non-currency inventory and ownership instances, world day and per-life age, discovered facts/knowledge/routes/facilities, open requests/events/receipts, pending queue, in-flight transaction payload/reservations/idempotency keys.",
+    "knownRouteRepairOnMigration": "If the current or visited location has a newly registered open outbound edge, expose that adjacent route without requiring an origin-only birth filter. Add route knowledge only for the registered adjacent edge; do not grant unrelated map knowledge or items.",
+    "allLedgerScalarsMustBeEnumeratedByC": true
+  },
+  "calendar": {
+    "ruleId": "r4_rule_calendar",
+    "daysPerMonth": 30,
+    "monthsPerYear": 12,
+    "epochYear": 1000,
+    "epochDay": 0,
+    "displayFormat": "第{year}年{month}月{day}日 · {shichen}时 · 第{ke}刻",
+    "worldDayZeroDisplay": "第1000年1月1日",
+    "worldDayIsInternalOnly": true,
+    "dateComparison": "worldDay is a read-only floor(worldTick/96) export. Runtime deadlines compare absolute worldTick or exact exclusive deadline ticks; inclusive source days convert to (day+1)*96.",
+    "lifeClockRule": "World year continues across lives; r4_fact_life_clock age is derived from the one worldTick and per-life lifeStartWorldTick. Rebirth updates the per-life anchor only; never resets world time."
+  },
+  "timeContract": {
+    "contractId": "R6-TIME-01",
+    "clockFactId": "r6_fact_world_time",
+    "authoritativeField": "runtimeState.worldTick",
+    "registeredSource": {
+      "worldPackId": "r4_world_qingxu",
+      "contentVersion": "2.5.0",
+      "calendarRuleId": "r4_rule_calendar",
+      "existingLifeClockFactId": "r4_fact_life_clock",
+      "existingActionIds": "r4-world-pack-v2.1.json actions and eventDefinitions; event choice IDs are checked against that pack; R6-prefixed subchoices/actions in this table are explicit additions for C to register."
+    },
+    "resolution": {
+      "unitId": "r6_time_ke",
+      "minutesPerTick": 15,
+      "ticksPerShichen": 8,
+      "shichenPerDay": 12,
+      "ticksPerDay": 96,
+      "ticksPerHour": 4,
+      "conversion": "One integer tick is one quarter-hour (一刻); one traditional double-hour 时辰 is eight ticks; one day is 96 ticks. Durations add exactly as integers; no per-action rounding. The displayed shichen follows traditional civil-clock spans: 子时 23:00-00:59; 丑时 01:00-02:59; 寅时 03:00-04:59; 卯时 05:00-06:59; 辰时 07:00-08:59; 巳时 09:00-10:59; 午时 11:00-12:59; 未时 13:00-14:59; 申时 15:00-16:59; 酉时 17:00-18:59; 戌时 19:00-20:59; 亥时 21:00-22:59. Civil worldDay still changes at 00:00; 子时 spans that date boundary."
+    },
+    "bounds": {
+      "minimumWorldTick": 0,
+      "maximumWorldDayInclusive": 4294967295,
+      "maximumWorldTickInclusive": 412316860415,
+      "integerRule": "Accept only finite, nonnegative, safe integers. Reject negative, fractional, NaN, Infinity, unsafe or out-of-bound world ticks/durations before any cost, receipt, queue, location, or clock mutation. Reject an addition whose result exceeds maximumWorldTickInclusive; never wrap or clamp."
+    },
+    "calendarProjection": {
+      "calendarRuleId": "r4_rule_calendar",
+      "worldDay": "floor(worldTick/96), derived read-only; day zero is 1000-01-01",
+      "tickWithinDay": "worldTick mod 96",
+      "shichenIndex": "floor(((tickWithinDay+4) mod 96)/8), indexed 子丑寅卯辰巳午未申酉戌亥; civil date still changes at tickWithinDay=0.",
+      "keIndex": "((tickWithinDay+4) mod 8)+1; ordinal ke within the displayed shichen, counted from its civil-clock start.",
+      "calendarDate": "month=floor(worldDay/30) mod 12 + 1; day=worldDay mod 30 + 1; year=1000+floor(worldDay/360)",
+      "storageRule": "Only runtimeState.worldTick is writable and authoritative. runtimeState.worldDay and all date/time/age/expiry/remaining projections are derived read-only compatibility fields; no parallel world.r6WorldTime clock may be written.",
+      "noDailyRoutineRule": "Time passing alone does not impose sleep, meal, work, night-travel, stamina, or day/night availability costs. Existing registered health, food, death, and event rules remain unchanged.",
+      "shichenCivilSpans": [
+        "子:23:00-00:59",
+        "丑:01:00-02:59",
+        "寅:03:00-04:59",
+        "卯:05:00-06:59",
+        "辰:07:00-08:59",
+        "巳:09:00-10:59",
+        "午:11:00-12:59",
+        "未:13:00-14:59",
+        "申:15:00-16:59",
+        "酉:17:00-18:59",
+        "戌:19:00-20:59",
+        "亥:21:00-22:59"
+      ],
+      "keRule": "One ke is 15 minutes. Count from the start of the displayed shichen across civil midnight: 23:00 子初刻1; 00:00 子第5刻; 00:45 子第8刻; 01:00 丑初刻1."
+    },
+    "scheduler": {
+      "boundaryIntervalTicks": 96,
+      "dayBoundaryOrder": [
+        "advance_to_boundary",
+        "death_check",
+        "world_nodes",
+        "action_completion",
+        "causal_followups",
+        "queue_ready_events"
+      ],
+      "middayCompletionOrder": [
+        "action_completion",
+        "causal_followups",
+        "queue_ready_events"
+      ],
+      "sameTickRule": "At a day boundary, run dayBoundaryOrder once before completing an action due on that exact tick. At a non-day action completion tick, run middayCompletionOrder. Persist phase receipts/cursor keyed by worldId+boundaryTick so save/reload cannot replay a phase. A started action keeps its reserved inputs and idempotency key; effects commit only under its registered completion/abort policy. A lifeLimitWorldTick is also an exact scheduler boundary, including intraday ticks; run death_check before any action completion or effect at that tick, and do not process later phases for the dead life.",
+      "advanceRule": "Advance to the next of action completion, day boundary, active expiry, blocking cause, or requested target tick. At a day boundary, weather/stock/seat/lease/offer nodes resolve before action completion; then resume remaining action ticks. A day is never skipped by a long action. Include the exact lifeLimitWorldTick as a boundary; if earlier than the next day/action boundary, advance there and resolve death before any same-tick effects.",
+      "dayNodeIdempotency": "r6_receipt_world_day_phase:<worldId>:<worldDay>:<phaseId>",
+      "dayNodeOnceRule": "Each derived worldDay runs world_nodes exactly once. Intraday actions do not repeat daily events, restocks, seat resets, offer publication, or weather facts.",
+      "intradayLifeLimitOrder": [
+        "death_check",
+        "action_completion",
+        "causal_followups",
+        "queue_ready_events"
+      ]
+    },
+    "perLifeClock": {
+      "factId": "r4_fact_life_clock",
+      "lifeStartTickField": "character.lifeStartWorldTick",
+      "lifeElapsedTicks": "worldTick-lifeStartWorldTick",
+      "ageDaysExport": "floor(lifeElapsedTicks/96)",
+      "lifespanSource": "R4 progressionRules.lifespanYearsByRealm; lifespanTicks=floor(realmLifeYears*360*96*bodyLifeFactorBasisPoints/10000), using integer arithmetic and applying bodyLifeFactorBasisPoints once; do not round to a whole day.",
+      "deathBoundary": "lifeLimitWorldTick=lifeStartWorldTick+floor(realmLifeYears*360*96*bodyLifeFactorBasisPoints/10000), using integer ticks without rounding lifespan to whole days. Treat this exact tick as a scheduler boundary even intraday; death_check precedes world_nodes/action_completion at a coincident midnight, and precedes action_completion/causal followups at an intraday tick. No action effect may commit at or after the life limit.",
+      "rebirth": "Keep worldTick continuous. On a valid rebirth, set lifeStartWorldTick=worldTick and derive new life age 0; preserve existing reincarnation-point spending and attained-realm retention rules unchanged.",
+      "deathExamples": [
+        {
+          "id": "R6-TIME-LIFE-01",
+          "case": "one-tick-short action",
+          "startTick": 1000,
+          "lifeLimitTick": 1001,
+          "actionDurationTicks": 1,
+          "expected": "death_check runs at tick 1001 before action_completion; action does not complete"
+        },
+        {
+          "id": "R6-TIME-LIFE-02",
+          "case": "action completes exactly at limit",
+          "startTick": 2000,
+          "lifeLimitTick": 2004,
+          "actionDurationTicks": 4,
+          "expected": "death_check runs at tick 2004 before action_completion; no action effects commit"
+        }
+      ]
+    },
+    "actionDurationTable": [
+      {
+        "eventId": "r4_birth_story",
+        "choiceId": "help_household",
+        "actionId": "r6_action_help_household",
+        "durationTicks": 2,
+        "durationLabel": "2刻/30分钟",
+        "oldDays": 0,
+        "reason": "A bounded household chore, not a full day."
+      },
+      {
+        "eventId": "r4_birth_story",
+        "choiceId": "respond_to_neighbor",
+        "actionId": "r6_action_neighbor_errand",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 0,
+        "reason": "A short visit and concrete neighbor errand."
+      },
+      {
+        "eventId": "r4_birth_story",
+        "choiceId": "fulfill_early_duty",
+        "actionId": "r6_action_fulfill_early_duty",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 0,
+        "reason": "A bounded promised household duty; longer contracts use their own registered duration."
+      },
+      {
+        "eventId": "r4_daily_herb",
+        "choiceId": "harvest_for_self",
+        "actionId": "r6_action_harvest_herbs",
+        "durationTicks": 24,
+        "durationLabel": "24刻/6小时",
+        "oldDays": 1,
+        "reason": "Sustained gathering and inventory settlement; fits within the same date when started early enough."
+      },
+      {
+        "eventId": "r4_daily_herb",
+        "choiceId": "help_other_gatherer",
+        "actionId": "r6_action_help_gatherer",
+        "durationTicks": 32,
+        "durationLabel": "32刻/8小时",
+        "oldDays": 1,
+        "reason": "A substantial shared gathering shift, still shorter than an automatic full-day block when it starts late."
+      },
+      {
+        "eventId": "r4_daily_herb",
+        "choiceId": "leave_stock",
+        "actionId": "r6_action_leave_herbs",
+        "durationTicks": 0,
+        "durationLabel": "不耗时",
+        "oldDays": 0,
+        "reason": "Declining/reading is not labor."
+      },
+      {
+        "eventId": "r4_daily_entrust",
+        "choiceId": "accept_and_fulfill",
+        "actionId": "r6_action_fulfill_entrustment",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "Preserve the actual contracted work duration."
+      },
+      {
+        "eventId": "r4_daily_entrust",
+        "choiceId": "accept_and_fail",
+        "actionId": "r6_action_attempt_entrustment",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "The full scheduled work attempt still occupies the contracted week even if it fails."
+      },
+      {
+        "eventId": "r4_daily_entrust",
+        "choiceId": "decline",
+        "actionId": "r6_action_decline_entrustment",
+        "durationTicks": 0,
+        "durationLabel": "不耗时",
+        "oldDays": 0,
+        "reason": "Reading/declining a request does not perform the work."
+      },
+      {
+        "eventId": "r4_daily_market",
+        "choiceId": "buy_listed_goods",
+        "actionId": "r6_action_market_buy",
+        "durationTicks": 2,
+        "durationLabel": "2刻/30分钟",
+        "oldDays": 0,
+        "reason": "Two-tick bundled market flow; replaces, and must not be added to, the separate one-tick quote issue plus one-tick signing/settlement steps."
+      },
+      {
+        "eventId": "r4_daily_market",
+        "choiceId": "sell_owned_goods",
+        "actionId": "r6_action_market_sell",
+        "durationTicks": 2,
+        "durationLabel": "2刻/30分钟",
+        "oldDays": 0,
+        "reason": "Two-tick bundled market flow; replaces, and must not be added to, the separate one-tick quote issue plus one-tick signing/settlement steps."
+      },
+      {
+        "eventId": "r4_daily_market",
+        "choiceId": "inspect_or_leave",
+        "actionId": "r6_action_inspect_market",
+        "durationTicks": 0,
+        "durationLabel": "不耗时",
+        "oldDays": 1,
+        "reason": "Inspection and leaving are read-only; they consume no time."
+      },
+      {
+        "eventId": "r4_daily_market",
+        "choiceId": "r6_choice_issue_market_quote",
+        "choiceStatus": "new_R6_subchoice",
+        "actionId": "r6_action_issue_market_quote",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 0,
+        "reason": "Generating and reviewing a signed price/stock quote."
+      },
+      {
+        "eventId": "r4_daily_market",
+        "choiceId": "r6_choice_counter_market_quote",
+        "choiceStatus": "new_R6_subchoice",
+        "actionId": "r6_action_counter_market_quote",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 0,
+        "reason": "One allowed counter proposal; the existing per-item-side-day attempt cap remains."
+      },
+      {
+        "eventId": "r4_daily_market",
+        "choiceId": "r6_choice_sign_market_trade",
+        "choiceStatus": "new_R6_subchoice",
+        "actionId": "r6_action_sign_market_trade",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 0,
+        "reason": "Atomic signature, inventory/cash transfer, and receipt creation; no later acknowledgement cost."
+      },
+      {
+        "sourceActionId": "r4_action_social",
+        "sourceOperation": "visitDays",
+        "actionId": "r6_action_social_visit",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 1,
+        "reason": "A brief actual visit; pure dialogue viewing is free."
+      },
+      {
+        "sourceActionId": "r4_action_social",
+        "sourceOperation": "healerDoseService.days",
+        "actionId": "r6_action_healer_dose",
+        "durationTicks": 8,
+        "durationLabel": "8刻/2小时",
+        "oldDays": 1,
+        "reason": "A bounded treatment appointment and signed service receipt."
+      },
+      {
+        "eventId": "r4_ev_daily_apprenticeappeal",
+        "choiceId": "check_receipt",
+        "actionId": "r6_action_check_apprentice_receipt",
+        "durationTicks": 0,
+        "durationLabel": "不耗时",
+        "oldDays": 1,
+        "reason": "Viewing an existing receipt is read-only."
+      },
+      {
+        "eventId": "r4_ev_daily_apprenticeappeal",
+        "choiceId": "ask_both_to_confirm",
+        "actionId": "r6_action_confirm_apprentice_service",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 1,
+        "reason": "A short meeting to obtain both confirmations."
+      },
+      {
+        "eventId": "r4_ev_daily_apprenticeappeal",
+        "choiceId": "withdraw_this_round",
+        "actionId": "r6_action_withdraw_apprentice_appeal",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 1,
+        "reason": "A short formal withdrawal, not a full day."
+      },
+      {
+        "eventId": "r4_ev_daily_publiclesson",
+        "choiceId": "request_complete_public_copy",
+        "actionId": "r6_action_request_lesson_copy",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 1,
+        "reason": "A brief archive request; subsequent study retains its own registered duration."
+      },
+      {
+        "eventId": "r4_ev_daily_publiclesson",
+        "choiceId": "return_with_gap_report",
+        "actionId": "r6_action_return_lesson_report",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 1,
+        "reason": "Preparing and handing over a concise gap report."
+      },
+      {
+        "eventId": "r4_ev_daily_publiclesson",
+        "choiceId": "compare_revision_notice",
+        "actionId": "r6_action_read_lesson_notice",
+        "durationTicks": 0,
+        "durationLabel": "不耗时",
+        "oldDays": 1,
+        "reason": "Reading a posted revision notice is free."
+      },
+      {
+        "eventId": "r4_acq_dao02",
+        "choiceId": "accept_apprenticeship",
+        "actionId": "r6_action_apprenticeship_accept",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "Preserve the registered apprenticeship process and permit duration."
+      },
+      {
+        "eventId": "r4_acq_dao02",
+        "choiceId": "buy_public_course",
+        "actionId": "r6_action_public_course",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "Preserve the actual week-long course, not a short service interaction."
+      },
+      {
+        "eventId": "r4_ev_daily_courier",
+        "choiceId": "verify_dispatch_copy",
+        "actionId": "r6_action_verify_dispatch",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 1,
+        "reason": "Inspect and match the named dispatch receipt."
+      },
+      {
+        "eventId": "r4_ev_daily_courier",
+        "choiceId": "contact_named_recipient",
+        "actionId": "r6_action_sign_courier_delivery",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 1,
+        "reason": "Reach the named recipient, verify identity, and sign delivery."
+      },
+      {
+        "eventId": "r4_ev_daily_courier",
+        "choiceId": "return_to_sender",
+        "actionId": "r6_action_sign_courier_return",
+        "durationTicks": 2,
+        "durationLabel": "2刻/30分钟",
+        "oldDays": 1,
+        "reason": "Record physical return of the sealed package."
+      },
+      {
+        "eventId": "r4_ev_daily_courier",
+        "choiceId": "r6_choice_accept_delivery",
+        "choiceStatus": "new_R6_subchoice",
+        "actionId": "r6_action_accept_delivery",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 1,
+        "reason": "Bind the funded package to the traveler; decision completes within the offer window."
+      },
+      {
+        "eventId": "r4_ev_daily_courier",
+        "choiceId": "r6_choice_decline_delivery",
+        "choiceStatus": "new_R6_subchoice",
+        "actionId": "r6_action_decline_delivery",
+        "durationTicks": 4,
+        "durationLabel": "4刻/1小时",
+        "oldDays": 1,
+        "reason": "Record a one-time refusal; the sealed package stays physically with the runner."
+      },
+      {
+        "sourceActionId": "r4_action_alchemy",
+        "sourceOperation": "days",
+        "actionId": "r4_action_alchemy",
+        "durationTicks": 288,
+        "durationLabel": "3日",
+        "oldDays": 3,
+        "reason": "Preserve complete R4 three-day production interval."
+      },
+      {
+        "sourceActionId": "r4_action_practice",
+        "sourceOperation": "practice.days",
+        "actionId": "r4_action_practice",
+        "durationTicks": 2880,
+        "durationLabel": "30日",
+        "oldDays": 30,
+        "reason": "Preserve full registered practice duration."
+      },
+      {
+        "sourceActionId": "r4_action_practice",
+        "sourceOperation": "study.days",
+        "actionId": "r6_action_practice_study",
+        "durationTicks": 960,
+        "durationLabel": "10日",
+        "oldDays": 10,
+        "reason": "Preserve full registered study duration."
+      },
+      {
+        "sourceActionId": "r4_action_recover",
+        "sourceOperation": "days",
+        "actionId": "r4_action_recover",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "Preserve full recovery interval and existing effects."
+      },
+      {
+        "eventId": "r4_daily_repair",
+        "choiceId": "repair_with_skill",
+        "actionId": "r6_action_repair",
+        "durationTicks": 288,
+        "durationLabel": "3日",
+        "oldDays": 3,
+        "reason": "Hands-on repair remains a multi-day task."
+      },
+      {
+        "eventId": "r4_daily_repair",
+        "choiceId": "hire_repairer",
+        "actionId": "r6_action_hire_repairer",
+        "durationTicks": 96,
+        "durationLabel": "1日",
+        "oldDays": 1,
+        "reason": "Specialist completes a real day-long service; not a short dialogue shortcut."
+      },
+      {
+        "sourceActionId": "r4_action_travel",
+        "sourceOperation": "near.days",
+        "actionId": "r4_action_travel",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "Preserve registered near carriage time; travel advances continuously through the shared clock."
+      },
+      {
+        "sourceActionId": "r4_action_travel",
+        "sourceOperation": "far.days",
+        "actionId": "r4_action_travel",
+        "durationTicks": 2880,
+        "durationLabel": "30日",
+        "oldDays": 30,
+        "reason": "Preserve registered far carriage time; travel advances continuously through the shared clock."
+      },
+      {
+        "sourceActionId": "r4_action_array",
+        "sourceOperation": "study.days",
+        "actionId": "r6_action_array_study",
+        "durationTicks": 960,
+        "durationLabel": "10日",
+        "oldDays": 10,
+        "reason": "Preserve the registered long study action."
+      },
+      {
+        "sourceActionId": "r4_action_array",
+        "sourceOperation": "deploy.days",
+        "actionId": "r6_action_array_deploy",
+        "durationTicks": 288,
+        "durationLabel": "3日",
+        "oldDays": 3,
+        "reason": "Preserve full array deployment and material commitment."
+      },
+      {
+        "sourceActionId": "r4_action_spell",
+        "sourceOperation": "days",
+        "actionId": "r4_action_spell",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "Preserve full registered spell practice interval."
+      },
+      {
+        "sourceActionId": "r4_action_contest",
+        "sourceOperation": "durationDays",
+        "actionId": "r4_action_contest",
+        "durationTicks": 672,
+        "durationLabel": "7日",
+        "oldDays": 7,
+        "reason": "Preserve the full contest participation interval."
+      },
+      {
+        "eventId": "r4_l1_weakherb",
+        "choiceId": "record_batch",
+        "actionId": "r6_action_record_herb_batch",
+        "durationTicks": 96,
+        "durationLabel": "1日",
+        "oldDays": 1,
+        "reason": "Preserve the full registered batch-recording task."
+      },
+      {
+        "eventId": "r4_l1_weakherb",
+        "choiceId": "use_anyway",
+        "actionId": "r6_action_use_weak_herb_batch",
+        "durationTicks": 288,
+        "durationLabel": "3日",
+        "oldDays": 3,
+        "reason": "Preserve the full three-day batch handling and its existing risk/result."
+      },
+      {
+        "eventId": "r4_ev_daily_kiln_queue",
+        "choiceId": "keep_slot",
+        "actionId": "r6_action_keep_kiln_slot",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 1,
+        "reason": "Confirming an existing queue reservation is a brief service interaction."
+      },
+      {
+        "eventId": "r4_ev_daily_kiln_queue",
+        "choiceId": "yield_slot",
+        "actionId": "r6_action_yield_kiln_slot",
+        "durationTicks": 1,
+        "durationLabel": "1刻/15分钟",
+        "oldDays": 1,
+        "reason": "Yielding a reservation is a brief administrative action."
+      },
+      {
+        "eventId": "r4_ev_daily_kiln_queue",
+        "choiceId": "record_crack",
+        "actionId": "r6_action_report_kiln_crack",
+        "durationTicks": 2,
+        "durationLabel": "2刻/30分钟",
+        "oldDays": 1,
+        "reason": "Inspecting and reporting a visible crack is a short safety report, not a full day."
+      }
+    ],
+    "freeInteractions": [
+      "read story/event text, inspect status/inventory/map, open or close a panel, request a passive view, and read a quote/receipt",
+      "confirm or acknowledge an already completed result/pending receipt",
+      "decline a request where no labor/resource is committed",
+      "Explicit exception: r4_ev_daily_courier accept/decline decisions are 4 ticks each; do not apply the generic zero-tick decline rule to these registered actions."
+    ],
+    "longActionRules": {
+      "daysToTicks": "Any preserved R4 full-day action converts exactly days*96 ticks once at dispatch; never apply both legacy days and durationTicks to one action.",
+      "travel": "Carriage/walking route progress consumes remaining route ticks only while route is open. WorldTick continues during choice/action pauses; route progress freezes during a 30-day practice, 3-day alchemy, closure, or event decision. Resume the same transaction and charge once.",
+      "portableAlchemyActionId": "r6_action_alchemy_portable",
+      "portableAlchemyDurationTicks": 288,
+      "practiceDurationTicks": 2880,
+      "closure": "Flood [D,D+3) means [D*96,(D+3)*96); weather is generated once at each worldDay boundary from derived worldDay and persisted seed. The cause is checked before travel progress. D+3 00:00 expires it before route movement resumes.",
+      "courier": "75-day runner duty=7200 ticks; offer window is [cycleStartTick,cycleStartTick+30*96). The same-day physical midpoint intersection rule still applies. Existing dueWorldDay inclusive deadlines project to exclusive deadline tick=(dueWorldDay+1)*96; exact-tick deadline semantics are half-open.",
+      "lease": "R6 portable furnace lease lasts exactly 30*96=2880 ticks from issuedAtTick; usable when currentTick<expiresAtTick. A 288-tick alchemy may start only when currentTick+288<=expiresAtTick. Equality reserves completion before expiry is applied to later use; one tick short rejects before charge/material/time mutation.",
+      "market": "Quote issue time is exact. A quote with legacy quoteExpiryWorldDays=0 remains valid only until the exclusive start of the next derived worldDay. A counter/sign must complete before expiry; otherwise reject with no trade settlement. One counter attempt per character/item/side/worldDay remains. Receipt is created at atomic settlement; result acknowledgement costs zero. The old same-day quote validity maps to next civil midnight exclusive. Its issue/completion points are distinct from package inclusive due dates.",
+      "dailySources": "Market stock, carriage seat counts, ration supplier caps, 30-day replenishments, courier cycle publication, and weather facts reset/resolve only in world_nodes at a derived day boundary; one boundary receipt prevents duplicates.",
+      "endOfDay": "Inclusive package/courier due dates remain valid through the last tick before the following civil date boundary, then expire at (dueDay+1)*96. Lease expiry follows its owning lease rule; public-furnace permit follows furnacePermit and is not covered by a generic inclusive-lease statement.",
+      "marketTransactionTime": "The registered one-step buy/sell action of 2 ticks is an alternative bundled flow equal to quote issue (1) + signature/settlement (1); it replaces those two steps and must not be added to them. In the explicit multi-step flow, issue=1, optional counter=1, sign=1; thus no-counter total=2 and one-counter total=3. Read/inspect/decline of an uncommitted quote is zero ticks; sign action begins at submission and completes after its stated tick duration. Settlement is permitted only if its completion tick is strictly before the quote expiry exclusive tick.",
+      "decisionTiming": "For the courier, accept and decline each consume 4 ticks (explicit exception to generic free decline). The choice starts when submitted and commits at completionTick=startTick+4. Offer acceptance is valid only when completionTick<offerWindowEndAtTickExclusive; a delivery is valid only when its signed settlement completionTick<dueAtTickExclusive. At an exact exclusive end tick, reject before state/resource mutation. Other no-labor declines remain zero ticks.",
+      "furnacePermit": "Legacy public-furnace permit is a separate record. Its old v2 check expired only when worldDay>issuedDay+validDays, so the terminal civil date remains available. Migrate its exclusive expiry to (issuedDay+validDays+1)*96. A three-day action still requires currentTick+288<=expiresAtTick; equality succeeds, one tick short rejects without mutation."
+    },
+    "firstPlayableAcceptanceGate": {
+      "gateId": "R6-TIME-ACCEPTANCE-01",
+      "owner": "C performs self-test after B handoff and U integration; execution director receives the demo only after this gate passes",
+      "mustUseSameCandidateVersion": true,
+      "ordinaryNewGameUiSequence": [
+        "new ordinary game without grants or save injection",
+        "earn a livelihood through registered UI actions",
+        "gather herbs through r4_daily_herb choices",
+        "learn the registered craft/apprenticeship through r4_acq_dao02 or its accepted UI path",
+        "brew at the public furnace with the real registered fee, recipe, materials and three-day interval",
+        "sell the produced goods through a signed quote and trade receipt",
+        "dispatch travel, pause at the physical waystop, perform a registered pause action, reload/save, and resume the same travel transaction",
+        "arrive at r4_loc_mirror_stage, continue to r4_loc_echo_pass, then take a valid return route"
+      ],
+      "perSegmentEvidence": "Record the exact candidate version/link, stable event/choice/action IDs, before/after worldTick/date/shichen, money/items/health, transaction/receipt IDs, and visible result. Save/reload at each segment boundary; retry must not duplicate time, cost, output, event, or arrival.",
+      "prohibitedShortcuts": [
+        "resource injection",
+        "unlock/flag injection",
+        "skip time",
+        "direct engine/background event invocation",
+        "substituting a helper or script result for the actual UI action"
+      ],
+      "oldSaveRouteCase": "In a user-authorized isolated copy of the actual Mirror stop, retry r4_loc_mirror_stage>r4_loc_echo_pass and its registered return. Preserve the original save. Current R6 contract already contains this 7-day/100-wen outbound edge and an 11-day walking alternative; the historical UI showed options but the click/transaction failure cause remains unknown until a real copied-save reproduction. Reported stop snapshot (handoff, not independently reproduced): year 1016/month 9/day 24, health 50, cash 300wen; the UI displayed carriage 1qian/7days and walking 11days, and no action was taken. The original save remains untouched.",
+      "completionRule": "Do not hand the candidate to the execution director for demo play until the entire ordinary-new-game sequence and the separately authorized old-save route case pass in the same identified candidate version. On a blocker, report its exact stable ID, visible message, tick/date, resources, transaction state, and recovery path; do not jump ahead."
+    },
+    "migration": {
+      "fromSaveSchemaVersion": 2,
+      "toSaveSchemaVersion": 3,
+      "receiptId": "R6-TIME-MIGRATION-01",
+      "idempotency": "If schemaVersion>=3 and this receipt exists, no-op. Stage a complete snapshot and validate all fields before atomic commit; on any invalid/missing required source, preserve the original save byte-for-byte and report a blocking reason. The receipt key is worldId+characterId+lifeIndex+sourceSchemaVersion.",
+      "legacyWorldDaySource": "Actual v2 source is runtimeState.worldDay. The single v3 authoritative path is runtimeState.worldTick. If that exact tick is absent, convert runtimeState.worldDay*96 at civil 00:00. If the exact tick already exists, preserve it and validate any coexisting day projection; missing unrelated fields do not block migration.",
+      "ageSource": "Actual v2 character fields are character.birthDay and derived character.ageDays=(runtimeState.worldDay-character.birthDay), confirmed at code/private-deploy/candidate-site/r6-demo/engine/r4-world-engine.js:2296. Prefer birthDay when present and derive lifeStartWorldTick=birthDay*96. If only ageDays exists, derive from runtimeState.worldTick-ageDays*96. If only an exact lifeStartWorldTick exists, preserve it. If no anchor exists, preserve character/world data and record a migration warning rather than block the whole legacy save or guess a new age.",
+      "inFlight": "Actual v2 path is inFlightTransaction.startedDay/targetDay (code/private-deploy/candidate-site/r6-demo/engine/r4-world-engine.js:2433). These are action start/completion points, each mapping to D*96; targetDay is not an inclusive deadline. Preserve actual progress fields and names; convert only fields verified as day counts, while opaque/unrecognized fields remain unchanged. If the transaction is absent, skip it. If timing keys are missing, preserve that object unchanged and add a migration warning that prevents that transaction alone from replay/settlement until reconciliation; continue unrelated world/character migration. Package/courier inclusive deadlines use separate owner paths and map to (D+1)*96.",
+      "pendingReceipts": "Preserve the exact pending receipt/event/outcome ID, readState, created time, idempotency key and queued position. A pending confirmation is not re-enqueued or auto-confirmed and requires 0 ticks. Existing receipt IDs stay immutable.",
+      "legacyDayFields": {
+        "runtimeState.worldDay": "Actual legacy source path -> runtimeState.worldTick=runtimeState.worldDay*96 at 00:00. Preserve worldDay only as a derived compatibility projection.",
+        "character.birthDay": "Actual legacy source path -> character.lifeStartWorldTick=character.birthDay*96 when present.",
+        "character.ageDays": "Actual v2 value/projection at r4-world-engine.js:2296 is worldDay-birthDay. Prefer character.birthDay as its anchor and rederive ageDays from migrated worldTick; when birthDay is absent but ageDays exists, use ageDays to derive lifeStartWorldTick. If both disagree, birthDay remains the source and a reconciliation warning is retained; do not block unrelated save migration.",
+        "inFlightTransaction.startedDay": "Actual legacy source path -> inFlightTransaction.startedAtTick=startedDay*96.",
+        "inFlightTransaction.targetDay": "Actual legacy source path -> inFlightTransaction.targetAtTick=targetDay*96; targetDay here is the action completion point, not an inclusive package deadline. Example startedDay=5842,targetDay=5845 => startAtTick=5842*96,targetAtTick=5845*96,durationTicks=3*96.",
+        "inFlightTransaction.existingProgressFields": "Preserve actual field names and opaque values. Only convert progress values when the current field is verified to be a day count; if a verified elapsed/remaining pair exists, multiply both by 96 and reconcile against targetAtTick-startedAtTick. Missing optional progress fields do not block migration. If timing keys are missing, preserve the transaction unchanged and prevent its replay/settlement pending reconciliation; migrate unrelated state.",
+        "character.permits.furnace.issuedDay+validDays": "Actual legacy source path -> expiresAtTickExclusive=(issuedDay+validDays+1)*96. Legacy check was worldDay > issuedDay+validDays, so its terminal date remained usable; the next 00:00 expiry preserves that availability. Keep three-day preflight currentTick+288<=expiryAtTick; equality is allowed and one tick short rejects without side effects. This differs from exact-duration rental lease.",
+        "R6 portableFurnaceLease expiry": "Semantic alias for the R6-created lease, not an asserted R4 source path; issueTick+30*96 is exact expiry, usable iff currentTick<expiresAtTick.",
+        "package/courier inclusive target or due day": "Semantic alias only; owning record must explicitly declare inclusive deadline, mapped to (day+1)*96 exclusive.",
+        "market quote issue date with zero-day lifetime": "Semantic alias only; next civil midnight is exclusive expiry.",
+        "road closure endDayExclusive": "Semantic alias only; endDayExclusive*96 clears the cause before route movement.",
+        "ambiguous generic targetDay": "Never infer from this alias. Resolve by owning path and record kind; preserve an unknown optional transaction for reconciliation instead of blocking unrelated legacy-save migration."
+      },
+      "reincarnation": "Keep worldTick and world calendar continuous. Derive a new lifeStartWorldTick only when the existing valid rebirth receipt commits; never modify point balance or realm-retention flags.",
+      "noDrift": "Convert whole days to multiples of 96 once, never round each action or migration pass. On reload, derive projections from saved worldTick; do not reconstruct ticks from rounded display date.",
+      "sourcePathEvidence": "Secretary-confirmed candidate source: code/private-deploy/candidate-site/r6-demo/engine/r4-world-engine.js lines 2433 (inFlightTransaction.startedDay/targetDay) and 2296 (ageDays=worldDay-character.birthDay). B did not inspect other runtime code."
+    }
+  },
+  "economy": {
+    "legacyWealthScale": 100,
+    "assetLedgers": {
+      "mortalCash": "cashWen; current-life money only",
+      "cultivatorGoods": "Registered item instances and quantities (for example r4_item_powder and r4_item_stargrass); not a monetary balance and no automatic conversion rate",
+      "cultivatorCurrency": "spiritStoneLowerEquivalent; separate currency for registered cultivator-market offers only. No exchange action or automatic cash conversion in current R6 slice.",
+      "reincarnationPoints": "Cross-life meta ledger governed by the existing project rules; never treated as cash, vendor credit, or cultivator goods. Existing user-approved option to spend points to preserve an attained realm remains unchanged.",
+      "wishPower": "Non-cash strategic resource/obligation candidate, with cause-linked sources and possible backlash only; not a current market balance."
+    },
+    "conversionRates": {
+      "legacyWealthToWen": 100,
+      "wenPerQian": 100,
+      "wenPerSilverLiang": 1000,
+      "lowerSpiritStonePerSilverLiang": 0.01,
+      "lowerSpiritStoneInSilverLiang": 100,
+      "middleSpiritStoneInLowerUnits": 100,
+      "upperSpiritStoneInLowerUnits": 10000,
+      "status": "provisional game setting; exact for internal display/registered tender, adjustable after user review; no exchange action in current slice"
+    },
+    "displayExamples": {
+      "legacyBalance3": "3钱 (300文)",
+      "nearFareLegacy1": "1钱 (100文)",
+      "farFareLegacy3": "3钱 (300文)",
+      "powderBaseLegacy12": "1两2钱 (1,200文)",
+      "rationPrice": "50文"
+    },
+    "wishPower": "Not a cash ledger. Future implementation may model cause-linked public belief/obligation and backlash only when a registered world mechanic is approved; do not substitute it for money or reputation points.",
+    "market": {
+      "tradeableItemIds": [
+        "r4_item_manual",
+        "r4_item_stargrass",
+        "r4_item_powder",
+        "r4_item_array_material"
+      ],
+      "displayVendorBalance": false,
+      "displayFields": [
+        "player balance",
+        "item quantity",
+        "locked unit offer",
+        "total",
+        "post-trade player balance",
+        "market demand band"
+      ],
+      "hideFields": [
+        "vendor cash/buyer credit",
+        "vendor ledger total",
+        "other hidden backend balances"
+      ],
+      "basePricesLegacy": {
+        "r4_item_manual": 8,
+        "r4_item_stargrass": 3,
+        "r4_item_powder": 12,
+        "r4_item_array_material": 6
+      },
+      "basePriceUnit": "legacy wealth; multiply by 100 for wen",
+      "quoteExpiryWorldDays": 0,
+      "maxQuantityPerQuote": 20,
+      "sellerDefaultRatePercent": 50,
+      "buyerDefaultRatePercent": 125,
+      "playerSellCounterCeilingPercentByDemandBand": {
+        "scarce": 60,
+        "low": 55,
+        "normal": 50
+      },
+      "playerBuyCounterFloorPercentBySupplyBand": {
+        "surplus": 115,
+        "normal_or_tight": 125
+      },
+      "demandBandRules": {
+        "scarce": "current stock is zero",
+        "low": "0 < current stock < opening stock",
+        "normal": "current stock >= opening stock",
+        "surplus": "current stock > opening stock",
+        "normal_or_tight": "current stock <= opening stock"
+      },
+      "counterAttemptsPerCharacterMarketItemSideDay": 1,
+      "counterRejection": "Quote closes; no time, item, or money is consumed.",
+      "marketQuoteLock": "Server-signed quote binds character, market, item, quantity, side, demand band, unit price, total, and issue day. Stock/funds are checked atomically on acceptance.",
+      "antiArbitrage": "Worst sell proceeds per base-price unit are <=60%; cheapest buy is >=115%; no buy-sell loop can profit before travel costs.",
+      "buyerLedgerFiniteAndHidden": true,
+      "buyerCredit": {
+        "openingCreditLegacyByMarket": {
+          "r4_loc_willow_market": 206,
+          "r4_loc_mirror_stage": 112
+        },
+        "openingCreditWenByMarket": {
+          "r4_loc_willow_market": 20600,
+          "r4_loc_mirror_stage": 11200
+        },
+        "derivation": "Sum initialStock[item] * floor(basePriceLegacy[item] * 50%) across registered tradable items. Values match the existing R6 finite-credit proposal; C must verify against authoritative market data and reconstruct conservatively for saves with incomplete trade history.",
+        "onSale": "Debit reserved buyer credit by actual total; on player purchase add only actual collected payment; no calendar regeneration.",
+        "oldSaveReconstruction": "With complete receipts, opening credit + verified player purchases - verified seller payouts; otherwise min(opening-credit formula, value of verifiable current stock); if stock/ledger cannot be verified, set spendable credit to zero. Never mint player cash or expose the balance."
+      }
+    },
+    "foodAndTravel": {
+      "rationItemId": "r6_item_travel_ration",
+      "rationPriceWen": 50,
+      "rationPurchaseActionId": "r6_action_buy_travel_ration",
+      "rationAvailability": "Only at a currently registered public kitchen/market supply source with positive stock; this slice registers no new location as a source until C maps an existing source. Not tradable back to vendors.",
+      "walkingRationsPerSevenDays": 1,
+      "existingSafeHubLivingCost": {
+        "r4Source": "r4_world_pack.caps.livingCost",
+        "legacyRule": "wealth 1 per 30 days at safe hub if wealth is positive",
+        "convertedRule": "At each 30-day safe-hub boundary, if cashWen > 0, debit min(cashWen, 100); if zero, debit zero. Never create debt or health loss from this fee. C must preserve R4 boundary ordering and receipt semantics."
+      },
+      "walkingRationConsumption": "ceil(actual walking days / 7); consume from inventory at dispatch; any shortage is converted to one health loss per missing ration at each completed seven-day block, with partial final block charged once on arrival.",
+      "carriageMeal": "Fare includes ordinary meals during transit; no ration is consumed.",
+      "noCashEgress": "Walking has no fare and stays selectable on any open known land route. If no ration is held, health cost is disclosed before departure. This does not promise survival through hazards or death checks.",
+      "noForcedBaseHungerMechanic": true,
+      "registeredSupplySources": [
+        {
+          "id": "r6_service_market_provisions",
+          "locationId": "r4_loc_willow_market",
+          "itemId": "r6_item_travel_ration",
+          "initialStock": 50,
+          "restock": "At each 30-day boundary, actual supplier delivery receipt raises stock to at most 50; no receipt, no stock.",
+          "unitPriceWen": 50,
+          "purchase": "Atomic cash debit and stock decrement",
+          "providerId": "r6_npc_provisioner_willow",
+          "supplierUnitCostWen": 30
+        },
+        {
+          "id": "r6_service_ashspring_provisions",
+          "locationId": "r4_loc_ashspring",
+          "itemId": "r6_item_travel_ration",
+          "initialStock": 20,
+          "restock": "At each 30-day boundary, actual supplier delivery receipt raises stock to at most 20; no receipt, no stock.",
+          "unitPriceWen": 50,
+          "purchase": "Atomic cash debit and stock decrement",
+          "providerId": "r6_npc_provisioner_ashspring",
+          "supplierUnitCostWen": 30
+        }
+      ]
+    },
+    "legacyPricesConvertedExactly": true,
+    "registeredCarriageServices": [
+      {
+        "id": "r6_service_carriage_willow",
+        "locationId": "r4_loc_willow_market",
+        "providerId": "r6_npc_carrier_willow",
+        "routeScope": "Open edges departing r4_loc_willow_market",
+        "seatsPerWorldDay": 3,
+        "restock": "Three logged seat instances on next world day",
+        "fares": "near=100wen/7days; far=300wen/30days; meals included",
+        "settlement": "One atomic fare debit and seat decrement; no refund after dispatch",
+        "dailySeatSupplierId": "r6_faction_waykeepers"
+      },
+      {
+        "id": "r6_service_carriage_mirror",
+        "locationId": "r4_loc_mirror_stage",
+        "providerId": "r6_npc_carrier_mirror",
+        "routeScope": "Open edges departing r4_loc_mirror_stage",
+        "seatsPerWorldDay": 3,
+        "restock": "Three logged seat instances on next world day",
+        "fares": "near=100wen/7days; far=300wen/30days; meals included",
+        "settlement": "One atomic fare debit and seat decrement; no refund after dispatch",
+        "dailySeatSupplierId": "r6_faction_waykeepers"
+      },
+      {
+        "id": "r6_service_carriage_ashspring",
+        "locationId": "r4_loc_ashspring",
+        "providerId": "r6_npc_carrier_ashspring",
+        "routeScope": "Open edges departing r4_loc_ashspring",
+        "seatsPerWorldDay": 3,
+        "restock": "Three logged seat instances on next world day",
+        "fares": "near=100wen/7days; far=300wen/30days; meals included",
+        "settlement": "One atomic fare debit and seat decrement; no refund after dispatch",
+        "dailySeatSupplierId": "r6_faction_waykeepers"
+      },
+      {
+        "id": "r6_service_carriage_furnace",
+        "locationId": "r4_loc_furnace_lane",
+        "providerId": "r6_npc_carrier_furnace",
+        "routeScope": "Open edges departing r4_loc_furnace_lane",
+        "seatsPerWorldDay": 3,
+        "restock": "Three logged seat instances on next world day",
+        "fares": "near=100wen/7days; far=300wen/30days; meals included",
+        "settlement": "One atomic fare debit and seat decrement; no refund after dispatch",
+        "dailySeatSupplierId": "r6_faction_waykeepers"
+      }
+    ]
+  },
+  "routes": {
+    "knowledgePolicy": "knownFromOrigin is bootstrap knowledge only. Completing a known route records that route pair in the character's current-life route knowledge. Repeat use is unlimited while the route is open; discovery is not a once-per-life ticket.",
+    "oldSaveEgressPolicy": "On load, if current location is registered/visited, list every adjacent open route, including newly added return edges, regardless of origin. Specifically r4_loc_mirror_stage must show r4_loc_willow_market, and r4_loc_echo_pass must show r4_loc_mirror_stage. Active/expired furnace permit and old emergency-used flags do not gate map exit.",
+    "closurePolicy": "Known and open are separate. A route can be known but closed by a current world cause. UI must state the cause and a legal alternative if one exists.",
+    "modes": {
+      "carriage": {
+        "actionMode": "paid",
+        "timeMultiplier": 1,
+        "fare": "fareWen",
+        "requiresLiveCarriageService": true,
+        "mealIncluded": true
+      },
+      "walking": {
+        "actionMode": "walk",
+        "timeMultiplierNumerator": 3,
+        "timeMultiplierDenominator": 2,
+        "days": "ceil(carriageDays*1.5)",
+        "fareWen": 0,
+        "requiresLiveCarriageService": false,
+        "mealIncluded": false,
+        "rationItemId": "r6_item_travel_ration",
+        "missingRationEffect": "Hunger/stamina attrition: 1 health per started 7-day block without ration. Warn health can reach zero; death/events may interrupt. Never promise safe arrival."
+      }
+    },
+    "edges": [
+      {
+        "from": "r4_loc_ashspring",
+        "to": "r4_loc_willow_market",
+        "carriageDays": 7,
+        "fareLegacyWealth": 1,
+        "fareWen": 100,
+        "kind": "land"
+      },
+      {
+        "from": "r4_loc_willow_market",
+        "to": "r4_loc_ashspring",
+        "carriageDays": 7,
+        "fareLegacyWealth": 1,
+        "fareWen": 100,
+        "kind": "land"
+      },
+      {
+        "from": "r4_loc_ashspring",
+        "to": "r4_loc_furnace_lane",
+        "carriageDays": 7,
+        "fareLegacyWealth": 1,
+        "fareWen": 100,
+        "kind": "land"
+      },
+      {
+        "from": "r4_loc_furnace_lane",
+        "to": "r4_loc_ashspring",
+        "carriageDays": 7,
+        "fareLegacyWealth": 1,
+        "fareWen": 100,
+        "kind": "land"
+      },
+      {
+        "from": "r4_loc_willow_market",
+        "to": "r4_loc_mirror_stage",
+        "carriageDays": 30,
+        "fareLegacyWealth": 3,
+        "fareWen": 300,
+        "kind": "land"
+      },
+      {
+        "from": "r4_loc_mirror_stage",
+        "to": "r4_loc_willow_market",
+        "carriageDays": 30,
+        "fareLegacyWealth": 3,
+        "fareWen": 300,
+        "kind": "land",
+        "newReturnEdge": true
+      },
+      {
+        "from": "r4_loc_mirror_stage",
+        "to": "r4_loc_echo_pass",
+        "carriageDays": 7,
+        "fareLegacyWealth": 1,
+        "fareWen": 100,
+        "kind": "land"
+      },
+      {
+        "from": "r4_loc_echo_pass",
+        "to": "r4_loc_mirror_stage",
+        "carriageDays": 7,
+        "fareLegacyWealth": 1,
+        "fareWen": 100,
+        "kind": "land",
+        "newReturnEdge": true
+      }
+    ],
+    "outOfScope": "No new edge to/from r4_loc_furnace_lane beyond the existing Ashspring pair. Report route unavailable if live world causes close all legal paths; do not mint teleport/free one-time egress.",
+    "serviceRules": "Carriage only at registered departure service with available seat and exact fare. Other known open land edges remain walkable unless closed."
+  },
+  "travelTransaction": {
+    "transactionId": "R6-TRAVEL-TX-01",
+    "fields": [
+      "id",
+      "characterId",
+      "routeId",
+      "mode",
+      "daysTotal",
+      "daysCompleted",
+      "daysRemaining",
+      "durationTicks",
+      "progressTicks",
+      "remainingTicks",
+      "farePaidWen",
+      "rationsReserved",
+      "status",
+      "lastProcessedWorldDay",
+      "lastProcessedWorldTick",
+      "startedAtTick",
+      "pauseAtTick",
+      "pauseEventId",
+      "idempotencyKey"
+    ],
+    "charge": "Deduct fare and reserve walking rations exactly once at dispatch. No refund or second charge on event pause/resume. Failed dispatch changes neither location nor balances.",
+    "progress": "One dispatch advances route-progress ticks while the route is open. World time advances through every 15-minute tick and crosses each 96-tick day boundary in canonical order. Stop route progress only on an actual eligible blocking event or death; resume the same remaining route ticks and update location once.",
+    "resume": "After resolving a blocking event, resume the same transaction for daysRemaining. Idempotency key prevents duplicate progress after reload/double submit.",
+    "encounterSource": "Only escrowed active r6_source_courier_board contracts or r6_fact_route_flood_closure generated from persisted daily weather can interrupt; fixtures are replay inputs, not player event source.",
+    "encounterReplayKey": [
+      "worldId",
+      "characterId",
+      "lifeIndex",
+      "routeId",
+      "departureWorldDay",
+      "transactionId",
+      "contractId or weatherFactId"
+    ],
+    "seedPolicy": "QA fixture seeds replay the registered funding/route/weather inputs only. They cannot create a contract, storm, cash reward, point, or player cause.",
+    "eventOutcomes": {
+      "r4_ev_daily_courier": "Positive travel relay only when a funded published r6_source_courier_board contract and parcel are carried by the registered runner at the route midpoint. One-day accept/decline action; the contract reward is not paid on encounter. Delivery receipt at the named destination is the sole payout.",
+      "r4_ev_daily_roadmarker": "Negative obstruction only from the generated route/day weather facts. One-day response plus a maximum three-day closure; cause expires automatically at its exclusive endWorldDay. Re-evaluate daily; no indefinite wait or teleport."
+    },
+    "eventEligibility": "Courier requires active board contract inside its half-open offer window, runner waiting at r6_site_mirror_post, exact route transaction on the same route, and no per-cycle player claim. Roadmarker requires a persisted flood cause active for the current route/day. Resolve and receipt against source ID/cause ID.",
+    "testFixtures": [
+      {
+        "id": "R6-TRAVEL-CAUSE-COURIER-01",
+        "eventId": "r4_ev_daily_courier",
+        "causeId": "r6_source_courier_board:contract:demo-01",
+        "fixtureSeed": 2026101901,
+        "status": "deterministic_source_replay_not_player_evidence"
+      },
+      {
+        "id": "R6-TRAVEL-CAUSE-ROADMARKER-01",
+        "eventId": "r4_ev_daily_roadmarker",
+        "causeId": "r6_fact_route_flood_closure:route:willow-mirror:day-10",
+        "fixtureSeed": 2026101902,
+        "status": "deterministic_source_replay_not_player_evidence"
+      }
+    ],
+    "formalCauseSources": {
+      "courier": {
+        "sourceId": "r6_source_courier_board",
+        "locationId": "r4_loc_willow_market",
+        "issuerId": "r6_npc_willow_apothecary",
+        "runnerId": "r6_npc_willow_courier_runner",
+        "recipientId": "r6_npc_mirror_recipient",
+        "recipientLocationId": "r4_loc_mirror_stage",
+        "cycle": {
+          "epochDay": 0,
+          "periodDays": 75,
+          "offerWindowDays": 30,
+          "cycleIndex": "floor((worldDay-epochDay)/periodDays)",
+          "openWorldDay": "epochDay+cycleIndex*periodDays",
+          "offerWindow": "cycleStartWorldDay <= worldDay < offerWindowEndWorldDayExclusive",
+          "offerWindowEndWorldDayExclusive": "cycleStartWorldDay+offerWindowDays",
+          "publishPhase": "R4 world_nodes once at cycle open; cycle key prevents duplicate publish after reload",
+          "slotsPerCycle": 2,
+          "publishRequires": [
+            "workingCashWen >= 200",
+            "one issuer-owned r4_item_powder parcel available"
+          ],
+          "publishActionId": "r6_action_publish_courier_contract",
+          "cycleEndWorldDayExclusive": "cycleStartWorldDay+75",
+          "nextCycleRequires": "The same named runner has completed the prior 75-day duty and its signed return receipt; no overlapping dispatch."
+        },
+        "ledgers": {
+          "workingCash": {
+            "id": "r6_ledger_willow_apothecary_working_cash",
+            "openingBalanceWen": 400,
+            "openingSourceReceiptId": "r6_receipt_willow_apothecary_seed_capital",
+            "openingSource": "one-time apothecary business capitalization at world initialization; NPC-only ledger, no player funds minted"
+          },
+          "escrow": {
+            "id": "r6_ledger_willow_courier_reward_escrow",
+            "openingBalanceWen": 0,
+            "type": "restricted liability, not income or player currency"
+          }
+        },
+        "fundingAndEscrow": {
+          "perOfferEscrowWen": 200,
+          "publishTransfer": "Atomically move 200wen from workingCash to escrow and reserve one actual r4_item_powder; if either is unavailable do not publish that slot. No offer without full escrow.",
+          "replenishment": "Only on a successful r4_daily_market quote settlement where r6_npc_willow_apothecary is seller of r4_item_powder: transfer floor(sellerNetCashReceivedWen*10/100) from actual seller proceeds to workingCash; receipt-keyed and idempotent. Later stock requires an actual signed apothecary buy quote at r4_loc_willow_market; one powder unit uses the R4 base 12 legacy wealth (1200wen) with registered 125% vendor buy markup and ceil-total (1500wen at opening price), and decrements real seller stock. No free restock.",
+          "parcelItemId": "r6_item_sealed_medicine_parcel",
+          "parcelContents": "one issuer-owned r4_item_powder instance, nontradable; wrapper is not a second medicine item",
+          "parcelIssuance": "On publication reserve one actual powder instance into the parcel. Pre-acceptance decline or offer-window expiry leaves parcel physically with the runner; return it to issuer inventory only on signed runner return receipt. On acceptance bind it to contract and character; on delivery consume it into recipient receipt; on accepted failure it becomes return cargo and is not credited back until a signed physical return receipt.",
+          "openingPowderInventoryUnits": 2,
+          "powderInventorySource": "At world initialization, reallocate two of the ten registered r4_item_powder units in r4_loc_willow_market opening vendor stock to the apothecary-owned parcel inventory (market stock becomes eight); record r6_receipt_willow_apothecary_seed_powder. This is an ownership transfer, not item creation. Later stock requires an actual signed buy quote from r4_loc_willow_market; r4_item_powder base price is 12 legacy wealth (=1200wen), market buy settlement applies the registered 125-percent markup and ceil-total rule (1500wen for one at base stock), and actual vendor stock must be positive.",
+          "openingPowderReceiptId": "r6_receipt_willow_apothecary_seed_powder"
+        },
+        "runnerSchedule": {
+          "routeId": "r4_loc_willow_market>r4_loc_mirror_stage",
+          "departureWorldDay": "cycle.openWorldDay",
+          "mode": "carriage",
+          "midpointWorldDay": "cycle.openWorldDay+15",
+          "waypointId": "r6_site_mirror_post",
+          "waitThrough": "cycle.openWorldDay+29",
+          "outboundRemainingTravelDaysAfterWindow": 15,
+          "mirrorArrivalWorldDay": "cycle.openWorldDay+45",
+          "returnRouteDays": 30,
+          "willowReturnReceiptWorldDay": "cycle.openWorldDay+75",
+          "afterWindow": "At cycle day30 resume the remaining 15 days of the 30-day Willow-to-Mirror carriage and arrive day45; take the registered 30-day return route and physically arrive Willow day75. Keep every unaccepted/declined parcel and matching escrow liability aboard until that signed return receipt. The next 75-day dispatch opens only after this receipt; no overlap or teleport."
+        },
+        "eventId": "r4_ev_daily_courier",
+        "contractId": "r6_courier_contract:<cycleIndex>:<slot01or02>",
+        "causeId": "r6_fact_delivery_contract:<contractId>",
+        "contractFields": [
+          "contractId",
+          "cycleIndex",
+          "slot",
+          "issuerId",
+          "runnerId",
+          "parcelInstanceId",
+          "namedRecipientId",
+          "routeId",
+          "openWorldDay",
+          "offerEndWorldDayExclusive",
+          "decision",
+          "acceptedBy",
+          "acceptedWorldDay",
+          "mode",
+          "remainingTravelDaysAtAccept",
+          "maxPracticeStopDays",
+          "maxAlchemyStopDays",
+          "floodDelayAllowanceDays",
+          "dueWorldDay",
+          "status",
+          "settlementReceiptId",
+          "idempotencyKey"
+        ],
+        "acceptance": {
+          "actionId": "r6_action_accept_delivery",
+          "decisionCostTicks": 4,
+          "requires": [
+            "character travelling r4_loc_willow_market>r4_loc_mirror_stage",
+            "runner and character occupy r6_site_mirror_post on the same persisted worldDay within [cycleStart+15,cycleStart+30); route arrival must physically coincide; arbitrary trips are not guaranteed an encounter",
+            "offerWindow open",
+            "contract cause active",
+            "no existing accepted courier contract for this character this cycle",
+            "decision completes strictly before offerWindowEndAtTickExclusive",
+            "player chooses accept"
+          ],
+          "dueFormula": "dueAtTickExclusive = acceptedAtTick + remainingRouteTicksAtAccept + 2880 practice ticks + 288 portable-alchemy ticks + 96 one-day roadmarker wait/response ticks + 288 flood-closure ticks + 672 delivery-grace ticks; acceptedAtTick is written after the 4-tick decision, so do not add it twice. Legacy dueWorldDay=floor((dueAtTickExclusive-1)/96)",
+          "routeDurations": {
+            "carriageDays": 30,
+            "walkingDays": 45,
+            "carriageMidpointDay": 15,
+            "walkingMidpointDay": 23,
+            "walkingRationsReserved": 7
+          },
+          "limits": "At most one 30-day practice and one 3-day portable alchemy action are covered by the stop budget; only one road closure is covered. More delay can expire the job; no deadline extension or teleport."
+        },
+        "normal": [
+          "Board posts at most two fully funded contract causes per 75-day duty. The single named runner reaches the physical midpoint on carriage day15 and waits through day29. At day30 resume the remaining15 outbound days (arrive Mirror day45), then take the registered 30-day return route (arrive Willow day75). Dispatch cannot recur until the signed return receipt. Encounter exists only when a traveling character physically reaches the waypoint on the same worldDay the runner is waiting; a carriage traveler departing at cycle open reaches day15 and a walker reaches day23, but trips at other dates are not guaranteed an encounter. Accept/decline costs4 ticks; parcel binds to that character and dueAtTickExclusive is calculated from post-action acceptedAtTick. Deliver at r4_loc_mirror_stage to r6_npc_mirror_recipient before the exclusive tick deadline; signed receipt transfers exactly 200wen from escrow to character.cashWen."
+        ],
+        "decline": [
+          "Four-tick decline receipt scoped to contractId+characterId; the same player cannot reopen that offer. Runner physically keeps parcel; escrow and powder stay reserved until its signed return receipt at cycleOpenWorldDay+75; closing the 30-day offer window does not refund. Other slot may be accepted, but only one accepted contract per character per cycle."
+        ],
+        "duplicate": [
+          "Repeated publish, accept, decline, delivery, or settlement with the same cycle/contract idempotency key is a no-op and returns the original receipt. One reward receipt per contract; rewardPoints=0."
+        ],
+        "timeout": [
+          "Unaccepted offer expires at openWorldDay+30 exclusive; keep escrow locked and parcel aboard runner until the actual return receipt at cycleOpenWorldDay+75, then return escrow to workingCash and parcel powder to issuer once under the same receipt transaction. Accepted offer deadline is inclusive. If worldDay > dueWorldDay before signed delivery, mark expired and refund its 200wen escrow to workingCash once in a timeout receipt (no player cash or points); parcel remains nontradable return cargo held by the character and is credited to issuer inventory only on a later physical return receipt, or logged lost without item recreation."
+        ],
+        "reload": [
+          "Persist both ledgers, cycle publish receipt, contract/parcel owner, offer decision, in-flight travel transaction, acceptedWorldDay/dueWorldDay, source receipts and idempotency key. Reload resumes same contract; duplicate receipt does not pay twice."
+        ],
+        "reward": {
+          "amountWen": 200,
+          "payerLedgerId": "r6_ledger_willow_courier_reward_escrow",
+          "recipientField": "character.cashWen",
+          "receiptId": "r6_receipt_courier_reward:<contractId>",
+          "reincarnationPointsDelta": 0,
+          "cultivatorCurrencyDelta": 0,
+          "rewardLedgerExclusion": "No noncash reward credits or points are issued; the only player reward is the 200wen transfer to character.cashWen."
+        }
+      },
+      "roadmarker": {
+        "routeId": "r4_loc_willow_market>r4_loc_mirror_stage",
+        "weatherFactId": "r6_fact_route_weather_day:<routeId>:<worldDay>",
+        "weatherMasterSeedField": "world.r6WeatherMasterSeed32",
+        "seedInit": "New world: master seed32=(Number(seed) >>> 0) || 1. Existing save: recover original seed32 from worldId=\"world-<base36 seed>\" and persist it once. If worldId is malformed, fallback to (Number(rngState) >>> 0) || 1 and record the one-time r6_receipt_weather_seed_migration. Same saved seed never rerolls on reload.",
+        "routeDaySalt": "FNV-1a32 over UTF-8 bytes of canonical routeId, then ASCII pipe byte 0x7C, then ASCII decimal worldDay bytes; offset basis 0x811C9DC5; per byte h=Math.imul(h XOR byte,0x01000193) >>> 0.",
+        "weatherAlgorithm": "day32=worldDay >>> 0; routeDaySalt is FNV-1a32(routeId UTF-8 bytes + ASCII pipe + decimal worldDay UTF-8 bytes) in that exact order; key=(r6WeatherMasterSeed32 XOR day32 XOR routeDaySalt) >>> 0. Apply exactly one R4 xorshift32(13,17,5) draw: x=key>>>0; x ^= x<<13; x ^= x>>>17; x ^= x<<5; next=(x>>>0)||1. rainLevel=Math.floor((next/4294967296)*4), integer 0..3. This reproduces candidate R4 helper zero-output fallback; raw key zero therefore yields next=1/rainLevel=0. Persist master seed, key, next, and rainLevel once per route/day.",
+        "dayOrder": "Use R4 calendar: advance_to_boundary -> death_check -> world_nodes (generate/expire weather causes before travel action completion) -> action_completion -> causal_followups -> queue_ready_events. A blocking flood cause created in world_nodes prevents that day from incrementing route progress; it consumes one world day and queues r4_ev_daily_roadmarker.",
+        "floodFactId": "r6_fact_route_flood_closure:<routeId>:<triggerWorldDay>",
+        "trigger": "For this route only, two consecutive persisted route-day rainLevel >= 2 values create cause on the second day D. startWorldDay=D inclusive; endWorldDayExclusive=D+3. Closed on D,D+1,D+2; automatically open before world_nodes on D+3, regardless of ongoing rain. The streak disarms on creation; it rearms only after closure expiry and at least one persisted rainLevel <=1 day. No duplicate cause during one high streak.",
+        "eventId": "r4_ev_daily_roadmarker",
+        "playerActions": [
+          "r6_action_wait_at_mirror_post: costs96 ticks and rechecks the cause; at most three closed-day waits, then route opens at endWorldDayExclusive",
+          "r6_action_resume_route: zero-day idempotent resume once cause is expired/cleared"
+        ],
+        "normal": [
+          "Deterministic route/day facts persist once. Two high-rain consecutive facts trigger one 3-day closure."
+        ],
+        "repeated": [
+          "Same route/day record or trigger key returns original receipt. A new closure requires expiry, a dry rearm day, and a later new two-day high streak."
+        ],
+        "reload": [
+          "Persist master seed, weather day facts, last high day, armed state, closure interval, transaction progress and cause receipt; do not regenerate on reload."
+        ],
+        "timeout": "Flood cause has fixed maximum three closed calendar days; one-day roadmarker response is separate. Other unrelated closures are not absorbed by courier allowance and can cause job deadline expiry.",
+        "testVector": {
+          "routeId": "r4_loc_willow_market>r4_loc_mirror_stage",
+          "routeIdFNV32Hex": "0xBC509C4E",
+          "worldSeed32": 2026101902,
+          "worldDays": [
+            5800,
+            5801,
+            5802
+          ],
+          "nextUint32": [
+            2152251557,
+            3939432912,
+            822878766
+          ],
+          "rainLevels": [
+            2,
+            3,
+            0
+          ],
+          "closureStartsAt": 5801,
+          "closureEndsAtExclusive": 5804,
+          "reopensAt": 5804,
+          "routeDaySaltHexByDay": [
+            "0x1236CF0B",
+            "0x1136CD78",
+            "0x1436D231"
+          ],
+          "zeroKeyWorldSeed32": 305584547,
+          "zeroKeyWorldDay": 5800,
+          "zeroKeyNextUint32": 1,
+          "zeroKeyRainLevel": 0,
+          "routeOnlyFNV32Hex": "0xBC509C4E"
+        },
+        "r4SourceEvidence": {
+          "path": "game-project/code/private-deploy/candidate-site/r6-demo/engine/r4-world-engine.js",
+          "initialSeedLine": 348,
+          "drawLines": "2971-2975",
+          "note": "Candidate-source observation only; not a runtime test. Its helper mutates rngState and maps a zero output to 1."
+        },
+        "dayOrderPhases": [
+          "advance_to_boundary",
+          "death_check",
+          "world_nodes",
+          "action_completion",
+          "causal_followups",
+          "queue_ready_events"
+        ]
+      }
+    }
+  },
+  "practiceAndFurnace": {
+    "terminology": {
+      "r4_ev_daily_kiln_queue": "炉位/排号（预约时段）",
+      "r4_item_furnace_access": "药炉使用许可（地点与期限）",
+      "borrowed": "借炉（炉主/许可人同意，不转移所有权）",
+      "rented": "租用公共炉位/取得限时许可",
+      "portable": "自有便携药炉（实际背包资产，不是许可同义词）"
+    },
+    "safeWaystopFactId": "r6_site_mirror_post",
+    "waystopAvailability": "B-authored setting: r6_site_mirror_post at day-15 waypoint of r4_loc_willow_market>r4_loc_mirror_stage, maintained by r6_npc_roadkeeper_mirror; safe/open/portableAlchemyAllowed unless flood or dated maintenance cause closes it. C registers exact IDs.",
+    "midtripMeditation": {
+      "actionId": "r4_action_practice",
+      "requires": [
+        "active trip on r4_loc_willow_market>r4_loc_mirror_stage",
+        "arrived at r6_site_mirror_post at physical midpoint (carriage day 15 or walking day 23)",
+        "waypoint open and no closure cause",
+        "no blocking event",
+        "learned practice skill",
+        "health>1"
+      ],
+      "registeredEffect": {
+        "days": 30,
+        "health": -1,
+        "power": 4
+      },
+      "effects": "Pause travel transaction; execute the existing practice action and its registered 30-day/health/power effect; process world events normally; resume remaining travel only after action resolves. No silent travel time overlaps practice.",
+      "whenUnavailable": "Ordinary road and closed site: hide action and explain exact cause.",
+      "whenAvailable": "At dispatch choose stop/continue; offer stop on physical midpoint: carriage day 15 or walking day 23. Freeze route progress during 30-day practice action; world advances; resume if route remains open, otherwise remain with cause/options."
+    },
+    "portableFurnaceItemId": "r6_item_portable_furnace",
+    "portableAlchemyActionId": "r6_action_alchemy_portable",
+    "portableFurnaceStatus": "proposed_new_asset_not_live",
+    "portableAlchemyRequires": [
+      "owned r6_item_portable_furnace or unexpired owned r6_item_portable_furnace_lease",
+      "open r6_site_mirror_post with portableAlchemyAllowed=true",
+      "learned r4_item_powder_recipe",
+      "dao02_stage>=1 and dao02_proficiency>=20",
+      "r4_item_stargrass quantity>=2",
+      "100wen fee",
+      "no blocking event",
+      "trip paused at waypoint"
+    ],
+    "portableAlchemyAction": "New r6_action_alchemy_portable reuses R4 recipe outcome/time/material/proficiency rules but substitutes the public-furnace permit prerequisite only with owned portable equipment plus site permission. It must not mutate or weaken r4_action_alchemy.",
+    "portableAlchemyCostAndOutcome": "3 days; 2 r4_item_stargrass; 100 wen fee; existing 80% success, success yields 2 r4_item_powder, failure consumes costs and yields none. No new fuel, probability, or failure product is invented; the material/fee costs are the batch inputs.",
+    "ownershipAcquisition": "B specifies source/item/seller/price/finite stock/restock receipt/ownership/lease/waypoint/route/conditions. C registers these IDs exactly. Never fabricate an existing save asset; new assets require purchase or valid migration.",
+    "registeredWaypoint": {
+      "id": "r6_site_mirror_post",
+      "routeId": "r4_loc_willow_market>r4_loc_mirror_stage",
+      "routeDayOffset": 15,
+      "maintainerId": "r6_npc_roadkeeper_mirror",
+      "safe": true,
+      "openUnlessCause": "r6_fact_route_flood_closure or dated maintenance",
+      "portableAlchemyAllowed": true,
+      "creationSource": "Editable setting: waykeeper maintenance ledger plus day-zero upkeep receipt; not asserted as R4 canon.",
+      "routeDayOffsetByMode": {
+        "carriage": 15,
+        "walking": 23
+      },
+      "progressRule": "Physical midpoint; day offset is ceil(total trip days/2). At carriage it is day 15 of 30; walking it is day 23 of 45."
+    },
+    "acquisitionRules": [
+      {
+        "id": "r6_source_portable_furnace_sale",
+        "itemId": "r6_item_portable_furnace",
+        "sellerId": "r4_npc_wen_repairer",
+        "locationId": "r4_loc_furnace_lane",
+        "priceWen": 5000,
+        "stock": 1,
+        "restock": "One serial asset per 30-day supplier delivery receipt",
+        "ownership": "Bind serial to buyer; nonstackable; transfer only by signed trade receipt."
+      },
+      {
+        "id": "r6_source_portable_furnace_rental",
+        "itemId": "r6_item_portable_furnace_lease",
+        "sellerId": "r4_npc_wen_repairer",
+        "locationId": "r4_loc_furnace_lane",
+        "priceWen": 1000,
+        "stock": 2,
+        "durationTicks": 2880,
+        "durationLabel": "30日",
+        "ownership": "Seller retains property; bind borrower/due day; return receipt removes lease; loss records claim cause without negative balance."
+      }
+    ]
+  },
+  "worldProgressionFramework": {
+    "status": "included_setting_framework_editable_not_all_currently_implemented",
+    "fourRealmRule": "Retain the user's already confirmed four-realm progression and point-paid preservation of a realm actually attained. Do not substitute the reference's contrary rule or add realm tiers in this slice.",
+    "stages": [
+      {
+        "id": "R6-WF-MORTAL",
+        "stage": "凡俗生活",
+        "ledger": "文/钱/两银 cashWen",
+        "systems": [
+          "work and household upkeep",
+          "food and local markets",
+          "foot or paid road travel",
+          "public craft spaces and learning"
+        ],
+        "currentR6": "current baseline; route/market/food rules proposed here"
+      },
+      {
+        "id": "R6-WF-CRAFT",
+        "stage": "技艺与生产",
+        "systems": [
+          "apprenticeship/lineage as an optional access route",
+          "recipe and proficiency gates",
+          "tools, fuel, materials and site permissions",
+          "common goods can be produced at scale; rare high-grade works require scarce causes"
+        ],
+        "currentR6": "existing DAO02/alchemy/market IDs remain authoritative; new lineage tree deferred from implementation"
+      },
+      {
+        "id": "R6-WF-CULTIVATOR",
+        "stage": "修士交易与资源",
+        "ledger": "cultivator goods plus separate lower/middle/upper spirit-stone wallet",
+        "systems": [
+          "registered faction markets price high-tier goods in spirit stones",
+          "materials, talismans, tools, arrays, puppets and techniques create supply/demand",
+          "cultivator currency does not automatically convert to cash"
+        ],
+        "currentR6": "currency hierarchy provisionally defined; no new high-tier market or offer is registered"
+      },
+      {
+        "id": "R6-WF-EXPEDITION",
+        "stage": "远行与时代技术",
+        "progression": [
+          "foot/horse/cart",
+          "river or coastal boat",
+          "steamship and transoceanic routes",
+          "extraordinary/interworld/star routes when the world's era and cause support them"
+        ],
+        "systems": [
+          "route-specific travel time, fares, provisions, supply, closures and cause-linked scenes",
+          "no guaranteed random event each trip"
+        ],
+        "currentR6": "only the five registered local locations and eight proposed road edges; later travel tiers stay in framework"
+      },
+      {
+        "id": "R6-WF-CROSS-LIFE",
+        "stage": "跨世轮回",
+        "ledger": "reincarnationPoints separate from mortal and cultivator wallets",
+        "systems": [
+          "point spending at rebirth under current project rules",
+          "optional preservation of a realm actually attained",
+          "world calendar and registered world consequences continue per existing rules"
+        ],
+        "currentR6": "no changes to existing realm or point contract"
+      },
+      {
+        "id": "R6-WF-WISH",
+        "stage": "愿力与公共承诺",
+        "ledger": "non-cash obligation/resource; no market tender",
+        "systems": [
+          "gain/use only from registered social/world causes",
+          "backlash or debt only when explicitly modeled and receipted"
+        ],
+        "currentR6": "no new wish-power field or event introduced"
+      }
+    ],
+    "candidateCraftLinesFromReference": [
+      {
+        "name": "符箓",
+        "progression": "紫符→金符",
+        "relationship": "consumable tools with registered supply and use causes"
+      },
+      {
+        "name": "炼器",
+        "progression": "灵器→半步道器→道器→上品道器",
+        "relationship": "common production vs scarce high-grade creation"
+      },
+      {
+        "name": "阵法/机关/傀儡/神通/百家",
+        "relationship": "future learned access, tools/materials, lineage and consequences; names are editable setting references, not asserted as independently verified canon"
+      },
+      {
+        "name": "炼药/丹药",
+        "progression": "疗伤/破境/增益/延寿; provisional 黄/玄/地/天 grades",
+        "relationship": "extend the existing recipe/proficiency/furnace/material chain; an exceptional failure output such as 妖丹 requires an explicit causal definition"
+      },
+      {
+        "name": "named artifacts and travel",
+        "examples": [
+          "太荒古炉",
+          "炼妖炉",
+          "彼岸号"
+        ],
+        "relationship": "setting-reference candidates linked to craft/furnace/expedition tiers; no current R6 location or runtime item is silently created"
+      }
+    ],
+    "systemConnections": [
+      "life-stage selects available market tender and craft permissions",
+      "tradeable goods connect gathering/production to market stock and finite buyer credit",
+      "craft prerequisites consume time, cash or stones, materials, tools/fuel and location permissions",
+      "travel connects local supply and markets while spending calendar time and provisions",
+      "registered events modify route, market, craft or social causes with idempotent receipts",
+      "cross-life points modify the next-life starting decision but never pay current-life merchants"
+    ]
+  },
+  "buttonStates": {
+    "enabled": "all prerequisites checked and route/action can commit",
+    "disabled": "state the exact missing prerequisite without submitting",
+    "pressed": "visible pressed feedback; prevent duplicate dispatch while pending",
+    "pending": "show transaction/event state and preserve reading position",
+    "stablePageNodes": [
+      "r6_living_scene",
+      "r6_travel_state",
+      "r6_scene_event",
+      "r6_scene_result",
+      "r6_view_overlay"
+    ]
+  },
+  "evidenceScenarios": [
+    {
+      "id": "R6-WL-SIM-01",
+      "name": "Mirror old-save return fare boundary",
+      "inputs": {
+        "location": "r4_loc_mirror_stage",
+        "legacyWealth": 3,
+        "destination": "r4_loc_willow_market",
+        "mode": "carriage"
+      },
+      "expected": {
+        "balanceWen": 300,
+        "fareWen": 300,
+        "days": 30,
+        "arrivalBalanceWen": 0
+      }
+    },
+    {
+      "id": "R6-WL-SIM-02",
+      "name": "zero-cash Mirror foot egress",
+      "inputs": {
+        "location": "r4_loc_mirror_stage",
+        "legacyWealth": 0,
+        "destination": "r4_loc_willow_market",
+        "mode": "walking",
+        "health": 87,
+        "rations": 0
+      },
+      "expected": {
+        "fareWen": 0,
+        "days": 45,
+        "healthLoss": 7,
+        "arrivalHealth": 80
+      }
+    },
+    {
+      "id": "R6-WL-SIM-03",
+      "name": "low-health zero-cash recovery then egress pressure path",
+      "inputs": {
+        "location": "r4_loc_mirror_stage",
+        "legacyWealth": 0,
+        "health": 1,
+        "recoveryActions": 3,
+        "destination": "r4_loc_willow_market",
+        "mode": "walking",
+        "rations": 0
+      },
+      "expected": {
+        "recoveryDays": 21,
+        "healthAfterRecovery": 10,
+        "travelDays": 45,
+        "healthLoss": 7,
+        "arrivalHealth": 3,
+        "totalDays": 66
+      }
+    },
+    {
+      "id": "R6-WL-SIM-04",
+      "name": "old Mirror save with active permit, no cash and rescue already used",
+      "inputs": {
+        "location": "r4_loc_mirror_stage",
+        "legacyWealth": 0,
+        "activeFurnacePermit": true,
+        "legacyEmergencyUsed": true,
+        "destination": "r4_loc_willow_market",
+        "mode": "walking",
+        "health": 87,
+        "rations": 0
+      },
+      "expected": {
+        "fareWen": 0,
+        "days": 45,
+        "healthLoss": 7,
+        "arrivalHealth": 80,
+        "routeVisible": true,
+        "permitPreserved": true,
+        "emergencyFlagPreserved": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-05",
+      "name": "carriage midpoint courier accept and idempotent travel resume",
+      "inputs": {
+        "worldSeed32": 2026101902,
+        "cycleOpenWorldDay": 5790,
+        "departureWorldDay": 5790,
+        "route": "r4_loc_willow_market>r4_loc_mirror_stage",
+        "mode": "carriage",
+        "routeDays": 30,
+        "waypointDay": 15,
+        "eventActionTicks": 4,
+        "runnerWaitUntil": 5820,
+        "offerSlot": 1,
+        "contractId": "r6_courier_contract:193:01",
+        "saveReloadAfterAccept": true
+      },
+      "expected": {
+        "dispatchCount": 1,
+        "fareCharges": 1,
+        "fareWen": 300,
+        "eventReceiptCount": 1,
+        "eventAtWorldDay": 5805,
+        "acceptanceWorldDay": 5805,
+        "acceptanceAtTickOffset": 4,
+        "daysCompletedAtPause": 15,
+        "daysRemainingAtPause": 15,
+        "dueWorldDay": 5864,
+        "escrowWenAfterAccept": 400,
+        "rewardWenAtEncounter": 0,
+        "playerRewardPoints": 0,
+        "duplicateAcceptNoOp": true,
+        "arrivalCountAfterResume": 1
+      }
+    },
+    {
+      "id": "R6-WL-SIM-06",
+      "name": "market haggling worst-case round trip",
+      "inputs": {
+        "tradeableItems": 4,
+        "maxQuantity": 20,
+        "buyRatePercent": 115,
+        "sellRatePercent": 60
+      },
+      "expected": {
+        "netProfitPerItemQuantity": "<=0",
+        "vendorBalanceVisible": false,
+        "counterAttemptsPerDay": 1
+      }
+    },
+    {
+      "id": "R6-WL-SIM-07",
+      "name": "Echo Pass return when legacy rescue was used",
+      "inputs": {
+        "location": "r4_loc_echo_pass",
+        "legacyWealth": 0,
+        "legacyEmergencyUsed": true,
+        "destination": "r4_loc_mirror_stage",
+        "mode": "walking",
+        "health": 10,
+        "rations": 0
+      },
+      "expected": {
+        "fareWen": 0,
+        "days": 11,
+        "healthLoss": 2,
+        "arrivalHealth": 8,
+        "routeVisible": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-08",
+      "name": "legacy save date conversion across year boundary and captured cumulative day",
+      "inputs": {
+        "departureWorldDay": 359,
+        "travelDays": 30,
+        "observedWorldDay": 5792
+      },
+      "expected": {
+        "departure": {
+          "year": 1000,
+          "month": 12,
+          "day": 30
+        },
+        "arrival": {
+          "year": 1001,
+          "month": 1,
+          "day": 30
+        },
+        "observedDisplay": {
+          "year": 1016,
+          "month": 2,
+          "day": 3
+        },
+        "worldDayRemainsInternal": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-09",
+      "name": "stuck-save migration preserves state and adds adjacent egress",
+      "inputs": {
+        "location": "r4_loc_mirror_stage",
+        "legacyWealth": 3,
+        "activeFurnacePermit": true,
+        "permitExpiryWorldDay": 5800,
+        "legacyEmergencyUsed": true,
+        "pendingTransactionId": "tx-keep-01",
+        "visitedLocations": [
+          "r4_loc_willow_market",
+          "r4_loc_mirror_stage"
+        ]
+      },
+      "expected": {
+        "cashWen": 300,
+        "location": "r4_loc_mirror_stage",
+        "permitExpiryWorldDay": 5800,
+        "legacyEmergencyUsed": true,
+        "pendingTransactionId": "tx-keep-01",
+        "outboundRoute": "r4_loc_willow_market",
+        "moneyMigrationCount": 1,
+        "secondMigrationNoOp": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-10",
+      "name": "safe midpoint practice pause/resume",
+      "inputs": {
+        "routeId": "r4_loc_willow_market>r4_loc_mirror_stage",
+        "arrivalDayOffset": 15,
+        "waypointId": "r6_site_mirror_post",
+        "practiceDays": 30,
+        "routeClosedAfterPractice": false
+      },
+      "expected": {
+        "travelFrozenDuringAction": true,
+        "worldDaysAdvanced": 30,
+        "healthDelta": -1,
+        "powerDelta": 4,
+        "resumeRemainingDays": 15,
+        "fareCharges": 1,
+        "arrivalCount": 1
+      }
+    },
+    {
+      "id": "R6-WL-SIM-11",
+      "name": "walking courier receipt settles once from escrow",
+      "inputs": {
+        "worldSeed32": 2026101902,
+        "cycleOpenWorldDay": 5790,
+        "departureWorldDay": 5790,
+        "route": "r4_loc_willow_market>r4_loc_mirror_stage",
+        "mode": "walking",
+        "routeDays": 45,
+        "rationsReserved": 7,
+        "waypointDay": 23,
+        "eventActionTicks": 4,
+        "remainingTravelDaysAtAccept": 22,
+        "practiceStopDays": 30,
+        "alchemyStopDays": 3,
+        "roadEventResponseDays": 1,
+        "closureDays": 3,
+        "deliveryGraceDays": 7,
+        "acceptedWorldDay": 5813,
+        "acceptedAtTickOffset": 4,
+        "deliveryWorldDay": 5873,
+        "contractId": "r6_courier_contract:193:01"
+      },
+      "expected": {
+        "eventId": "r4_ev_daily_courier",
+        "eventWorldDay": 5813,
+        "dueWorldDay": 5879,
+        "deliveryWorldDay": 5873,
+        "rewardWen": 200,
+        "rewardLedgerId": "r6_ledger_willow_courier_reward_escrow",
+        "recipientField": "character.cashWen",
+        "reincarnationPointsDelta": 0,
+        "cultivatorCurrencyDelta": 0,
+        "rewardReceiptCount": 1,
+        "duplicateDeliveryRewardWen": 0,
+        "escrowBalanceBeforeDeliveryWen": 400,
+        "escrowBalanceAfterDeliveryWen": 200
+      }
+    },
+    {
+      "id": "R6-WL-SIM-12",
+      "name": "weather-generated road closure event path",
+      "inputs": {
+        "routeId": "r4_loc_willow_market>r4_loc_mirror_stage",
+        "worldSeed32": 2026101902,
+        "worldDays": [
+          5800,
+          5801,
+          5802
+        ]
+      },
+      "expected": {
+        "rainLevels": [
+          2,
+          3,
+          0
+        ],
+        "closureFactId": "r6_fact_route_flood_closure:r4_loc_willow_market>r4_loc_mirror_stage:5801",
+        "eventId": "r4_ev_daily_roadmarker",
+        "closedFromWorldDay": 5801,
+        "endWorldDayExclusive": 5804,
+        "reopensAtWorldDay": 5804,
+        "sourceWeatherFactCount": 3,
+        "noHandSetRain": true,
+        "noTeleport": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-13",
+      "name": "migration preserves noncurrency pending state",
+      "inputs": {
+        "skills": [
+          "r4_skill_dao02"
+        ],
+        "inventory": {
+          "r4_item_powder": 2,
+          "r6_item_portable_furnace": "serial-A"
+        },
+        "pendingQueue": [
+          "ev-01"
+        ],
+        "inFlightTransaction": {
+          "id": "tx-01",
+          "daysRemaining": 4,
+          "reservedItems": {
+            "r4_item_stargrass": 2
+          }
+        },
+        "eventReceipts": [
+          "rcpt-01"
+        ],
+        "knowledge": [
+          "r4_loc_mirror_stage"
+        ]
+      },
+      "expected": {
+        "allListedFieldsPreserved": true,
+        "cashConvertedOnce": true,
+        "secondMigrationNoOp": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-14",
+      "name": "legal acquire, return, travel stop and portable alchemy path",
+      "inputs": {
+        "startLocation": "r4_loc_willow_market",
+        "cashWen": 6400,
+        "learnedRecipe": true,
+        "dao02Stage": 1,
+        "dao02Proficiency": 20,
+        "routeSequence": [
+          "r4_loc_willow_market>r4_loc_ashspring",
+          "r4_loc_ashspring>r4_loc_furnace_lane",
+          "r4_loc_furnace_lane>r4_loc_ashspring",
+          "r4_loc_ashspring>r4_loc_willow_market",
+          "r4_loc_willow_market>r4_loc_mirror_stage"
+        ],
+        "purchases": [
+          {
+            "item": "r6_item_portable_furnace",
+            "priceWen": 5000
+          },
+          {
+            "item": "r4_item_stargrass",
+            "quantity": 2,
+            "unitPriceWen": 300
+          }
+        ],
+        "waypoint": "r6_site_mirror_post",
+        "action": "r6_action_alchemy_portable"
+      },
+      "expected": {
+        "cashSpentWen": 6400,
+        "portableFurnaceOwned": true,
+        "stargrassConsumed": 2,
+        "alchemyFeeWen": 100,
+        "alchemyDays": 3,
+        "travelPausedAtWaypoint": true,
+        "travelFareCharges": 5,
+        "routeContinuableAfterAction": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-15",
+      "name": "walking midpoint courier deadline including both optional stops",
+      "inputs": {
+        "routeDays": 45,
+        "waypointDay": 23,
+        "eventActionTicks": 4,
+        "acceptedWorldDay": 5813,
+        "acceptedAtTickOffset": 4,
+        "remainingTravelDays": 22,
+        "practiceStopDays": 30,
+        "alchemyStopDays": 3,
+        "roadEventResponseDays": 1,
+        "closureDays": 3,
+        "deliveryGraceDays": 7,
+        "cycleOpenWorldDay": 5790
+      },
+      "expected": {
+        "dueWorldDay": 5879,
+        "arrivalAtMaxCoveredDelayWorldDay": 5872,
+        "remainingGraceDays": 7,
+        "offerAcceptedBeforeCycleClose": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-16",
+      "name": "escrow seed, actual-sale replenishment and cycle slot cap",
+      "inputs": {
+        "openingWorkingCashWen": 400,
+        "actualSettledPowderSalesReceiptWen": 1000,
+        "saleAllocationPercent": 10,
+        "publishSlotsRequested": 2,
+        "escrowPerSlotWen": 200,
+        "duplicateSaleReceipt": true,
+        "availablePowderUnits": 2
+      },
+      "expected": {
+        "saleReplenishmentWen": 100,
+        "workingCashBeforePublishWen": 500,
+        "offersPublished": 2,
+        "escrowAfterPublishWen": 400,
+        "workingCashAfterPublishWen": 100,
+        "duplicateSaleCreditWen": 0,
+        "playerCashMintedWen": 0
+      }
+    },
+    {
+      "id": "R6-WL-SIM-17",
+      "name": "courier refusal timeout duplicate and reload boundaries",
+      "inputs": {
+        "offerOpenWorldDay": 5790,
+        "offerEndWorldDayExclusive": 5820,
+        "declineActionTicks": 4,
+        "declineActionDays": 0,
+        "duplicateDecisionSubmission": true,
+        "acceptedWorldDay": 5814,
+        "dueWorldDay": 5880,
+        "deliveryAttemptWorldDays": [
+          5880,
+          5881
+        ],
+        "reloadBeforeSettlement": true,
+        "unacceptedRunnerReturnWorldDay": 5865
+      },
+      "expected": {
+        "declineTicks": 4,
+        "declineDays": 0,
+        "declinePlayerRewardWen": 0,
+        "sameContractReofferedToCharacter": false,
+        "unacceptedTimeoutRefundWen": 200,
+        "duplicateRefundWen": 0,
+        "day5880DeliveryAllowed": true,
+        "day5881ContractExpired": true,
+        "expiredPlayerRewardWen": 0,
+        "reloadKeepsEscrowAndDueDay": true,
+        "duplicateSettlementWen": 0,
+        "unacceptedTimeoutRefundWorldDay": 5865
+      }
+    },
+    {
+      "id": "R6-WL-SIM-18",
+      "name": "courier physical route duty and 75-day cycle conservation",
+      "inputs": {
+        "cycleOpenWorldDay": 5790,
+        "outboundDays": 30,
+        "midpointDayOffset": 15,
+        "offerWindowDays": 30,
+        "waitThroughOffset": 29,
+        "remainingOutboundDaysAfterWindow": 15,
+        "returnDays": 30,
+        "sameNamedRunner": true,
+        "dispatchPeriodDays": 75
+      },
+      "expected": {
+        "midpointWorldDay": 5805,
+        "windowCloseWorldDayExclusive": 5820,
+        "mirrorArrivalWorldDay": 5835,
+        "willowReturnReceiptWorldDay": 5865,
+        "nextCycleOpenWorldDay": 5865,
+        "sameRunnerOverlapDays": 0,
+        "travelDaysAccounted": 75
+      }
+    },
+    {
+      "id": "R6-WL-SIM-19",
+      "name": "declined parcel escrow conservation and reload before physical return",
+      "inputs": {
+        "cycleOpenWorldDay": 5790,
+        "offerEndWorldDayExclusive": 5820,
+        "runnerReturnReceiptWorldDay": 5865,
+        "parcelUnitsReserved": 1,
+        "escrowReservedWen": 200,
+        "declined": true,
+        "reloadedBeforeReturn": true,
+        "duplicateReturnReceipt": true
+      },
+      "expected": {
+        "parcelAtRunnerBeforeReturn": 1,
+        "escrowLockedWenBeforeReturn": 200,
+        "parcelIssuerCreditBeforeReturn": 0,
+        "workingCashRefundBeforeReturnWen": 0,
+        "parcelIssuerCreditOnReturn": 1,
+        "workingCashRefundOnReturnWen": 200,
+        "playerCashWen": 0,
+        "duplicateReturnCreditUnits": 0,
+        "duplicateRefundWen": 0,
+        "reloadPreservesRunnerParcelAndEscrow": true
+      }
+    },
+    {
+      "id": "R6-WL-SIM-20",
+      "name": "courier encounter requires same-day physical route intersection",
+      "inputs": {
+        "cycleOpenWorldDay": 5790,
+        "runnerWaitStartWorldDay": 5805,
+        "runnerWaitEndWorldDayExclusive": 5820,
+        "playerArrivalDates": [
+          5805,
+          5813,
+          5820
+        ],
+        "playerModes": [
+          "carriage",
+          "walking",
+          "carriage"
+        ]
+      },
+      "expected": {
+        "eventOnSameDay": [
+          true,
+          true,
+          false
+        ],
+        "eventAtWaypointOnly": true,
+        "arbitraryTripGuaranteedEncounter": false
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-01",
+      "name": "same-day short chores accumulate without day rounding",
+      "inputs": {
+        "startWorldDay": 99,
+        "tickWithinDay": 46,
+        "shortActionTicks": [
+          2,
+          4,
+          4
+        ],
+        "laterLaborTicks": [
+          24,
+          32
+        ]
+      },
+      "expected": {
+        "shortActionsTotalTicks": 10,
+        "shortActionsRemainInStartDay": true,
+        "shortActionsCrossShichenCount": 2,
+        "allActionsTotalTicks": 66,
+        "endWorldDay": 100,
+        "endTickWithinDay": 16,
+        "elapsedTicks": 66
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-02",
+      "name": "shichen display and month-year boundary",
+      "inputs": {
+        "worldDay": 359,
+        "tickWithinDay": 95,
+        "advanceTicks": 1
+      },
+      "expected": {
+        "beforeDate": [
+          1000,
+          12,
+          30
+        ],
+        "beforeShichenIndex": 0,
+        "beforeKeIndex": 4,
+        "afterDate": [
+          1001,
+          1,
+          1
+        ],
+        "afterShichenIndex": 0,
+        "afterKeIndex": 5,
+        "worldDaysAdvanced": 1
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-03",
+      "name": "nested R4 save migration maps actual date fields and is idempotent",
+      "inputs": {
+        "legacySave": {
+          "runtimeState": {
+            "worldDay": 5842,
+            "migrationReceipts": []
+          },
+          "character": {
+            "birthDay": 400,
+            "ageDays": 5442,
+            "permits": {
+              "furnace": {
+                "issuedDay": 5835,
+                "validDays": 7
+              }
+            }
+          },
+          "inFlightTransaction": {
+            "id": "tx-r4-5842-5845",
+            "startedDay": 5842,
+            "targetDay": 5845,
+            "status": "in_progress"
+          }
+        },
+        "travelDaysTotal": 30,
+        "travelDaysCompleted": 15,
+        "travelDaysRemaining": 15,
+        "packageTargetDayInclusive": 5800,
+        "quoteIssuedDay": 5790,
+        "quoteExpiryWorldDays": 0,
+        "offerWindowEndDayExclusive": 5820
+      },
+      "expected": {
+        "runtimeWorldTick": 560832,
+        "lifeStartWorldTick": 38400,
+        "derivedAgeDays": 5442,
+        "inFlightStartedAtTick": 560832,
+        "inFlightTargetAtTick": 561120,
+        "inFlightDurationTicks": 288,
+        "furnacePermitExpiresAtTickExclusive": 560928,
+        "travelTicksTotal": 2880,
+        "travelTicksCompleted": 1440,
+        "travelTicksRemaining": 1440,
+        "packageTargetAtTickExclusive": 556896,
+        "quoteExpiresAtTickExclusive": 555936,
+        "offerWindowEndAtTickExclusive": 558720,
+        "singleMigrationReceipt": true,
+        "secondRunNoOp": true,
+        "sourceUnchanged": true
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-04",
+      "name": "one day boundary event while a short operation crosses midnight",
+      "inputs": {
+        "startWorldDay": 5800,
+        "tickWithinDay": 95,
+        "actionDurationTicks": 2,
+        "reloadAtCompletion": true
+      },
+      "expected": {
+        "worldDayBoundariesEntered": [
+          5801
+        ],
+        "worldNodesCount": 1,
+        "actionCompletionReceipts": 1,
+        "causalFollowups": 1,
+        "queuedEventCount": 1,
+        "reloadDuplicates": 0
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-05",
+      "name": "lease one tick short rejected and exact duration reservation accepted",
+      "inputs": {
+        "alchemyDurationTicks": 288,
+        "shortRemainingLeaseTicks": 287,
+        "exactRemainingLeaseTicks": 288,
+        "feeWen": 100,
+        "stargrassUnits": 2
+      },
+      "expected": {
+        "shortLeaseAccepted": false,
+        "shortLeaseFeeWen": 0,
+        "shortLeaseStargrassConsumed": 0,
+        "shortLeaseClockDelta": 0,
+        "exactLeaseAccepted": true,
+        "exactLeaseCompletionTickEqualsExpiry": true,
+        "exactLeaseFeeWen": 100,
+        "exactLeaseStargrassConsumed": 2,
+        "exactLeaseClockDelta": 288
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-06",
+      "name": "portable alchemy pauses route progress then resumes same transaction",
+      "inputs": {
+        "routeRemainingTicksBefore": 1440,
+        "alchemyDurationTicks": 288,
+        "fareWen": 300,
+        "reloadDuringAlchemy": true
+      },
+      "expected": {
+        "worldTickDeltaDuringAlchemy": 288,
+        "routeProgressDuringAlchemy": 0,
+        "routeRemainingTicksAfterAlchemy": 1440,
+        "routeTicksAfterResume": 1440,
+        "totalWorldTickDelta": 1728,
+        "fareCharges": 1,
+        "arrivalReceipts": 1,
+        "alchemyReceipts": 1
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-07",
+      "name": "pending result confirmation is free and idempotent",
+      "inputs": {
+        "worldTickBeforeAck": 993001,
+        "pendingReceiptId": "result-77",
+        "ackAttempts": 2
+      },
+      "expected": {
+        "worldTickAfterAck": 993001,
+        "receiptIdUnchanged": true,
+        "readState": "read",
+        "confirmationEffects": 1,
+        "duplicateEffects": 0
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-08",
+      "name": "save reload retry does not double-charge or advance time twice",
+      "inputs": {
+        "startWorldTick": 200000,
+        "actionDurationTicks": 24,
+        "firstRunTicksBeforeReload": 10,
+        "feeWen": 100,
+        "duplicateSubmissions": 2
+      },
+      "expected": {
+        "finalWorldTick": 200024,
+        "totalElapsedTicks": 24,
+        "feeChargedWen": 100,
+        "actionCompletionReceipts": 1,
+        "inventorySettlementCount": 1,
+        "duplicateTimeTicks": 0
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-09",
+      "name": "exclusive quote expiry and inclusive day deadline boundaries",
+      "inputs": {
+        "quoteIssuedAtTick": 96093,
+        "quoteExpiryWorldDays": 0,
+        "quoteSignDurationTicks": 1,
+        "inclusiveDueWorldDay": 100,
+        "leasedActionStartTick": 1000,
+        "leaseDurationTicks": 2880,
+        "quoteSignAtTick": 96094
+      },
+      "expected": {
+        "quoteExpiresAtTickExclusive": 96096,
+        "quoteCanSettleBeforeBoundary": true,
+        "dueAtTickExclusive": 9696,
+        "dueValidAtLastPriorTick": true,
+        "dueInvalidAtExclusiveTick": true,
+        "leaseExpiresAtTick": 3880,
+        "quoteSignDurationTicks": 1
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-10",
+      "name": "invalid and overflowing clock input rejects atomically",
+      "inputs": {
+        "invalidValues": [
+          -1,
+          1.5,
+          "NaN",
+          "Infinity",
+          9007199254740992
+        ],
+        "maximumWorldTick": 412316860415,
+        "overflowDurationTicks": 1
+      },
+      "expected": {
+        "allInputsRejected": true,
+        "clockMutations": 0,
+        "costMutations": 0,
+        "receiptWrites": 0,
+        "queueMutations": 0,
+        "wrapOrClamp": false
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-11",
+      "name": "civil midnight and traditional 子时 projection",
+      "inputs": {
+        "civilHours": [
+          23,
+          24,
+          25
+        ],
+        "ticksPerHour": 4
+      },
+      "expected": {
+        "shichen": [
+          "子",
+          "子",
+          "丑"
+        ],
+        "ke": [
+          1,
+          5,
+          1
+        ],
+        "civilDateOffsets": [
+          0,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "R6-TIME-SIM-12",
+      "name": "intraday lifespan boundary wins over same-tick action",
+      "inputs": {
+        "lifeLimitTick": 5005,
+        "actionStartTick": 5001,
+        "actionDurationTicks": 4
+      },
+      "expected": {
+        "deathCheckTick": 5005,
+        "actionEffectsCommitted": false,
+        "lastLivingTick": 5004
+      }
+    }
+  ],
+  "openRisks": [
+    {
+      "id": "R6-WL-RISK-01",
+      "status": "WARN",
+      "owner": "C",
+      "condition": "Alias-to-location ID mapping and world closure behavior must be verified against the current save contract and route registry.",
+      "acceptanceCriteria": "Every reported display alias resolves to the registered location ID; each known, open route is repeatable in both intended directions on an isolated save. In particular, verify the already-registered r4_loc_mirror_stage>r4_loc_echo_pass edge (7 carriage days/100wen; walking 11 days) in the authorized copy.",
+      "nextAction": "The route contract has no missing outbound edge; preserve the user's reported stop. After U/C, reproduce the visible option's click/transaction failure in an authorized save copy and report the actual cause; do not infer that the journey is over.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-WL-RISK-02",
+      "status": "WARN",
+      "owner": "C",
+      "condition": "B defines exact carriage, ration and acquisition sources; live runtime bindings and actual legacy money-field inventory remain unverified.",
+      "acceptanceCriteria": "C binds listed IDs, tests prices/stock receipts, enumerates actual money fields, converts once and preserves noncurrency/pending state.",
+      "nextAction": "Register B-defined IDs without changing values; test isolated saves and report runtime ID mismatches.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-WL-RISK-03",
+      "status": "WARN",
+      "owner": "C",
+      "condition": "B defines r6_site_mirror_post, portable furnace sale/rental and ownership conditions; R4 runtime does not prove them registered.",
+      "acceptanceCriteria": "C registers exact IDs; demonstrate day-15 pause, practice/alchemy and resume or closure handling without overlapping clocks or editing original saves.",
+      "nextAction": "Register the specified station, waystop, seller and actions; do not hide acquisition permanently or invent substitutes.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-WL-RISK-04",
+      "status": "WARN",
+      "owner": "C",
+      "condition": "The B contract now defines specific R4 RNG-compatible route/day generation and bounded closure expiry; current runtime wiring and human play remain unverified.",
+      "acceptanceCriteria": "C implements the specified seed/hash/unsigned/zero semantics, exact day order, idempotent weather facts, flood expiry/rearm, and both courier source receipts; reproduce R6-WL-SIM-05/11/12/15-17 in an isolated runtime and browser.",
+      "nextAction": "C binds exact source IDs and logs weather keys, rain levels, contract/escrow receipts, route pause/resume and settlement idempotency; no substitute random formula or hand-entered rain.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-WL-RISK-05",
+      "status": "WARN",
+      "owner": "User/C",
+      "condition": "No human playtest of this contract or revised page exists; do not call product feedback closed.",
+      "acceptanceCriteria": "Execution director completes phone playthrough of low-cash, repeat-return, interrupted-travel, market, and disabled-prerequisite states and records observations.",
+      "nextAction": "After C/U handoff and local verification, deliver the playable candidate for director review; retain WARN until feedback is recorded.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-TIME-RISK-01",
+      "status": "WARN",
+      "owner": "C",
+      "condition": "The single worldTick, short action durations, boundary scheduler, and legacy projections are a B rule contract only; no implementation/runtime path has been verified.",
+      "acceptanceCriteria": "In the named candidate, prove same-day short action accumulation, exact month/year rollover, day boundary once-only ordering, exact lease/quote/deadline boundaries, and no second writable worldDay/age clock.",
+      "nextAction": "After U, wire the clock through the existing engine transaction path and replay R6-TIME-SIM-01/02/04/05/09 without editing product time values independently.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-TIME-RISK-02",
+      "status": "WARN",
+      "owner": "C",
+      "condition": "Old-save time migration, active transactions, pending results, and in-flight travel are specified but have not run on a real legacy save.",
+      "acceptanceCriteria": "Use an authorized isolated copy; migration is atomic/idempotent, invalid inputs leave the source untouched, all pending/in-flight IDs and reservations survive, and reload/retry changes time/cost/output once only.",
+      "nextAction": "C demonstrates R6-TIME-SIM-03/07/08 on an isolated copy and separately recovers the user's Mirror-to-Echo stop without operating the original save.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-TIME-RISK-03",
+      "status": "WARN",
+      "owner": "Execution Director/User",
+      "condition": "The proposed 15-minute tick and traditional shichen display respond to the user's concern about day-sized chores, but the improved pacing and time readability have not been observed with a player.",
+      "acceptanceCriteria": "Execution director can chain household/neighbor chores within one date, understand the current shichen and remaining action time, and distinguish free inspection/confirmation from real labor without new sleep/night restrictions.",
+      "nextAction": "After C self-test passes, run the same-version phone demo and record observed actions, confusion, and cheapest follow-up; do not infer UX success from the arithmetic audit.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    },
+    {
+      "id": "R6-TIME-RISK-04",
+      "status": "WARN",
+      "owner": "C",
+      "condition": "No same-version end-to-end new-game UI self-test has yet demonstrated that the complete livelihood-to-return path is playable, and the user's actual Mirror-to-Echo click failure is undiagnosed.",
+      "acceptanceCriteria": "Before the execution director is invited to demo, C completes the ordinary UI sequence in R6-TIME-ACCEPTANCE-01 with save/reload and exact version/link receipts, then reproduces the old-save route in its separately authorized copy. No resource grants, time skipping, unlock injection, or background trigger.",
+      "nextAction": "B hands this gate to U/C in order; C must report full path or an exact blocker and recovery before any user demo invitation.",
+      "acceptanceReason": "This is explicitly retained as a downstream WARN because B has only established the contract and deterministic reference evidence; no runtime, migrated user save, or human play evidence is claimed as a product PASS."
+    }
+  ]
+}
